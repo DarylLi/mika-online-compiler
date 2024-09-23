@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<div id='root'></div>
+	<div id='target'></div>
+	<body>
+		kira~⭐✨
+	</body>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+		<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script type="importmap">
+			{
+				"imports": {
+					"@lodash/startCase": "https://unpkg.com/lodash-es@4.17.21/startCase.js"
+				}
+			}
+		</script>
+		<!-- <script type="module">
+			import startCase from '@lodash/startCase';
+			console.log(startCase('fooBar'));
+		</script> -->
+		<script id='reactPanel' type="text/babel" data-presets="react" data-type="module">
+			import startCase from '@lodash/startCase';
+			const {useState} = React;
+			console.log(startCase('fooBar'));
+			let Enter = undefined;
+			const __injectCode__ = `console.log('woca;')
+    function Enter() {
+        const [txt,setTxt] = useState(0)
+        const getCall = ()=>{alert('wasai');setTxt(txt+1)}
+    
+        return (
+        <div onClick={() => getCall()}>kukuji{txt}</div>
+        );
+    }`;
+			__injectCode__ && eval(__injectCode__)
+			// function Dcp() {
+			// 	const [txt,setTxt] = useState(0)
+			// 	const getCall = ()=>{alert('wasai');setTxt(txt+1)}
+			
+			// 	return (
+			// 	<div onClick={() => getCall()}>kukuji{txt}</div>
+			// 	);
+			// }
+			const root = ReactDOM.createRoot(document.getElementById('target'));
+			Enter && root.render(<Enter />);
+		  </script>	
+	<!-- <script src="outEx.js"></script> -->
+</html>
