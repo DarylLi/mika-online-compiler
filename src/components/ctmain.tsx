@@ -2,7 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import MonacoEditor from "react-monaco-editor";
 import { editStore } from "@store/index";
 import { observer } from "mobx-react-lite";
-import { getCodeTransform, getFileContent } from "@utils/index";
+import {
+  getCodeTransform,
+  getFileContent,
+  doDebounceChange,
+  doThrottleChange,
+} from "@utils/index";
 import { updateData } from "@utils/indexDb";
 import { toJS } from "mobx";
 
@@ -14,6 +19,7 @@ function MainEditor() {
   const editorDidMount = (editor: any, monaco: any) => {
     editor.focus();
   };
+
   const onChange = async (newValue: any, e: any) => {
     // editStore.currentFiles,
     //   info?.node?.path,
@@ -29,9 +35,8 @@ function MainEditor() {
       name: "daryl",
       templates: toJS(editStore.currentFiles),
     };
-    console.log(changedData);
     updateData(
-      editStore.currentIndexDBInstance.db,
+      (editStore?.currentIndexDBInstance as any)?.db,
       "mika-templates",
       changedData
     );
@@ -43,12 +48,11 @@ function MainEditor() {
   return (
     <div className="mika-mona-center-editor">
       <MonacoEditor
-        height="600"
         language="javascript"
         theme="vs-dark"
         value={editStore.code}
         options={options}
-        onChange={onChange}
+        onChange={doDebounceChange(500, onChange)}
         editorDidMount={editorDidMount}
       ></MonacoEditor>
     </div>

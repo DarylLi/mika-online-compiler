@@ -17,13 +17,13 @@ import { observer } from "mobx-react-lite";
 // const projcetTmp = { ...templates, ...crd, ...umiRust };
 
 function Directory() {
-  const [defaultFile, setDefaultFile] = useState({});
   // editStore.setCurrentFile(currentFile);
 
   const [stat, setStat] = useState(1);
   const [code, setCode] = useState("");
   // const [spendKeys, setSpendKeys] = useState([editStore?.curType || "vue"]);
   const [spendKeys, setSpendKeys] = useState([templates[0]?.path]);
+  const [selectedKeys, setSelectedKeys] = useState([] as any);
   const editorDidMount = (editor: any, monaco: any) => {
     console.log("editorDidMount", editor);
     editor.focus();
@@ -56,6 +56,7 @@ function Directory() {
         ? spendKeys.filter((e) => e !== info.node.filename)
         : [...spendKeys, info?.node?.filename]
     );
+    setSelectedKeys(selectedKeys);
   };
   useEffect(() => {
     const curData = {
@@ -93,14 +94,14 @@ function Directory() {
         // 默认文件store相关存储
         editStore.updateCode(currentFile.value);
         editStore.updateInfo(currentFile);
-        setDefaultFile(currentFile);
+        setSelectedKeys([currentFile.path]);
         // 渲染入口文件内容至目标dom
         const getRootDom = setInterval(() => {
           document.getElementById("previewFrame") &&
             (() => {
               getCodeTransform(
                 currentFile?.value || "",
-                indexStore.templates || null
+                indexStore?.templates || templates
               );
               clearInterval(getRootDom);
             })();
@@ -120,7 +121,7 @@ function Directory() {
           showLine={true}
           showIcon={true}
           onSelect={onSelect}
-          defaultSelectedKeys={[(defaultFile as any).path]}
+          selectedKeys={selectedKeys}
           onExpand={onExpand}
           expandedKeys={spendKeys}
           treeData={editStore.currentFiles}

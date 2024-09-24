@@ -7,6 +7,9 @@
     "dev": "node startdev.js",
     "build": "webpack --mode=production"
   },
+  "engines": {
+    "node": ">=21.1.0"
+  },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
     "clean-webpack-plugin": "^4.0.0",

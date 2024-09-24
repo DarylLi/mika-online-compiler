@@ -25,9 +25,28 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
     presets: ["env"],
     plugins: [["transform-react-jsx"], ["confound", { prefix: nameprefix }]],
   }).code;
-  // 文件import 检索
+  // jsx文件import 检索
   let resultArr = [...result.matchAll(/import.*from.*;/g)];
-  // 替换import内容为相应代码段
+  // css 文件import检索
+  let cssArr = [...result.matchAll(/import.*(.css)("|');/g)];
+  // 替换import css内容为相应代码段
+  cssArr.length > 0 &&
+    cssArr.forEach((css, index) => {
+      let importTarget = css[0].split("import")[0].trim();
+      let matchedName = matchFileName(checkedFile, css[0]);
+      let fileInfo = matchedName;
+      let parseCode = "";
+      // css文件名匹配后操作
+      if (fileInfo) {
+        // 引用代码文件输出内容名称混淆处理
+        let extraFile = fileInfo.value.replace(/};/g, "}");
+        let curName = `__${fileInfo.filename}__`.replace(".", "PName");
+
+        parseCode = `let ${curName} = document.createElement("style");${curName}.innerText=\`${extraFile}\`;document.getElementById("innerCssCode").appendChild(${curName});`;
+      }
+      result = result.replace(css[0], parseCode);
+    });
+  // 替换import jsx内容为相应代码段
   resultArr.length > 0 &&
     resultArr.forEach((mr, index) => {
       let matchedName = matchFileName(checkedFile, mr[0]);
@@ -81,7 +100,7 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
       plugins: ["transFileConfound"],
     }).code;
   } catch (error) {
-    console.log(`引入文件变量名重复`);
+    console.log(`解析出错`, error);
   }
   return result;
 };
@@ -130,7 +149,13 @@ registerPlugin("transConfound", transConfound);
 registerPlugin("transFileConfound", transFileConfound);
 
 export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
-  const importCheckedCode = doCheckImport(codeTxt, "index_", checkedFiles);
+  // css引入前置标签刷新
+  let refreshCode = `let _refreshCssCode_ = document.getElementById("innerCssCode")||document.createElement("div");_refreshCssCode_.setAttribute('id','innerCssCode');_refreshCssCode_.innerHTML='';document.getElementById("root").appendChild(_refreshCssCode_);`;
+  const importCheckedCode = doCheckImport(
+    `${refreshCode}${codeTxt}`,
+    "index_",
+    checkedFiles
+  );
   // transform-react-jsx已处理部分名称替换，单文件需独自处理
   let values = Array.from(mapSolute.values());
   try {
@@ -140,9 +165,9 @@ export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
         values.map((w) => w.targetKey).filter((inner) => inner === e.targetKey)
           .length > 1
     );
-    // console.log(duplicateList)
+    // 引入文件重名检测
     if (duplicateList.length > 1) {
-      let reCode = `let offList=[];let doDuplicateStr = importCheckedCode.replace(/${duplicateList[0].targetKey}.*()/g,(match,offset)=>{console.log('....',match,offset);match.includes('()')&&offList.push(match);console.log(offList.length);return 'D_'+offList.length+'_'+match});importCheckedCode=doDuplicateStr`;
+      let reCode = `let offList=[];let doDuplicateStr = importCheckedCode.replace(/${duplicateList[0].targetKey}.*()/g,(match,offset)=>{match.includes('()')&&offList.push(match);return 'D_'+offList.length+'_'+match});importCheckedCode=doDuplicateStr`;
       // console.log(reCode)
       eval(reCode);
       // let testCode = `let offList=[];let okStrArr = importCheckedCode.matchAll(/${duplicateList[0].targetKey}.*/g);console.log([...okStrArr])`;
@@ -160,13 +185,17 @@ export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
     presets: ["env"],
     plugins: ["transConfound"],
   }).code;
-  rewrite
-    ? eval(
-        `var exports={};const { useRef, useState } = React;${afterCode};document.getElementById('previewFrame').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default))`
-      )
-    : eval(
-        `var exports={};const { useRef, useState } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default));`
-      );
+  try {
+    rewrite
+      ? eval(
+          `var exports={};const { useRef, useState } = React;${afterCode};document.getElementById('previewFrame').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default))`
+        )
+      : eval(
+          `var exports={};const { useRef, useState } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default));`
+        );
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const getFileContent = (files, path) => {
@@ -193,6 +222,58 @@ export const replaceFileContent = (files, path, txt) => {
   }
 };
 
+export const checkLessCss = (path) => {
+  /(.css)|(.less)/.test(path);
+  style.innerText = `.App{background:#dedede;font-size:28px}
+`;
+  document.getElementById("root").appendChild(style);
+  let style = document.createElement("style");
+};
+
 export default {
   getCodeTransform,
 };
+
+// debounce单例注册
+let currentDebounceInstance = null;
+class DebounceInsance {
+  refreshTimer = null;
+  constructor() {
+    console.log(this.refreshTimer);
+  }
+}
+// debounce
+export function doDebounceChange(time, fn) {
+  if (!currentDebounceInstance) currentDebounceInstance = new DebounceInsance();
+  return function () {
+    clearTimeout(currentDebounceInstance.refreshTimer);
+    // currentDebounceInstance.refreshTimer = null;
+    let args = Array.from(arguments);
+    currentDebounceInstance.refreshTimer = setTimeout(() => {
+      fn.apply(this, args);
+    }, time);
+  };
+}
+
+// throttle单例注册
+let currentTrottleInstance = null;
+class ThrottleInsance {
+  needRefresh = true;
+  constructor() {
+    console.log(this.needRefresh);
+  }
+}
+// trottle Main
+export function doThrottleChange(time, fn, ...args) {
+  if (!currentTrottleInstance) currentTrottleInstance = new ThrottleInsance();
+  return function () {
+    let totalArgs = [...args, ...Array.from(arguments)];
+    if (currentTrottleInstance.needRefresh === true) {
+      setTimeout(() => {
+        currentTrottleInstance.needRefresh = true;
+      }, time);
+      currentTrottleInstance.needRefresh = false;
+      fn.apply(this, totalArgs);
+    }
+  };
+}
