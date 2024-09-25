@@ -6,7 +6,17 @@ window.useState = useState;
 var transferMap = new Map();
 let replaceMaps = new Map();
 let mapSolute = new Map();
+let rustInstance = null;
 
+const renderRustLib = () => {
+  if (!rustInstance) {
+    rustInstance = import("@pkg");
+    rustInstance.then((res) => {
+      res.greet("wo hua");
+    });
+  }
+};
+renderRustLib();
 const matchFileName = (fileTrees, name) => {
   let result = null;
   //   匹配目录名称相符的第一个文件
@@ -39,10 +49,13 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
       // css文件名匹配后操作
       if (fileInfo) {
         // 引用代码文件输出内容名称混淆处理
-        let extraFile = fileInfo.value.replace(/};/g, "}");
-        let curName = `__${fileInfo.filename}__`.replace(".", "PName");
+        let cssFile = fileInfo.value.replace(/};/g, "}");
+        let curName = `__${fileInfo.filename}__`.replace(
+          ".",
+          `PName${new Date().getTime()}_`
+        );
 
-        parseCode = `let ${curName} = document.createElement("style");${curName}.innerText=\`${extraFile}\`;document.getElementById("innerCssCode").appendChild(${curName});`;
+        parseCode = `let ${curName} = document.createElement("style");${curName}.innerText=\`${cssFile}\`;document.getElementById("innerCssCode").appendChild(${curName});`;
       }
       result = result.replace(css[0], parseCode);
     });
@@ -59,7 +72,8 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
         // 对代码段内容进行同等替换检索
         let replaceCode = doCheckImport(
           extraFile,
-          `${nameprefix}${fileInfo.filename.split(".")[0]}_`
+          `${nameprefix}${fileInfo.filename.split(".")[0]}_`,
+          checkedFile
         );
         // 引用文件相应对象变量名替换
         let importTarget = mr[0].replace("import", "").split("from")[0].trim();

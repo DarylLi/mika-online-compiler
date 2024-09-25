@@ -10,7 +10,6 @@ import {
 } from "@utils/index";
 import { updateData } from "@utils/indexDb";
 import { toJS } from "mobx";
-
 function MainEditor() {
   // let cursocket: any = null;
   const [code, setCode] = useState("");
