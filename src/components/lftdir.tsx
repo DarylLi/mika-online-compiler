@@ -24,13 +24,6 @@ function Directory() {
   // const [spendKeys, setSpendKeys] = useState([editStore?.curType || "vue"]);
   const [spendKeys, setSpendKeys] = useState([templates[0]?.path]);
   const [selectedKeys, setSelectedKeys] = useState([] as any);
-  const editorDidMount = (editor: any, monaco: any) => {
-    console.log("editorDidMount", editor);
-    editor.focus();
-  };
-  const onChange = (newValue: any, e: any) => {
-    console.log("onChange", newValue, e);
-  };
   const options = {
     selectOnLineNumbers: true,
   };
@@ -44,7 +37,6 @@ function Directory() {
     //   info?.node?.path,
     //   info?.node?.value
     // );
-    console.log(editStore.currentFiles);
     info?.node?.kind !== "directory" &&
       editStore.updateCode(
         getFileContent(editStore.currentFiles, info?.node?.path) || ""

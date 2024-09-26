@@ -6,13 +6,16 @@ window.useState = useState;
 var transferMap = new Map();
 let replaceMaps = new Map();
 let mapSolute = new Map();
+// rust 实例引用
 let rustInstance = null;
+// rust lib
+let rustLib = null;
 
 const renderRustLib = () => {
   if (!rustInstance) {
     rustInstance = import("@pkg");
-    rustInstance.then((res) => {
-      res.greet("wo hua");
+    rustInstance.then((result) => {
+      rustLib = result;
     });
   }
 };
@@ -164,7 +167,9 @@ registerPlugin("transFileConfound", transFileConfound);
 
 export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
   // css引入前置标签刷新
-  let refreshCode = `let _refreshCssCode_ = document.getElementById("innerCssCode")||document.createElement("div");_refreshCssCode_.setAttribute('id','innerCssCode');_refreshCssCode_.innerHTML='';document.getElementById("root").appendChild(_refreshCssCode_);`;
+
+  let refreshCode = rustLib.getCompiledCode("refresh_css");
+  // `let _refreshCssCode_ = document.getElementById("innerCssCode")||document.createElement("div");_refreshCssCode_.setAttribute('id','innerCssCode');_refreshCssCode_.innerHTML='';document.getElementById("root").appendChild(_refreshCssCode_);`;
   const importCheckedCode = doCheckImport(
     `${refreshCode}${codeTxt}`,
     "index_",
@@ -234,14 +239,6 @@ export const replaceFileContent = (files, path, txt) => {
       e.children && replaceFileContent(e.children, path, txt);
     });
   }
-};
-
-export const checkLessCss = (path) => {
-  /(.css)|(.less)/.test(path);
-  style.innerText = `.App{background:#dedede;font-size:28px}
-`;
-  document.getElementById("root").appendChild(style);
-  let style = document.createElement("style");
 };
 
 export default {
