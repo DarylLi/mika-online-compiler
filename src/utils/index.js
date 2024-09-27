@@ -58,7 +58,8 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
           `PName${new Date().getTime()}_`
         );
 
-        parseCode = `let ${curName} = document.createElement("style");${curName}.innerText=\`${cssFile}\`;document.getElementById("innerCssCode").appendChild(${curName});`;
+        // parseCode = `let ${curName} = document.createElement("style");${curName}.innerText=\`${cssFile}\`;document.getElementById("innerCssCode").appendChild(${curName});`;
+        parseCode = rustLib.getCompiledCssCode(curName, cssFile);
       }
       result = result.replace(css[0], parseCode);
     });
@@ -204,14 +205,20 @@ export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
     presets: ["env"],
     plugins: ["transConfound"],
   }).code;
+  // console.log("afterCode ::: ", rustLib.getCompiledJSXCode(afterCode));
+  //获取编译后代码
+  let targetCode = rustLib.getCompiledJSXCode(
+    `${rewrite ? "isReWrite::__||" + afterCode : "isInit::__||" + afterCode}`
+  );
   try {
-    rewrite
-      ? eval(
-          `var exports={};const { useRef, useState } = React;${afterCode};document.getElementById('previewFrame').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default))`
-        )
-      : eval(
-          `var exports={};const { useRef, useState } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default));`
-        );
+    eval(targetCode);
+    // rewrite
+    //   ? eval(
+    //       `var exports={};const { useRef, useState } = React;${afterCode};document.getElementById('previewFrame').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default))`
+    //     )
+    //   : eval(
+    //       `var exports={};const { useRef, useState } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default));`
+    //     );
   } catch (err) {
     console.log(err);
   }
