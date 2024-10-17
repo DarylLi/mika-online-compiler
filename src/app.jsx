@@ -12,6 +12,7 @@ import { registryIntervalTimeout } from './utils';
 
 //防止编辑器内写入interval或timeout因重复保存刷新造成内存泄漏
 registryIntervalTimeout();
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     // <BabelCmp/>

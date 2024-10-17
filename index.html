@@ -8,15 +8,30 @@
 	<div id='target'></div>
 	<body>
 	</body>
-	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 		<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
 		<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.js"></script>
 		<script type="importmap">
 			{
 				"imports": {
-					"@lodash/startCase": "https://unpkg.com/lodash-es@4.17.21/startCase.js"
+					"@lodash/startCase": "https://unpkg.com/lodash-es@4.17.21/startCase.js",
+					"vue-sfc-loader": "https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.js",
 				}
 			}
+		</script>
+		<!-- <script type="importmap">
+			{
+			  "imports": {
+			  "react": "https://esm.sh/react@18.2.0",
+			  "react-dom/client": "https://esm.sh/react-dom@18.2.0",
+			}
+		  }
+		</script> -->
+		<!-- 三方引用方案2待优化：通过importmap引入三方文件,编译过程通过重复append module script实现编译内容转述 -->
+		<script type="module">
+			import vue3SfcLoader from 'vue3-sfc-loader';
+			window['vue3-sfc-loader'] = vue3SfcLoader;
 		</script>
 		<!-- <script type="module">
 			import startCase from '@lodash/startCase';

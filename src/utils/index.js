@@ -2,6 +2,9 @@ import { useState, memo } from "react";
 import { transform, registerPlugin } from "@babel/standalone";
 import { templates } from "@mock/fileData";
 import { matchFileName } from "./commonUtils";
+import { getCssfromSass } from "./parseSass";
+import { getCssFromLess } from "./parseLess";
+
 window.memo = memo;
 window.useState = useState;
 var transferMap = new Map();
@@ -23,7 +26,7 @@ const renderRustLib = () => {
 renderRustLib();
 
 // import内容替换
-const doCheckImport = (str, nameprefix, checkedFile = templates) => {
+const doCheckImport = async (str, nameprefix, checkedFile = templates) => {
   let result = str;
   let checked = transform(result, {
     presets: ["env"],
@@ -34,65 +37,88 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
   let resultArr = [...result.matchAll(/import.*from.*(;|\s)/g)];
   // console.log(resultArr);
   // css 文件import检索
-  let cssArr = [...result.matchAll(/import.*(.css)("|')(;|\s)/g)];
+  let cssArr = [...result.matchAll(/import.*(.scss|.less|.css)("|')(;|\s)/g)];
   // 替换import css内容为相应代码段
   cssArr.length > 0 &&
-    cssArr.forEach((css, index) => {
-      let importTarget = css[0].split("import")[0].trim();
-      let matchedName = matchFileName(checkedFile, css[0]);
-      let fileInfo = matchedName;
-      let parseCode = "";
-      // css文件名匹配后操作
-      if (fileInfo) {
-        // 引用代码文件输出内容名称混淆处理
-        let cssFile = fileInfo.value.replace(/};/g, "}");
-        let curName = `__${fileInfo.filename}__`.replace(
-          ".",
-          `PName${new Date().getTime()}_`
-        );
+    (await (async () => {
+      // cssArr.forEach((css, index) => {
+      for (var index = 0; index < cssArr.length; index++) {
+        const css = cssArr[index];
+        let matchedName = matchFileName(checkedFile, css[0]);
+        let fileInfo = matchedName;
+        let parseCode = "";
+        // css文件名匹配后操作
+        if (fileInfo) {
+          // 引用代码文件输出内容名称混淆处理
+          let fileType = css[1].replace(".", "");
+          let cssFile = fileInfo.value.replace(/};/g, "}");
+          // less sass不同文件处理
+          const mapFile = {
+            scss: getCssfromSass,
+            less: getCssFromLess,
+          };
+          if (mapFile[fileType]) {
+            cssFile = await mapFile[fileType](cssFile);
+          }
+          // getCssfromSass()
+          let curName = `__${fileInfo.filename}__`.replace(
+            ".",
+            `PName${new Date().getTime()}_`
+          );
 
-        // parseCode = `let ${curName} = document.createElement("style");${curName}.innerText=\`${cssFile}\`;document.getElementById("innerCssCode").appendChild(${curName});`;
-        parseCode = rustLib.getCompiledCssCode(curName, cssFile);
+          // parseCode = `let ${curName} = document.createElement("style");${curName}.innerText=\`${cssFile}\`;document.getElementById("innerCssCode").appendChild(${curName});`;
+          parseCode = rustLib.getCompiledCssCode(curName, cssFile);
+        }
+        result = result.replace(css[0], parseCode);
       }
-      result = result.replace(css[0], parseCode);
-    });
+    })());
+  // });
   // 替换import jsx内容为相应代码段
   resultArr.length > 0 &&
-    resultArr.forEach((mr, index) => {
-      let matchedName = matchFileName(checkedFile, mr[0]);
-      // 若引用文件存在则替换文件内容
-      if (matchedName) {
-        let fileInfo = matchedName;
-        // 引用代码文件输出内容名称混淆处理
-        let extraFile = fileInfo.value;
+    // resultArr.forEach((mr, index) => {
+    (await (async () => {
+      for (var index = 0; index < resultArr.length; index++) {
+        let mr = resultArr[index];
+        let matchedName = matchFileName(checkedFile, mr[0]);
+        // 若引用文件存在则替换文件内容
+        if (matchedName) {
+          let fileInfo = matchedName;
+          // 引用代码文件输出内容名称混淆处理
+          let extraFile = fileInfo.value;
 
-        // 对代码段内容进行同等替换检索
-        let replaceCode = doCheckImport(
-          extraFile,
-          `${nameprefix}${fileInfo.filename.split(".")[0]}_`,
-          checkedFile
-        );
-        // 引用文件相应对象变量名替换
-        let importTarget = mr[0].replace("import", "").split("from")[0].trim();
-        // 混淆引用名，防止单输出文件重名引用
-        let replaceExportTarget = transferMap.get(importTarget) || importTarget;
-        // 源文件export变量名
-        const orginExportNameArr = replaceCode.split("export default");
-        replaceCode =
-          orginExportNameArr[1]?.trim() === replaceExportTarget
-            ? replaceCode.replace("export default", `//export default`)
-            : replaceCode.replace(
-                "export default",
-                `let ${replaceExportTarget} =`
-              );
+          // 对代码段内容进行同等替换检索
+          let replaceCode = await doCheckImport(
+            extraFile,
+            `${nameprefix}${fileInfo.filename.split(".")[0]}_`,
+            checkedFile
+          );
+          // 引用文件相应对象变量名替换
+          let importTarget = mr[0]
+            .replace("import", "")
+            .split("from")[0]
+            .trim();
+          // 混淆引用名，防止单输出文件重名引用
+          let replaceExportTarget =
+            transferMap.get(importTarget) || importTarget;
+          // 源文件export变量名
+          const orginExportNameArr = replaceCode.split("export default");
+          replaceCode =
+            orginExportNameArr[1]?.trim() === replaceExportTarget
+              ? replaceCode.replace("export default", `//export default`)
+              : replaceCode.replace(
+                  "export default",
+                  `let ${replaceExportTarget} =`
+                );
 
-        result = result.replace(mr[0], `${replaceCode};`);
+          result = result.replace(mr[0], `${replaceCode};`);
+        }
+        // 不存在则先注释处理
+        else {
+          result = result.replace(mr[0], `//${mr[0]}`);
+        }
       }
-      // 不存在则先注释处理
-      else {
-        result = result.replace(mr[0], `//${mr[0]}`);
-      }
-    });
+    })());
+  // });
   resultArr.forEach((mr) => {
     const curKey = `${mr[0].replace("import", "").split("from")[0].trim()}`;
     replaceMaps.set(curKey, `${nameprefix}${curKey}`);
@@ -159,28 +185,31 @@ registerPlugin("confound", confound);
 registerPlugin("transConfound", transConfound);
 registerPlugin("transFileConfound", transFileConfound);
 
-export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
+export const getCodeTransform = async (
+  codeTxt,
+  checkedFiles,
+  rewrite = false
+) => {
   // css引入前置标签刷新
-
-  let refreshCode = rustLib.getCompiledCode("refresh_css");
-  // interval && timeout 释放
-  window._editorInnerInterval.length > 0 &&
-    window._editorInnerInterval.forEach((inner) => {
-      window.clearInterval(inner);
-    });
-  window._editorInnerTimeout.length > 0 &&
-    window._editorInnerTimeout.forEach((inner) => {
-      window.clearTimeout(inner);
-    });
-  // `let _refreshCssCode_ = document.getElementById("innerCssCode")||document.createElement("div");_refreshCssCode_.setAttribute('id','innerCssCode');_refreshCssCode_.innerHTML='';document.getElementById("root").appendChild(_refreshCssCode_);`;
-  const importCheckedCode = doCheckImport(
-    `${refreshCode}${codeTxt}`,
-    "index_",
-    checkedFiles
-  );
-  // transform-react-jsx已处理部分名称替换，单文件需独自处理
-  let values = Array.from(mapSolute.values());
   try {
+    let refreshCode = rustLib.getCompiledCode("refresh_css");
+    // interval && timeout 释放
+    window._editorInnerInterval.length > 0 &&
+      window._editorInnerInterval.forEach((inner) => {
+        window.clearInterval(inner);
+      });
+    window._editorInnerTimeout.length > 0 &&
+      window._editorInnerTimeout.forEach((inner) => {
+        window.clearTimeout(inner);
+      });
+    // `let _refreshCssCode_ = document.getElementById("innerCssCode")||document.createElement("div");_refreshCssCode_.setAttribute('id','innerCssCode');_refreshCssCode_.innerHTML='';document.getElementById("root").appendChild(_refreshCssCode_);`;
+    const importCheckedCode = await doCheckImport(
+      `${refreshCode}${codeTxt}`,
+      "index_",
+      checkedFiles
+    );
+    // transform-react-jsx已处理部分名称替换，单文件需独自处理
+    let values = Array.from(mapSolute.values());
     const duplicateList = values.filter(
       (e) =>
         e.targetKey &&
@@ -195,24 +224,30 @@ export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
       // let testCode = `let offList=[];let okStrArr = importCheckedCode.matchAll(/${duplicateList[0].targetKey}.*/g);console.log([...okStrArr])`;
       // eval(testCode)
     }
-  } catch (error) {
-    console.log(error);
-  }
-  const output = transform(importCheckedCode, {
-    presets: ["env"],
-    plugins: [["transform-react-jsx"]],
-  }).code;
-  const afterCode = transform(output, {
-    presets: ["env"],
-    plugins: ["transConfound"],
-  }).code;
-  // console.log("afterCode ::: ", rustLib.getCompiledJSXCode(afterCode));
-  //获取编译后代码
-  let targetCode = rustLib.getCompiledJSXCode(
-    `${rewrite ? "isReWrite::__||" + afterCode : "isInit::__||" + afterCode}`
-  );
-  try {
+    const output = transform(importCheckedCode, {
+      presets: ["env"],
+      plugins: [["transform-react-jsx"]],
+    }).code;
+    const afterCode = transform(output, {
+      presets: ["env"],
+      plugins: ["transConfound"],
+    }).code;
+    // console.log("afterCode ::: ", rustLib.getCompiledJSXCode(afterCode));
+    //获取编译后代码
+    let targetCode = rustLib.getCompiledJSXCode(
+      `${rewrite ? "isReWrite::__||" + afterCode : "isInit::__||" + afterCode}`
+    );
     eval(targetCode);
+    // tbd： shadow root待切换
+    // setTimeout(() => {
+    //   console.log("reset in shadow");
+    //   let scode = rustLib.getCompiledShadowCode(
+    //     `${
+    //       rewrite ? "isReWrite::__||" + afterCode : "isInit::__||" + afterCode
+    //     }`
+    //   );
+    //   eval(scode);
+    // }, 3000);
   } catch (err) {
     console.log(err);
   }
@@ -250,9 +285,7 @@ export default {
 let currentDebounceInstance = null;
 class DebounceInsance {
   refreshTimer = null;
-  constructor() {
-    console.log(this.refreshTimer);
-  }
+  constructor() {}
 }
 // debounce
 export function doDebounceChange(time, fn) {
@@ -271,9 +304,7 @@ export function doDebounceChange(time, fn) {
 let currentTrottleInstance = null;
 class ThrottleInsance {
   needRefresh = true;
-  constructor() {
-    console.log(this.needRefresh);
-  }
+  constructor() {}
 }
 // trottle Main
 export function doThrottleChange(time, fn, ...args) {

@@ -9,7 +9,6 @@ function App() {
     
     document.body.appendChild(script);
     setTimeout(() => {
-      console.log(React.createElement("div", {}, "dadad"));
       window.app_MikaEdit.default.renderComponents(document.getElementById('target'))
       // const MikaM = window.app_MikaEdit.default;
       // const Elemet = React.createElement(MikaM, {});

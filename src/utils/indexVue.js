@@ -83,9 +83,9 @@ export const loadVueTemplate = (entryFile, templates, isupdate) => {
   !isupdate &&
     Promise.all([
       loadAsyncCdn("https://unpkg.com/vue@3.5.11/dist/vue.global.js"),
-      loadAsyncCdn(
-        "https://cdn.jsdelivr.net/npm/vue3-sfc-loader/dist/vue3-sfc-loader.js"
-      ),
+      // loadAsyncCdn(
+      //   "https://cdn.jsdelivr.net/npm/vue3-sfc-loader"
+      // ),
     ]).then((res) => {
       VueImportReplacement("app.vue", entryFile, templates).then((res) => {
         if (compiledFileObj["app.vue"]) {

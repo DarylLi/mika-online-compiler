@@ -23,3 +23,27 @@ export const loadAsyncCdn = (src) => {
     };
   });
 };
+
+export const renderShadowRoot = (contentObj) => {
+  // const container = shadowRootContainer.value;
+  // const container = document.getElementById('shadowRoot');
+  let shadowRoot = document.getElementById("shadowRootFrame");
+
+  if (!shadowRoot) {
+    const curShadowRoot = document.createElement("div");
+    curShadowRoot.setAttribute("id", "shadowRootFrame");
+    document.body.appendChild(curShadowRoot);
+    shadowRoot = curShadowRoot.attachShadow({ mode: "open" });
+    window.innerShadowRoot = shadowRoot;
+  } else {
+    shadowRoot.innerHTML = "";
+  }
+  // const style = document.createElement('style');
+  // style.type = 'text/css';
+  // style.appendChild(document.createTextNode(contentObj.cssContent));
+  // shadowRoot.appendChild(style);
+
+  const content = document.createElement("div");
+  content.innerHTML = `<div class="wasai">woopop<div>`;
+  // shadowRoot.appendChild(content);
+};

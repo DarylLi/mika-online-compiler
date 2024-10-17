@@ -87,6 +87,14 @@ path:'src',kind:'directory',children:[
     filename:'component.css',
     value:`.App-inner{background:#fbe2f0;font-size:12px}`,
     path:'component.css'
+  },{
+    filename:'component.scss',
+    value:`body{.App-inner{background:#fbe2f0;font-size:12px}}`,
+    path:'component.scss'
+  },{
+    filename:'component.less',
+    value:`body{.App-inner{background:#fbe2f0;font-size:12px}}`,
+    path:'component.less'
   }
 ]}]
   

@@ -13,7 +13,7 @@ function PageEntry() {
   const [stat, setStat] = useState(1);
   const [code, setCode] = useState('');
   const [percent, setPercent] = React.useState(0);
-
+  
   const editorDidMount = (editor, monaco) => {
     console.log('editorDidMount', editor);
     editor.focus();

@@ -5,6 +5,7 @@ const WebpackDevServer = require("webpack-dev-server");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const { RsdoctorWebpackPlugin } = require("@rsdoctor/webpack-plugin");
 
 const webpack = require("webpack");
 const config = {
@@ -94,10 +95,10 @@ const config = {
     new WasmPackPlugin({
       crateDirectory: path.resolve(__dirname, "."),
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: "server",
-      openAnalyzer: true,
-    }),
+    process.env.RSDOCTOR &&
+      new RsdoctorWebpackPlugin({
+        // 插件选项
+      }),
   ],
   resolve: {
     extensions: [".ts", ".js", ".tsx", ".jsx", ".wasm"],

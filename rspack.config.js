@@ -7,6 +7,7 @@ const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { defineConfig } = require("@rspack/cli");
 const terserPlugin = require("terser-webpack-plugin");
+const { RsdoctorRspackPlugin } = require("@rsdoctor/rspack-plugin");
 
 const config = defineConfig({
   mode: "development",
@@ -100,10 +101,14 @@ const config = defineConfig({
     new WasmPackPlugin({
       crateDirectory: path.resolve(__dirname, "."),
     }),
+    process.env.RSDOCTOR &&
+      new RsdoctorRspackPlugin({
+        // 插件选项
+      }),
   ],
   devServer: {
     open: true,
-    port: "9000",
+    port: "8888",
     allowedHosts: [
       "host.com",
       "subdomain.host.com",

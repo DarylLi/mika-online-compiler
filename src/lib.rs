@@ -49,10 +49,31 @@ fn get_after_compile_code(after_code: &str) -> String {
     }
     result_code
 }
+// 生成代码渲染至shadowroot
+fn get_after_compile_code_to_shadow(after_code: &str) -> String {
+    // 初始化及复写表示获取
+    let split_result: Vec<&str> = after_code.split("::__||").collect();
+    let code_type = split_result[0];
+    let code_content = split_result[1];
+    let mut result_code: String = String::from("");
+    if code_type == "isReWrite" {
+        // 复写代码编译内容
+        result_code =  format!("var exports={{}};const {{ useRef, useState }} = React;{};window.innerShadowRoot.innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','shadowRootContent');window.innerShadowRoot.appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(targetRoot);window._rootHandler.render(React.createElement(_default))",code_content);
+    } else {
+        // 初始化代码内容
+        result_code = format!("var exports={{}};const {{useRef, useState }} = React;{};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','shadowRootContent');window.innerShadowRoot.appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(targetRoot);window._rootHandler.render(React.createElement(_default));",code_content);
+    }
+    result_code
+}
 
 #[wasm_bindgen]
 pub fn getCompiledJSXCode(after_code: &str) -> String {
     String::from(get_after_compile_code(after_code))
+}
+
+#[wasm_bindgen]
+pub fn getCompiledShadowCode(after_code: &str) -> String {
+    String::from(get_after_compile_code_to_shadow(after_code))
 }
 
 // css文件编译代码
@@ -61,9 +82,20 @@ fn get_css_compiled_file(css_name: &str, css_file: &str) -> String {
     result_code
 }
 
+// css文件编译代码至shadow content
+fn get_css_compiled_file_shadow(css_name: &str, css_file: &str) -> String {
+    let result_code = format!("let {} = document.createElement('style');{}.innerText=`{}`;window.innerShadowRoot.appendChild({});",css_name,css_name,css_file,css_name);
+    result_code
+}
+
 #[wasm_bindgen]
 pub fn getCompiledCssCode(css_name: &str, css_file: &str) -> String {
     String::from(get_css_compiled_file(css_name, css_file))
+}
+
+#[wasm_bindgen]
+pub fn getCompiledCssCodeShadow(css_name: &str, css_file: &str) -> String {
+    String::from(get_css_compiled_file_shadow(css_name, css_file))
 }
 
 fn duplicate_check(dp_str: &str) -> String {

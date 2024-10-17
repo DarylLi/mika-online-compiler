@@ -76,6 +76,7 @@ function Layout() {
           <li className={`${curroute === 'vue' ? 'active' : ''}`} >
             <Link to="/vue" onClick={(e)=>toggleActive(e,'vue')}>Vue</Link>
           </li>
+          
         </ul>
       </nav>
 
@@ -84,30 +85,6 @@ function Layout() {
     <Outlet />
     </>
 
-  );
-}
-
-function Home() {
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
-}
-
-function About() {
-  return (
-    <div>
-      <h2>About</h2>
-    </div>
-  );
-}
-
-function Dashboard() {
-  return (
-    <div>
-      <h2>Dashboard</h2>
-    </div>
   );
 }
 
