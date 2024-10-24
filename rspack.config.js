@@ -77,6 +77,7 @@ const config = defineConfig({
       },
     ],
   },
+  devtool: false,
   plugins: [
     new HtmlWebpackPlugin({
       filename: "index.html",
@@ -101,6 +102,8 @@ const config = defineConfig({
     new WasmPackPlugin({
       crateDirectory: path.resolve(__dirname, "."),
     }),
+    // new rspack.SourceMapDevToolPlugin({
+    // }),
     process.env.RSDOCTOR &&
       new RsdoctorRspackPlugin({
         // 插件选项
@@ -117,8 +120,34 @@ const config = defineConfig({
     ],
   },
   optimization: {
+    splitChunks: {
+      chunks: "async",
+      minChunks: 1,
+      minSize: 20000,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+      name: "single",
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+          name: "vendor",
+        },
+        default: {
+          minChunks: 1,
+          priority: -20,
+          reuseExistingChunk: true,
+          name: "common",
+        },
+      },
+    },
     minimize: true,
-    minimizer: [new terserPlugin()],
+    minimizer: [
+      new terserPlugin({
+        extractComments: false,
+      }),
+    ],
   },
   resolve: {
     extensions: [".ts", ".js", ".tsx", ".jsx", ".wasm"],

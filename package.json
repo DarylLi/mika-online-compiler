@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node startdev.js",
     "build": "webpack --mode=production",
+    "build-clear": "NOTXT=true npm run build",
     "rspack-build": "rspack --mode=production",
     "rspack-dev": "rspack serve",
     "rspack-build-doctor": "RSDOCTOR=true npm run rspack-build",

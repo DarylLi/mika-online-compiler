@@ -1,8 +1,18 @@
 import { Routes, Route, Outlet, Link } from "react-router-dom";
-import EditorRoot from './editorRoot';
-import EditorRootVue from "./editorRootVue";
-import { useEffect, useState } from "react";
+// import EditorRoot from './editorRoot';
+// import EditorRootVue from "./editorRootVue";
+import { Suspense, useEffect, useState } from "react";
 import { createRef } from "react";
+
+const EditorRootVue = React.lazy(()=>import(
+  /* webpackChunkName: "cmpt_EditorRootVue" */
+  `./editorRootVue`
+))
+const EditorRoot = React.lazy(()=>import(
+  /* webpackChunkName: "cmpt_EditorRoot" */
+  `./editorRoot`
+))
+
 
 export default function App() {
   return (
@@ -12,8 +22,8 @@ export default function App() {
             parent route elements. See the note about <Outlet> below. */}
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<EditorRoot />} />
-          <Route path="vue" element={<EditorRootVue />} />
+          <Route index element={<Suspense fallback={<></>}><EditorRoot /></Suspense>} />
+          <Route path="vue" element={<Suspense fallback={<></>}><EditorRootVue /></Suspense>} />
           {/* Using path="*"" means "match anything", so this route
                 acts like a catch-all for URLs that we don't have explicit
                 routes for. */}

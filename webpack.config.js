@@ -6,8 +6,9 @@ const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const { RsdoctorWebpackPlugin } = require("@rsdoctor/webpack-plugin");
-
+const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
+
 const config = {
   mode: "development",
   // entry: [path.join(__dirname,'/src/main.js'),path.join(__dirname,'/src/extra.js'),path.join(__dirname,'/src/haha.js')],
@@ -125,14 +126,23 @@ const config = {
           test: /[\\/]node_modules[\\/]/,
           priority: -10,
           reuseExistingChunk: true,
+          name: "vendors",
         },
         default: {
-          minChunks: 2,
+          minChunks: 1,
           priority: -20,
           reuseExistingChunk: true,
+          name: "common",
         },
       },
     },
+    minimizer:
+      (process.env.NOTXT && [
+        new TerserPlugin({
+          extractComments: false,
+        }),
+      ]) ||
+      undefined,
   },
   experiments: {
     asyncWebAssembly: true,
