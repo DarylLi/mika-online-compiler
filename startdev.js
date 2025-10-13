@@ -5,6 +5,7 @@ const webpack = require("webpack");
 const webpackDevServer = require("webpack-dev-server");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
+const { VueLoaderPlugin } = require("vue-loader");
 
 const config = {
   mode: "development",
@@ -16,6 +17,7 @@ const config = {
     app: path.join(__dirname, "/src/app.jsx"),
   },
   plugins: [
+    new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "index.html",
@@ -90,13 +92,17 @@ const config = {
         },
       },
       {
+        test: /\.vue$/,
+        use: "vue-loader",
+      },
+      {
         test: path.resolve(__dirname, "node_modules/webpack-dev-server/client"),
         loader: "null-loader",
       },
     ],
   },
   resolve: {
-    extensions: [".ts", ".js", ".tsx", ".jsx", "wasm"],
+    extensions: [".ts", ".vue", ".js", ".tsx", ".jsx", "wasm"],
     alias: {
       "@components": path.resolve(__dirname, "src/components/"),
       "@mock": path.resolve(__dirname, "src/mock/"),

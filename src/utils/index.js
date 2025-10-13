@@ -6,20 +6,7 @@ window.useState = useState;
 var transferMap = new Map();
 let replaceMaps = new Map();
 let mapSolute = new Map();
-// rust 实例引用
-let rustInstance = null;
-// rust lib
-let rustLib = null;
 
-const renderRustLib = () => {
-  if (!rustInstance) {
-    rustInstance = import("@pkg");
-    rustInstance.then((result) => {
-      rustLib = result;
-    });
-  }
-};
-renderRustLib();
 const matchFileName = (fileTrees, name) => {
   let result = null;
   //   匹配目录名称相符的第一个文件
@@ -38,32 +25,9 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
     presets: ["env"],
     plugins: [["transform-react-jsx"], ["confound", { prefix: nameprefix }]],
   }).code;
-  // jsx文件import 检索
+  // 文件import 检索
   let resultArr = [...result.matchAll(/import.*from.*;/g)];
-  // css 文件import检索
-  let cssArr = [...result.matchAll(/import.*(.css)("|');/g)];
-  // 替换import css内容为相应代码段
-  cssArr.length > 0 &&
-    cssArr.forEach((css, index) => {
-      let importTarget = css[0].split("import")[0].trim();
-      let matchedName = matchFileName(checkedFile, css[0]);
-      let fileInfo = matchedName;
-      let parseCode = "";
-      // css文件名匹配后操作
-      if (fileInfo) {
-        // 引用代码文件输出内容名称混淆处理
-        let cssFile = fileInfo.value.replace(/};/g, "}");
-        let curName = `__${fileInfo.filename}__`.replace(
-          ".",
-          `PName${new Date().getTime()}_`
-        );
-
-        // parseCode = `let ${curName} = document.createElement("style");${curName}.innerText=\`${cssFile}\`;document.getElementById("innerCssCode").appendChild(${curName});`;
-        parseCode = rustLib.getCompiledCssCode(curName, cssFile);
-      }
-      result = result.replace(css[0], parseCode);
-    });
-  // 替换import jsx内容为相应代码段
+  // 替换import内容为相应代码段
   resultArr.length > 0 &&
     resultArr.forEach((mr, index) => {
       let matchedName = matchFileName(checkedFile, mr[0]);
@@ -76,8 +40,7 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
         // 对代码段内容进行同等替换检索
         let replaceCode = doCheckImport(
           extraFile,
-          `${nameprefix}${fileInfo.filename.split(".")[0]}_`,
-          checkedFile
+          `${nameprefix}${fileInfo.filename.split(".")[0]}_`
         );
         // 引用文件相应对象变量名替换
         let importTarget = mr[0].replace("import", "").split("from")[0].trim();
@@ -118,7 +81,7 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
       plugins: ["transFileConfound"],
     }).code;
   } catch (error) {
-    console.log(`解析出错`, error);
+    console.log(`引入文件变量名重复`);
   }
   return result;
 };
@@ -167,15 +130,7 @@ registerPlugin("transConfound", transConfound);
 registerPlugin("transFileConfound", transFileConfound);
 
 export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
-  // css引入前置标签刷新
-
-  let refreshCode = rustLib.getCompiledCode("refresh_css");
-  // `let _refreshCssCode_ = document.getElementById("innerCssCode")||document.createElement("div");_refreshCssCode_.setAttribute('id','innerCssCode');_refreshCssCode_.innerHTML='';document.getElementById("root").appendChild(_refreshCssCode_);`;
-  const importCheckedCode = doCheckImport(
-    `${refreshCode}${codeTxt}`,
-    "index_",
-    checkedFiles
-  );
+  const importCheckedCode = doCheckImport(codeTxt, "index_", checkedFiles);
   // transform-react-jsx已处理部分名称替换，单文件需独自处理
   let values = Array.from(mapSolute.values());
   try {
@@ -185,9 +140,9 @@ export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
         values.map((w) => w.targetKey).filter((inner) => inner === e.targetKey)
           .length > 1
     );
-    // 引入文件重名检测
+    // console.log(duplicateList)
     if (duplicateList.length > 1) {
-      let reCode = `let offList=[];let doDuplicateStr = importCheckedCode.replace(/${duplicateList[0].targetKey}.*()/g,(match,offset)=>{match.includes('()')&&offList.push(match);return 'D_'+offList.length+'_'+match});importCheckedCode=doDuplicateStr`;
+      let reCode = `let offList=[];let doDuplicateStr = importCheckedCode.replace(/${duplicateList[0].targetKey}.*()/g,(match,offset)=>{console.log('....',match,offset);match.includes('()')&&offList.push(match);console.log(offList.length);return 'D_'+offList.length+'_'+match});importCheckedCode=doDuplicateStr`;
       // console.log(reCode)
       eval(reCode);
       // let testCode = `let offList=[];let okStrArr = importCheckedCode.matchAll(/${duplicateList[0].targetKey}.*/g);console.log([...okStrArr])`;
@@ -205,23 +160,13 @@ export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
     presets: ["env"],
     plugins: ["transConfound"],
   }).code;
-  // console.log("afterCode ::: ", rustLib.getCompiledJSXCode(afterCode));
-  //获取编译后代码
-  let targetCode = rustLib.getCompiledJSXCode(
-    `${rewrite ? "isReWrite::__||" + afterCode : "isInit::__||" + afterCode}`
-  );
-  try {
-    eval(targetCode);
-    // rewrite
-    //   ? eval(
-    //       `var exports={};const { useRef, useState } = React;${afterCode};document.getElementById('previewFrame').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default))`
-    //     )
-    //   : eval(
-    //       `var exports={};const { useRef, useState } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewContent'));window._rootHandler.render(React.createElement(_default));`
-    //     );
-  } catch (err) {
-    console.log(err);
-  }
+  rewrite
+    ? eval(
+        `var exports={};const {Button, Pagination, Card} = antd; const { useRef, useState } = React;${afterCode};document.getElementById('previewFrame').shadowRoot.querySelector('body').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default))`
+      )
+    : eval(
+        `var exports={};const {Button, Pagination, Card} = antd; const { useRef, useState } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default));`
+      );
 };
 
 export const getFileContent = (files, path) => {
@@ -251,47 +196,3 @@ export const replaceFileContent = (files, path, txt) => {
 export default {
   getCodeTransform,
 };
-
-// debounce单例注册
-let currentDebounceInstance = null;
-class DebounceInsance {
-  refreshTimer = null;
-  constructor() {
-    console.log(this.refreshTimer);
-  }
-}
-// debounce
-export function doDebounceChange(time, fn) {
-  if (!currentDebounceInstance) currentDebounceInstance = new DebounceInsance();
-  return function () {
-    clearTimeout(currentDebounceInstance.refreshTimer);
-    // currentDebounceInstance.refreshTimer = null;
-    let args = Array.from(arguments);
-    currentDebounceInstance.refreshTimer = setTimeout(() => {
-      fn.apply(this, args);
-    }, time);
-  };
-}
-
-// throttle单例注册
-let currentTrottleInstance = null;
-class ThrottleInsance {
-  needRefresh = true;
-  constructor() {
-    console.log(this.needRefresh);
-  }
-}
-// trottle Main
-export function doThrottleChange(time, fn, ...args) {
-  if (!currentTrottleInstance) currentTrottleInstance = new ThrottleInsance();
-  return function () {
-    let totalArgs = [...args, ...Array.from(arguments)];
-    if (currentTrottleInstance.needRefresh === true) {
-      setTimeout(() => {
-        currentTrottleInstance.needRefresh = true;
-      }, time);
-      currentTrottleInstance.needRefresh = false;
-      fn.apply(this, totalArgs);
-    }
-  };
-}

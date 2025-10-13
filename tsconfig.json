@@ -15,7 +15,6 @@
     "isolatedModules": true,
     "experimentalDecorators": true,
     "noEmit": false,
-    "noImplicitThis": false,
     "jsx": "react-jsx",
     "paths": {
       "@mock/*": ["src/mock/*"],

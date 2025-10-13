@@ -68,14 +68,6 @@ path:'src',kind:'directory',children:[
       }
     export default ExtraB`,
     path:'extraB.jsx'
-  },{
-    filename:'main.css',
-    value:`.App-header{background:#dedede;font-size:28px}`,
-    path:'main.css'
-  },{
-    filename:'component.css',
-    value:`.App-inner{background:#fbe2f0;font-size:12px}`,
-    path:'component.css'
   }
 ]}]
   

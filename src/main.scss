@@ -1,37 +1,104 @@
-html, body,#root{
+html,body,#root{
+    margin: 0px;
     height: 100%;
-    margin: 0px !important;
+    background: radial-gradient(
+      1200px 600px at 70% -10%,
+      #1b2230 0%,
+      #0b0e13 60%
+    )
+    no-repeat;
+}
+#root{
+    overflow: hidden;
 }
 .App{
-    height: inherit;
     display: flex;
     justify-content: flex-start;
-    background: #fbe2f0;
-    padding: 15px;
+    background: transparent;
     box-sizing: border-box;
+    padding: 15px;
+    height: 100%;
     .ant-tree{
         background-color: #fff0;
     }
     .mika-mona-left-dir{
         width: 220px;
-        height: 100%;
-        margin-right: 15px;
-        background-color: #d6e0f9;
+        margin-right: 5px;
+        background: #242424;
+        border-right: 1px solid #dedede3b;
+        border-radius: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6666666667), inset 0 1px 0 rgba(255, 255, 255, 0.0705882353);
     }
     .mika-mona-center-editor{
+        border-radius: 10px;
+        background: linear-gradient(#0d1116, #0b0e13);
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6666666667), inset 0 1px 0 rgba(255, 255, 255, 0.0705882353);
         flex: 1;
+        overflow: hidden;
+        .monac-load{
+            color:#fff;
+        }
     }
     .mika-mona-right-view{
         width: 400px;
         margin-left: 10px;
         background-color: #fff;
-        border-radius: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        max-height: calc(100% - 66px);
+        overflow: auto;
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.6666666667), inset 0 1px 0 rgba(255, 255, 255, 0.0705882353);
         iframe{
             width: 100%;
             height: 100%;
         }
     }
+    .mika-mona-left-dir,.mika-mona-center-editor{
+        max-height: calc(100% - 66px);
+    }
+    .mika-mona-center-editor{
+        padding-bottom: 20px;
+    }
+    .ant-tree-list-holder-inner{
+        color:#fff;
+    }
+    .ant-tree-node-selected{
+        background-color: #DFF976!important;
+        color: #000;
+    }
 }
+.title-nav-header{
+    display: block;
+    width: 100%;
+    a{
+        position: absolute;
+        top: 14px;
+        color: #fff;
+        left: 372px;
+        &:first-child{
+            left: 372px;
+        }
+        &:nth-child(2){
+            left: 246px;
+        }
+    }
+    a.active{
+        color: #DFF976;
+        border: 0px solid #0b0e13;
+    }
+}
+.title-header{
+        font-size: 18px;
+        text-align: left;
+        color: #fff;
+        background: transparent;
+        font-weight: 600;
+        border-bottom: 1px solid #dedede45;
+        padding: 10px;
+        padding-left:20px;
+    }
 .mika-out-log-content{
     height: 400px;
     overflow-y: auto;

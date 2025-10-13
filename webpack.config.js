@@ -4,7 +4,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const WebpackDevServer = require("webpack-dev-server");
 const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
-
+const { VueLoaderPlugin } = require("vue-loader");
 const webpack = require("webpack");
 const config = {
   mode: "development",
@@ -70,9 +70,14 @@ const config = {
         test: path.resolve(__dirname, "node_modules/webpack-dev-server/client"),
         loader: "null-loader",
       },
+      {
+        test: /\.vue$/,
+        use: "vue-loader",
+      },
     ],
   },
   plugins: [
+    new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "index.html",
@@ -94,7 +99,7 @@ const config = {
     }),
   ],
   resolve: {
-    extensions: [".ts", ".js", ".tsx", ".jsx", ".wasm"],
+    extensions: [".vue", ".ts", ".js", ".tsx", ".jsx", ".wasm"],
     alias: {
       "@components": path.resolve(__dirname, "src/components/"),
       "@mock": path.resolve(__dirname, "src/mock/"),
