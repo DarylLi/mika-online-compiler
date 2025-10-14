@@ -10,7 +10,6 @@ Mika Online Compiler 是一个基于前端渲染的在线代码编辑器，支�
 
 - **React 支持**: 完整的 React 18 开发环境，支持 JSX 语法
 - **Vue 支持**: Vue 3 单文件组件 (SFC) 支持，包含 template、script、style 块
-- **TypeScript**: 支持 TypeScript 和 TSX 文件类型
 
 ### 🎨 UI 组件库集成
 
@@ -34,7 +33,6 @@ Mika Online Compiler 是一个基于前端渲染的在线代码编辑器，支�
 ### 📁 文件管理
 
 - **文件树**: 可视化的文件目录结构
-- **多文件编辑**: 支持同时编辑多个文件
 - **文件操作**: 创建、删除、重命名文件功能
 - **本地存储**: 使用 IndexedDB 持久化保存项目数据
 
@@ -47,13 +45,12 @@ Mika Online Compiler 是一个基于前端渲染的在线代码编辑器，支�
 - **Monaco Editor**: 代码编辑器
 - **Webpack 5**: 模块打包工具
 - **Babel**: JavaScript 编译器
-- **Vue Loader**: Vue 单文件组件加载器
+- **Vue-SFC-Loader**: Vue 单文件组件加载器
 
 ### 核心功能实现
 
 - **代码转换**: 使用 Babel Standalone 进行实时代码转换
 - **模块解析**: 自定义模块解析器处理文件依赖
-- **沙箱执行**: 通过 eval 和 Shadow DOM 实现安全的代码执行环境
 - **组件热更新**: 动态卸载和重新挂载组件实现热更新
 
 ## 项目结构
