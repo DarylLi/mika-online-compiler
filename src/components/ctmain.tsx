@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 // import MonacoEditor from "react-monaco-editor";
-import MonacoEditor from "@monaco-editor/react";
-import { editStore } from "@store/index";
-import { observer } from "mobx-react-lite";
-import { getCodeTransform, getFileContent } from "@utils/index";
-import { parseVue } from "@utils/parseVue";
-import { updateData } from "@utils/indexDb";
-import { toJS } from "mobx";
+import MonacoEditor from '@monaco-editor/react';
+import { editStore } from '@store/index';
+import { observer } from 'mobx-react-lite';
+import { getCodeTransform, getFileContent } from '@utils/index';
+import { parseVue } from '@utils/parseVue';
+import { updateData } from '@utils/indexDb';
+import { toJS } from 'mobx';
 function MainEditor(props: any) {
-  const { cpType = "react" } = props;
+  const { cpType = 'react' } = props;
   // let cursocket: any = null;
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState('');
   const cursocket: any = useRef(null);
   // const [cursocket, setCurSocket] = useState(null as any);
   const editorDidMount = (editor: any, monaco: any) => {
@@ -21,28 +21,28 @@ function MainEditor(props: any) {
     //   info?.node?.path,
     //   info?.node?.value
     editStore.replaceFileContent(newValue);
-    editStore.updateCode(newValue || "");
+    editStore.updateCode(newValue || '');
     // 更新入口文件
     let currentFile = getFileContent(
       editStore.currentFiles,
-      cpType === "react" ? "src/app.jsx" : "src/App.vue"
+      cpType === 'react' ? 'src/app.jsx' : 'src/App.vue'
     );
     // 重新编译入口文件
-    cpType === "react"
-      ? getCodeTransform(currentFile || "", editStore.currentFiles, true)
+    cpType === 'react'
+      ? getCodeTransform(currentFile || '', editStore.currentFiles, true)
       : parseVue(
-          currentFile || "",
+          currentFile || '',
           JSON.parse(JSON.stringify(editStore.currentFiles)),
           true
         );
     const changedData = {
-      id: "daryl",
-      name: "daryl",
+      id: 'daryl',
+      name: 'daryl',
       templates: toJS(editStore.currentFiles),
     };
     updateData(
       (editStore as any).currentIndexDBInstance.db,
-      cpType === "react" ? "mika-templates" : "mika-vue-templates",
+      cpType === 'react' ? 'mika-templates' : 'mika-vue-templates',
       changedData
     );
   };
@@ -51,36 +51,36 @@ function MainEditor(props: any) {
   };
   const mdOption = {
     acceptSuggestionOnCommitCharacter: true,
-    acceptSuggestionOnEnter: "on",
-    accessibilitySupport: "auto",
+    acceptSuggestionOnEnter: 'on',
+    accessibilitySupport: 'auto',
     accessibilityPageSize: 10,
-    ariaLabel: "Editor content",
+    ariaLabel: 'Editor content',
     ariaRequired: false,
     screenReaderAnnounceInlineSuggestion: true,
-    autoClosingBrackets: "languageDefined",
-    autoClosingComments: "languageDefined",
-    autoClosingDelete: "auto",
-    autoClosingOvertype: "auto",
-    autoClosingQuotes: "languageDefined",
-    autoIndent: "full",
-    autoSurround: "languageDefined",
+    autoClosingBrackets: 'languageDefined',
+    autoClosingComments: 'languageDefined',
+    autoClosingDelete: 'auto',
+    autoClosingOvertype: 'auto',
+    autoClosingQuotes: 'languageDefined',
+    autoIndent: 'full',
+    autoSurround: 'languageDefined',
     bracketPairColorization: {
       enabled: true,
       independentColorPoolPerBracketType: false,
     },
     bracketPairGuides: {
       bracketPairs: false,
-      bracketPairsHorizontal: "active",
+      bracketPairsHorizontal: 'active',
       highlightActiveBracketPair: true,
       indentation: true,
       highlightActiveIndentation: true,
     },
     stickyTabStops: false,
     codeLens: true,
-    codeLensFontFamily: "",
+    codeLensFontFamily: '',
     codeLensFontSize: 0,
     colorDecorators: true,
-    colorDecoratorActivatedOn: "clickAndHover",
+    colorDecoratorActivatedOn: 'clickAndHover',
     colorDecoratorsLimit: 500,
     columnSelection: false,
     comments: {
@@ -89,11 +89,11 @@ function MainEditor(props: any) {
     },
     contextmenu: true,
     copyWithSyntaxHighlighting: true,
-    cursorBlinking: "blink",
-    cursorSmoothCaretAnimation: "off",
-    cursorStyle: "line",
+    cursorBlinking: 'blink',
+    cursorSmoothCaretAnimation: 'off',
+    cursorStyle: 'line',
     cursorSurroundingLines: 0,
-    cursorSurroundingLinesStyle: "default",
+    cursorSurroundingLinesStyle: 'default',
     cursorWidth: 0,
     disableLayerHinting: false,
     disableMonospaceOptimizations: false,
@@ -102,28 +102,28 @@ function MainEditor(props: any) {
     emptySelectionClipboard: true,
     dropIntoEditor: {
       enabled: true,
-      showDropSelector: "afterDrop",
+      showDropSelector: 'afterDrop',
     },
     stickyScroll: {
       enabled: true,
       maxLineCount: 5,
-      defaultModel: "outlineModel",
+      defaultModel: 'outlineModel',
       scrollWithEditor: true,
     },
-    experimentalWhitespaceRendering: "svg",
-    extraEditorClassName: "",
+    experimentalWhitespaceRendering: 'svg',
+    extraEditorClassName: '',
     fastScrollSensitivity: 5,
     find: {
       cursorMoveOnType: true,
-      seedSearchStringFromSelection: "always",
-      autoFindInSelection: "never",
+      seedSearchStringFromSelection: 'always',
+      autoFindInSelection: 'never',
       globalFindClipboard: false,
       addExtraSpaceOnTop: true,
       loop: true,
     },
     fixedOverflowWidgets: false,
     folding: true,
-    foldingStrategy: "auto",
+    foldingStrategy: 'auto',
     foldingHighlight: true,
     foldingImportsByDefault: false,
     foldingMaximumRegions: 5000,
@@ -131,23 +131,23 @@ function MainEditor(props: any) {
     fontFamily: "Menlo, Monaco, 'Courier New', monospace",
     fontLigatures2: false,
     fontSize: 12,
-    fontWeight: "normal",
+    fontWeight: 'normal',
     fontVariations: false,
     formatOnPaste: false,
     formatOnType: false,
     glyphMargin: true,
     gotoLocation: {
       multiple: null,
-      multipleDefinitions: "peek",
-      multipleTypeDefinitions: "peek",
-      multipleDeclarations: "peek",
-      multipleImplementations: "peek",
-      multipleReferences: "peek",
-      alternativeDefinitionCommand: "editor.action.goToReferences",
-      alternativeTypeDefinitionCommand: "editor.action.goToReferences",
-      alternativeDeclarationCommand: "editor.action.goToReferences",
-      alternativeImplementationCommand: "",
-      alternativeReferenceCommand: "",
+      multipleDefinitions: 'peek',
+      multipleTypeDefinitions: 'peek',
+      multipleDeclarations: 'peek',
+      multipleImplementations: 'peek',
+      multipleReferences: 'peek',
+      alternativeDefinitionCommand: 'editor.action.goToReferences',
+      alternativeTypeDefinitionCommand: 'editor.action.goToReferences',
+      alternativeDeclarationCommand: 'editor.action.goToReferences',
+      alternativeImplementationCommand: '',
+      alternativeReferenceCommand: '',
     },
     hideCursorInOverviewRuler: false,
     hover: {
@@ -160,21 +160,21 @@ function MainEditor(props: any) {
     inDiffEditor: false,
     letterSpacing: 0,
     lightbulb: {
-      enabled: "onCode",
+      enabled: 'onCode',
     },
     lineDecorationsWidth: 10,
     lineHeight: 0,
-    lineNumbers: "on",
+    lineNumbers: 'on',
     lineNumbersMinChars: 5,
     linkedEditing: false,
     links: true,
-    matchBrackets: "always",
+    matchBrackets: 'always',
     minimap: {
       enabled: true,
       autohide: false,
-      size: "proportional",
-      side: "right",
-      showSlider: "mouseover",
+      size: 'proportional',
+      side: 'right',
+      showSlider: 'mouseover',
       scale: 1,
       renderCharacters: true,
       maxColumn: 120,
@@ -183,14 +183,14 @@ function MainEditor(props: any) {
       sectionHeaderFontSize: 9,
       sectionHeaderLetterSpacing: 1,
     },
-    mouseStyle: "text",
+    mouseStyle: 'text',
     mouseWheelScrollSensitivity: 1,
     mouseWheelZoom: false,
     multiCursorMergeOverlapping: true,
-    multiCursorModifier: "alt",
-    multiCursorPaste: "spread",
+    multiCursorModifier: 'alt',
+    multiCursorPaste: 'spread',
     multiCursorLimit: 10000,
-    occurrencesHighlight: "singleFile",
+    occurrencesHighlight: 'singleFile',
     overviewRulerBorder: true,
     overviewRulerLanes: 2,
     padding: {
@@ -199,34 +199,34 @@ function MainEditor(props: any) {
     },
     pasteAs: {
       enabled: true,
-      showPasteSelector: "afterPaste",
+      showPasteSelector: 'afterPaste',
     },
     parameterHints: {
       enabled: true,
       cycle: true,
     },
-    peekWidgetDefaultFocus: "tree",
+    peekWidgetDefaultFocus: 'tree',
     definitionLinkOpensInPeek: false,
     quickSuggestions: {
-      other: "on",
-      comments: "off",
-      strings: "off",
+      other: 'on',
+      comments: 'off',
+      strings: 'off',
     },
     quickSuggestionsDelay: 10,
     readOnly: false,
     renameOnType: false,
     renderControlCharacters: true,
-    renderFinalNewline: "on",
-    renderLineHighlight: "line",
+    renderFinalNewline: 'on',
+    renderLineHighlight: 'line',
     renderLineHighlightOnlyWhenFocus: false,
-    renderValidationDecorations: "editable",
-    renderWhitespace: "selection",
+    renderValidationDecorations: 'editable',
+    renderWhitespace: 'selection',
     revealHorizontalRightPadding: 15,
     roundedSelection: true,
     rulers: [],
     scrollbar: {
-      vertical: "auto",
-      horizontal: "auto",
+      vertical: 'auto',
+      horizontal: 'auto',
       verticalScrollbarSize: 14,
       horizontalScrollbarSize: 12,
       scrollByPage: false,
@@ -238,16 +238,16 @@ function MainEditor(props: any) {
     selectionClipboard: true,
     selectionHighlight: true,
     selectOnLineNumbers: true,
-    showFoldingControls: "mouseover",
+    showFoldingControls: 'mouseover',
     showUnused: true,
     showDeprecated: true,
     inlayHints: {
-      enabled: "on",
+      enabled: 'on',
       fontSize: 0,
-      fontFamily: "",
+      fontFamily: '',
       padding: false,
     },
-    snippetSuggestions: "inline",
+    snippetSuggestions: 'inline',
     smartSelect: {
       selectLeadingAndTrailingWhitespace: true,
       selectSubwords: true,
@@ -255,11 +255,11 @@ function MainEditor(props: any) {
     smoothScrolling: false,
     stopRenderingLineAfter: 10000,
     suggest: {
-      insertMode: "insert",
+      insertMode: 'insert',
       filterGraceful: true,
       localityBonus: false,
       shareSuggestSelections: false,
-      selectionMode: "always",
+      selectionMode: 'always',
       snippetsPreventQuickSuggestions: false,
       showIcons: true,
       showStatusBar: false,
@@ -300,27 +300,27 @@ function MainEditor(props: any) {
     },
     inlineSuggest: {
       enabled: true,
-      showToolbar: "onHover",
+      showToolbar: 'onHover',
       suppressSuggestions: false,
-      fontFamily: "default",
+      fontFamily: 'default',
     },
     inlineEdit: {
       enabled: false,
-      showToolbar: "onHover",
-      fontFamily: "default",
+      showToolbar: 'onHover',
+      fontFamily: 'default',
     },
     inlineCompletionsAccessibilityVerbose: false,
     suggestFontSize: 0,
     suggestLineHeight: 0,
     suggestOnTriggerCharacters: true,
-    suggestSelection: "first",
-    tabCompletion: "off",
+    suggestSelection: 'first',
+    tabCompletion: 'off',
     tabIndex: 0,
     unicodeHighlight: {
-      nonBasicASCII: "inUntrustedWorkspace",
+      nonBasicASCII: 'inUntrustedWorkspace',
       invisibleCharacters: true,
       ambiguousCharacters: true,
-      includeComments: "inUntrustedWorkspace",
+      includeComments: 'inUntrustedWorkspace',
       includeStrings: true,
       allowedCharacters: {},
       allowedLocales: {
@@ -328,38 +328,38 @@ function MainEditor(props: any) {
         _vscode: true,
       },
     },
-    unusualLineTerminators: "prompt",
+    unusualLineTerminators: 'prompt',
     useShadowDOM: true,
     useTabStops: true,
-    wordBreak: "normal",
+    wordBreak: 'normal',
     wordSegmenterLocales: [],
-    wordSeparators: "`~!@#$%^&*()-=+[{]}\\|;:'\",.<>/?",
-    wordWrap: "off",
+    wordSeparators: '`~!@#$%^&*()-=+[{]}\\|;:\'",.<>/?',
+    wordWrap: 'off',
     wordWrapBreakAfterCharacters:
-      " \t})]?|/&.,;¢°′″‰℃、。｡､￠，．：；？！％・･ゝゞヽヾーァィゥェォッャュョヮヵヶぁぃぅぇぉっゃゅょゎゕゖㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ々〻ｧｨｩｪｫｬｭｮｯｰ”〉》」』】〕）］｝｣",
-    wordWrapBreakBeforeCharacters: "([{‘“〈《「『【〔（［｛｢£¥＄￡￥+＋",
+      ' \t})]?|/&.,;¢°′″‰℃、。｡､￠，．：；？！％・･ゝゞヽヾーァィゥェォッャュョヮヵヶぁぃぅぇぉっゃゅょゎゕゖㇰㇱㇲㇳㇴㇵㇶㇷㇸㇹㇺㇻㇼㇽㇾㇿ々〻ｧｨｩｪｫｬｭｮｯｰ”〉》」』】〕）］｝｣',
+    wordWrapBreakBeforeCharacters: '([{‘“〈《「『【〔（［｛｢£¥＄￡￥+＋',
     wordWrapColumn: 80,
-    wordWrapOverride1: "inherit",
-    wordWrapOverride2: "inherit",
+    wordWrapOverride1: 'inherit',
+    wordWrapOverride2: 'inherit',
     defaultColorDecorators: false,
     tabFocusMode: false,
     wrappingIndent: {
-      wrappingIndent: "same",
+      wrappingIndent: 'same',
     },
     wrappingStrategy: {
-      wrappingStrategy: "simple",
+      wrappingStrategy: 'simple',
     },
   };
   return (
-    <div className="mika-mona-center-editor">
+    <div className='mika-mona-center-editor'>
       {editStore.code && (
         <MonacoEditor
-          height="calc(100vh - 66px)"
-          language={cpType === "react" ? "javascript" : "markdown"}
-          theme="vs-dark"
+          height='calc(100vh - 66px)'
+          language={cpType === 'react' ? 'javascript' : 'markdown'}
+          theme='vs-dark'
           value={editStore.code}
           options={mdOption as any}
-          loading={<div className="monac-load">编辑器加载中..</div>}
+          loading={<div className='monac-load'>编辑器加载中..</div>}
           onChange={onChange}
           onMount={editorDidMount}
         ></MonacoEditor>

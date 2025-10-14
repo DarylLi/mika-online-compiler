@@ -1,10 +1,10 @@
-import { observer } from "mobx-react";
-import React, { PureComponent, createRef } from "react";
-import { editStore } from "@store/index";
-import { getCodeTransform } from "@utils/index";
-import { Button, Modal } from "antd";
-import axios from "axios";
-import CryproJs from "crypto-js";
+import { observer } from 'mobx-react';
+import React, { PureComponent, createRef } from 'react';
+import { editStore } from '@store/index';
+import { getCodeTransform } from '@utils/index';
+import { Button, Modal } from 'antd';
+import axios from 'axios';
+import CryproJs from 'crypto-js';
 
 @observer
 class EditLog extends PureComponent<any, any> {
@@ -71,25 +71,25 @@ class EditLog extends PureComponent<any, any> {
     };
     const { showLog, logPanelRef } = this.state;
     const classNames = {
-      header: "mika-log-header",
-      body: "mika-log-body",
+      header: 'mika-log-header',
+      body: 'mika-log-body',
     };
     return (
       <span>
         <Button onClick={getSave}>save</Button>
         <Button onClick={this.switchLog}>
-          {showLog ? "hide console" : "show console"}
+          {showLog ? 'hide console' : 'show console'}
         </Button>
         <Modal
-          title="compileLog"
+          title='compileLog'
           open={showLog}
           onOk={hideModal}
           onCancel={hideModal}
-          okText="确认"
+          okText='确认'
           classNames={classNames}
-          cancelText="取消"
+          cancelText='取消'
         >
-          <div className="mika-out-log-content" ref={this.state.logPanelRef}>
+          <div className='mika-out-log-content' ref={this.state.logPanelRef}>
             {editStore.logMsg.map((e, i) => (
               <p key={e.msg + i} className={e.status}>
                 {e.msg}

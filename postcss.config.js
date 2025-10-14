@@ -1,6 +1,5 @@
-
 module.exports = {
   plugins: [
-    require('autoprefixer') // 引用autoprefixer模块
-  ]
-}
+    require('autoprefixer'), // 引用autoprefixer模块
+  ],
+};

@@ -7,10 +7,9 @@ import RouteCmpt from './router/route';
 import BabelCmp from './babelCmp';
 import SFCCmpt from './sfcLoader';
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    // <SFCCmpt/>
-    // <PageEntry/>
-    <RouteCmpt/>
+  // <SFCCmpt/>
+  // <PageEntry/>
+  <RouteCmpt />
 );

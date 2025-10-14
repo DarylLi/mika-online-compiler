@@ -2,10 +2,10 @@
 export default {
   methods: {
     goToAbout() {
-      this.$router.push('/about')
+      this.$router.push('/about');
     },
   },
-}
+};
 </script>
 
 <template>

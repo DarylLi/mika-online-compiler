@@ -1,19 +1,23 @@
-export const templates : any = [{filename:'src',
-value:'',
-path:'src',kind:'directory',children:[
-  // {
-  //   filename:'utils.js',
-  //   path:'src/utils.js',
-  //   value:`
-  //       export const getA = () => {};
-  //       const getB = () => {};
-  //       const getC = () => {};
-  //       export default { getA, getB, getC };
-  //   `,
-  // },
+export const templates: any = [
   {
-    filename:'app.jsx',
-    value:`    import A from './extraA.jsx';
+    filename: 'src',
+    value: '',
+    path: 'src',
+    kind: 'directory',
+    children: [
+      // {
+      //   filename:'utils.js',
+      //   path:'src/utils.js',
+      //   value:`
+      //       export const getA = () => {};
+      //       const getB = () => {};
+      //       const getC = () => {};
+      //       export default { getA, getB, getC };
+      //   `,
+      // },
+      {
+        filename: 'app.jsx',
+        value: `    import A from './extraA.jsx';
     import B from './extraB.jsx';
   
     function App() {
@@ -30,10 +34,11 @@ path:'src',kind:'directory',children:[
         );
       }
     export default App;`,
-    path:'src/app.jsx'
-  },{
-    filename:'extraA.jsx',
-    value:`   function ExtraA() {
+        path: 'src/app.jsx',
+      },
+      {
+        filename: 'extraA.jsx',
+        value: `   function ExtraA() {
       const [txt,setTxt] = useState(0)
       const getCall = ()=>{alert('change text!');setTxt(txt+1)}
       return (
@@ -56,10 +61,11 @@ path:'src',kind:'directory',children:[
       );
     }
   export default ExtraA`,
-    path:'src/extraA.jsx'
-  },{
-    filename:'extraB.jsx',
-    value:`   function ExtraB() {
+        path: 'src/extraA.jsx',
+      },
+      {
+        filename: 'extraB.jsx',
+        value: `   function ExtraB() {
         const [txt,setTxt] = useState(0)
         const getCall = ()=>{alert('wasai');setTxt(txt+1)}
         return (
@@ -67,7 +73,8 @@ path:'src',kind:'directory',children:[
         );
       }
     export default ExtraB`,
-    path:'extraB.jsx'
-  }
-]}]
-  
+        path: 'extraB.jsx',
+      },
+    ],
+  },
+];

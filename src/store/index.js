@@ -1,23 +1,23 @@
-import { makeAutoObservable } from "mobx";
-import { replaceFileContent } from "@utils/index";
+import { makeAutoObservable } from 'mobx';
+import { replaceFileContent } from '@utils/index';
 
 class EditorStore {
   // curTemplate = "createReactDemo";
   // curType = "create-react-demo-tmp";
   currentIndexDBInstance = null;
   currentFiles = [];
-  curTemplate = "rustUmi";
-  curType = "rust-umi-generate";
-  curStatic = "dist";
+  curTemplate = 'rustUmi';
+  curType = 'rust-umi-generate';
+  curStatic = 'dist';
   fileInfo = undefined;
-  code = "";
+  code = '';
   socket = null;
   showView = false;
   showSpin = false;
   logPanelRef = null;
   logMsg = [];
   viewSrc = `editorTarget/${this.curTemplate}/${this.curType}/${
-    this.curStatic || "dist"
+    this.curStatic || 'dist'
   }/index.html`;
 
   constructor() {
