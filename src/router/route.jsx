@@ -26,7 +26,8 @@ export default function RouteCmpt() {
               e.stopPropagation();
             }
           }}
-          to={`${pathname.endsWith('/') ? curRelativePath.replace(/\/$/, '') : curRelativePath}/entry`}
+          // to={`${pathname.endsWith('/') ? curRelativePath.replace(/\/$/, '') : curRelativePath}/entry`}
+          to='/entry'
         >
           React Compiler
         </Link>
@@ -45,7 +46,8 @@ export default function RouteCmpt() {
               e.stopPropagation();
             }
           }}
-          to={`${pathname.endsWith('/') ? curRelativePath.replace(/\/$/, '') : curRelativePath}/sfc`}
+          // to={`${pathname.endsWith('/') ? curRelativePath.replace(/\/$/, '') : curRelativePath}/sfc`}
+          to='/sfc'
         >
           Vue Compiler
         </Link>
