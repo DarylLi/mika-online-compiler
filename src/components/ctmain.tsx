@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import { editStore } from '@store/index';
 import { observer } from 'mobx-react-lite';
-import { getCodeTransform, getFileContent } from '@utils/index';
+import { getCodeTransform, getFileContent, doDebounce } from '@utils/index';
 import { parseVue } from '@utils/parseVue';
 import { updateData } from '@utils/indexDb';
 import { toJS } from 'mobx';
@@ -360,7 +360,7 @@ function MainEditor(props: any) {
           value={editStore.code}
           options={mdOption as any}
           loading={<div className='monac-load'>编辑器加载中..</div>}
-          onChange={onChange}
+          onChange={doDebounce(onChange, 500)}
           onMount={editorDidMount}
         ></MonacoEditor>
       )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Tree, message } from 'antd';
+import { Input, Tree, message, Modal } from 'antd';
 import { templates } from '@mock/fileData';
 import { vueTemplates } from '@mock/vueData';
 import { editStore } from '@store/index';
@@ -19,7 +19,6 @@ import {
   addData,
   updateData,
   getData,
-  deleteData,
 } from '@utils/indexDb';
 import { observer } from 'mobx-react-lite';
 import { toJS } from 'mobx';
@@ -28,6 +27,9 @@ import { toJS } from 'mobx';
 function Directory(props: any) {
   const { cpType = 'react' } = props;
   const [defaultFile, setDefaultFile] = useState({});
+  const [selectedKeys, setSelectedKeys] = useState([
+    (cpType === 'react' ? templates[0] : vueTemplates[0]).children[0].path,
+  ]);
   // editStore.setCurrentFile(currentFile);
   const [messageApi, contextHolder] = message.useMessage();
   const [newFile, setNewFile] = useState(null);
@@ -135,6 +137,43 @@ function Directory(props: any) {
   const deleteData = (event: any, node: any) => {
     event.preventDefault();
     event.stopPropagation();
+    Modal.confirm({
+      title: 'Are you sure you want to delete this file?',
+      onOk: () => {
+        const templatesAfter = toJS(editStore.currentFiles);
+        let curFiles = templatesAfter[0].children;
+        curFiles = curFiles.filter((e: any) => e.path !== node.path);
+        templatesAfter[0].children = curFiles;
+        // 同步更新indexDB缓存
+        editStore.setCurrentFiles(templatesAfter);
+        const changedData = {
+          id: 'daryl',
+          name: 'daryl',
+          templates: toJS(templatesAfter),
+        };
+        updateData(
+          (editStore as any).currentIndexDBInstance.db,
+          cpType === 'react' ? 'mika-templates' : 'mika-vue-templates',
+          changedData
+        );
+        // 重新编译
+        setSelectedKeys([
+          (cpType === 'react' ? templates[0] : vueTemplates[0]).children[0]
+            .path,
+        ]);
+        const currentFile = templatesAfter[0].children.find((e: any) =>
+          cpType === 'react'
+            ? e.filename.includes('app.jsx')
+            : e.filename.includes('App.vue')
+        );
+        cpType === 'react'
+          ? getCodeTransform(currentFile?.value || '', templatesAfter)
+          : parseVue(currentFile?.value || '', templatesAfter);
+        onSelect([], {
+          node: currentFile,
+        });
+      },
+    });
   };
   const onSelect = (selectedKeys: any[], info: any) => {
     console.log(info);
@@ -149,6 +188,7 @@ function Directory(props: any) {
         ? spendKeys.filter(e => e !== info.node.filename)
         : [...spendKeys, info?.node?.filename]
     );
+    setSelectedKeys([info?.node?.path]);
     setShowOP('');
     setShowRenameKey('');
   };
@@ -231,7 +271,7 @@ function Directory(props: any) {
           switcherIcon={<DownOutlined />}
           onSelect={onSelect}
           onRightClick={onRightClick}
-          defaultSelectedKeys={[(defaultFile as any).path]}
+          selectedKeys={selectedKeys}
           onExpand={onExpand}
           expandedKeys={spendKeys}
           titleRender={(node: any) =>
@@ -261,22 +301,23 @@ function Directory(props: any) {
                     <FileAddOutlined />
                   </span>
                 )}
-                {showOP === node.path && !/App.vue|app.jsx/.test(showOP) && (
-                  <div className='mika-mona-left-dir-title-op'>
-                    <span>
-                      <EditOutlined
-                        onClick={event => {
-                          changeName(event, node);
-                        }}
-                      ></EditOutlined>
-                    </span>
-                    <span>
-                      <CloseOutlined
-                        onClick={event => deleteData(event, node)}
-                      ></CloseOutlined>
-                    </span>
-                  </div>
-                )}
+                {showOP === node.path &&
+                  !(/App.vue|app.jsx/.test(showOP) || showOP === 'src') && (
+                    <div className='mika-mona-left-dir-title-op'>
+                      <span>
+                        <EditOutlined
+                          onClick={event => {
+                            changeName(event, node);
+                          }}
+                        ></EditOutlined>
+                      </span>
+                      <span>
+                        <CloseOutlined
+                          onClick={event => deleteData(event, node)}
+                        ></CloseOutlined>
+                      </span>
+                    </div>
+                  )}
               </>
             )
           }

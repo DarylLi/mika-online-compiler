@@ -1,8 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { transform, registerPlugin } from '@babel/standalone';
 import { templates } from '@mock/fileData';
 
 window.useState = useState;
+window.useEffect = useEffect;
 var transferMap = new Map();
 let replaceMaps = new Map();
 let mapSolute = new Map();
@@ -55,7 +56,7 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
             ? replaceCode.replace('export default', `//export default`)
             : replaceCode.replace(
                 'export default',
-                `let ${replaceExportTarget} =`
+                `var ${replaceExportTarget} =`
               );
         result = result.replace(
           mr[0],
@@ -152,25 +153,24 @@ export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
       // let testCode = `let offList=[];let okStrArr = importCheckedCode.matchAll(/${duplicateList[0].targetKey}.*/g);console.log([...okStrArr])`;
       // eval(testCode)
     }
+    const output = transform(importCheckedCode, {
+      presets: ['env'],
+      plugins: [['transform-react-jsx']],
+    }).code;
+    const afterCode = transform(output, {
+      presets: ['env'],
+      plugins: ['transConfound'],
+    }).code;
+    rewrite
+      ? eval(
+          `var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState, useEffect } = React;${afterCode};document.getElementById('previewFrame').shadowRoot.querySelector('body').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default))`
+        )
+      : eval(
+          `var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState, useEffect } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default));`
+        );
   } catch (error) {
     console.log(error);
   }
-  const output = transform(importCheckedCode, {
-    presets: ['env'],
-    plugins: [['transform-react-jsx']],
-  }).code;
-
-  const afterCode = transform(output, {
-    presets: ['env'],
-    plugins: ['transConfound'],
-  }).code;
-  rewrite
-    ? eval(
-        `var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState } = React;${afterCode};document.getElementById('previewFrame').shadowRoot.querySelector('body').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default))`
-      )
-    : eval(
-        `var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default));`
-      );
   transferMap = new Map();
   replaceMaps = new Map();
   mapSolute = new Map();
@@ -200,6 +200,15 @@ export const replaceFileContent = (files, path, txt) => {
   }
 };
 
+export const doDebounce = (fn, time) => {
+  let timer = null;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+    }, time);
+  };
+};
 export default {
   getCodeTransform,
 };

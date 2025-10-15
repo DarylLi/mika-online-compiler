@@ -8,7 +8,6 @@ function RightView(props: any) {
   const [showView, setShowView] = useState(false);
   const frameRef: any = useRef(null);
   useEffect(() => {
-    console.log('doom loaded');
     let shadowResult: HTMLElement | null =
       document.getElementById('previewFrame');
     (shadowResult as any).attachShadow({ mode: 'open' });

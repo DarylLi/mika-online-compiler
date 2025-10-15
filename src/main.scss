@@ -104,6 +104,9 @@ body,
       width: 166px;
     }
   }
+  .ant-tree-node-content-wrapper:hover {
+    color: #dff976 !important;
+  }
 }
 .title-nav-header {
   display: block;
@@ -119,10 +122,18 @@ body,
     &:nth-child(2) {
       left: 246px;
     }
+    text-decoration: none;
   }
   a.active {
     color: #dff976;
     border: 0px solid #0b0e13;
+  }
+  span {
+    display: inline-block;
+    position: absolute;
+    top: 13px;
+    left: 365px;
+    color: #dff976;
   }
 }
 .title-header {

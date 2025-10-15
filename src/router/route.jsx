@@ -1,10 +1,12 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 const PageEntry = React.lazy(() => import('../pageEntry'));
 const VueEntry = React.lazy(() => import('../vueEntry'));
-
+const curRelativePath = window.location.href;
+const pathname = window.location.pathname;
 export default function RouteCmpt() {
   const [curPath, setCurPath] = useState('react');
+  const [canRedirect, setCanRedirect] = useState(true);
   return (
     <BrowserRouter>
       {/* Navigation */}
@@ -12,19 +14,38 @@ export default function RouteCmpt() {
         <div className='title-header'>Mika Coding Online</div>
         <Link
           className={`${curPath === 'react' ? 'active' : ''}`}
-          onClick={() => {
-            setCurPath('react');
+          onClick={e => {
+            if (canRedirect) {
+              setCurPath('react');
+              setCanRedirect(false);
+              setTimeout(() => {
+                setCanRedirect(true);
+              }, 1000);
+            } else {
+              e.preventDefault();
+              e.stopPropagation();
+            }
           }}
-          to='/'
+          to={`${pathname.endsWith('/') ? curRelativePath.replace(/\/$/, '') : curRelativePath}/entry`}
         >
-          React Compiler |{' '}
+          React Compiler
         </Link>
+        <span>|</span>
         <Link
           className={`${curPath === 'vue' ? 'active' : ''}`}
-          onClick={() => {
-            setCurPath('vue');
+          onClick={e => {
+            if (canRedirect) {
+              setCurPath('vue');
+              setCanRedirect(false);
+              setTimeout(() => {
+                setCanRedirect(true);
+              }, 1000);
+            } else {
+              e.preventDefault();
+              e.stopPropagation();
+            }
           }}
-          to='/sfc'
+          to={`${pathname.endsWith('/') ? curRelativePath.replace(/\/$/, '') : curRelativePath}/sfc`}
         >
           Vue Compiler
         </Link>
@@ -34,7 +55,7 @@ export default function RouteCmpt() {
       {/* Routes */}
       <Routes>
         <Route
-          path='/'
+          path='*'
           element={
             <Suspense fallback={<div>loading...</div>}>
               <PageEntry></PageEntry>

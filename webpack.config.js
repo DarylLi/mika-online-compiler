@@ -13,7 +13,7 @@ const config = {
     app: path.join(__dirname, '/src/app.jsx'),
   },
   output: {
-    path: path.join(__dirname, '/build'),
+    path: path.join(__dirname, '/dist'),
     filename: '[name].bundle.js',
     libraryTarget: 'umd',
     library: '[name]_MikaEdit',
