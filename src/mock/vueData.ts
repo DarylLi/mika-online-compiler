@@ -1,29 +1,82 @@
 export const vueTemplates: any = [
   {
-    filename: 'src',
-    value: '',
-    path: 'src',
-    kind: 'directory',
+    filename: "src",
+    value: "",
+    path: "src",
+    kind: "directory",
     children: [
       {
-        filename: 'App.vue',
+        filename: "App.vue",
         value: `<script setup>
 import { ref } from "vue";
 import ButtonCmpt from "./ButtonCmpt.vue";
 const count = ref(12);
+const tableData = [
+  {
+    date: '2016-05-03',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-02',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-04',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+  {
+    date: '2016-05-01',
+    name: 'Tom',
+    address: 'No. 189, Grove St, Los Angeles',
+  },
+];
 </script>
 <template>
-  <h1>okok</h1>
-  <ButtonCmpt></ButtonCmpt>
+  <h2>This is Vue Page</h2>
+  <div class='vue-logo'>
+  <img
+      alt="Vue logo"
+      class="logo"
+      src="https://v2.vuejs.org/images/logo.svg"
+      width="125"
+      height="125"
+    />
+  </div>
+  <h3>ElementPlus components below:</h3>
+  <div style={{"padding":"10px"}}>
+    <el-button type='warning'>Waring!!!</el-button>
+  </div>
+  <div class="common-layout">
+    <div>
+    <el-link href="https://element-plus.org" target="_blank">default</el-link>
+    <el-link type="primary">primary</el-link>
+    <el-link type="success">success</el-link>
+    <el-link type="warning">warning</el-link>
+    <el-link type="danger">danger</el-link>
+    <el-link type="info">info</el-link>
+  </div> 
+  </div>
+  <div>
+  <el-table :data="tableData" style="width: 100%">
+    <el-table-column prop="date" label="Date" width="180" />
+    <el-table-column prop="name" label="Name" width="180" />
+    <el-table-column prop="address" label="Address" />
+  </el-table>
+  </div>
   <div class="card">
-    <button type="button" @click="count++">count iws {{ count }}</button>
+    <el-button type="button" @click="count++">count iws {{ count }}</el-button>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR
     </p>
   </div>
-
-  <p>
+  
+  <h3>Other components:</h3>
+  <ButtonCmpt></ButtonCmpt>
+  <!-- <p>
     Check out
     <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
       >create-vue</a
@@ -36,32 +89,48 @@ const count = ref(12);
       target="_blank"
       >Vue Docs Scaling up Guide</a
     >.
-  </p>
+  </p> -->
   <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
-  <nav>
+  <!-- <nav>
     <RouterLink to="/">Go to Home</RouterLink>
     <RouterLink to="/about">Go to About</RouterLink>
-  </nav>
-  <main>
+  </nav> -->
+  <!-- <main>
     <RouterView />
-  </main>
+  </main> -->
 </template>
 <style scoped>
 .read-the-docs {
   color: #dedede;
 }
+h2{
+  text-align:center;
+}
+.el-link {
+  margin-right: 8px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+.vue-logo{
+  display:flex;
+  justify-content:center;
+}
 </style>
 `,
-        path: 'src/App.vue',
+        path: "src/App.vue",
       },
       {
-        filename: 'ButtonCmpt.vue',
+        filename: "ButtonCmpt.vue",
         value: `<template>
-      <button @click="count++">
-        You clicked ww {{ count }} times.
-      </button>
-    </template>`,
-        path: 'src/ButtonCmpt.vue',
+  <button @click="count++">
+    You you clicked :{{ count }} times! !
+  </button><p>Hello</p>
+</template>
+<script setup>
+  import {ref} from 'vue';
+  const count = ref(0);
+</script>`,
+        path: "src/ButtonCmpt.vue",
       },
     ],
   },
