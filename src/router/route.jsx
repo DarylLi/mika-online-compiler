@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Suspense, useEffect, useState } from 'react';
 const PageEntry = React.lazy(() => import('../pageEntry'));
 const VueEntry = React.lazy(() => import('../vueEntry'));
+const AngularEntry = React.lazy(() => import('../ngEntry'));
 const curRelativePath = window.location.href;
 const pathname = window.location.pathname;
 export default function RouteCmpt() {
@@ -51,6 +52,25 @@ export default function RouteCmpt() {
         >
           Vue Compiler
         </Link>
+        <span>|</span>
+        <Link
+          className={`${curPath === 'angular' ? 'active' : ''}`}
+          onClick={e => {
+            if (canRedirect) {
+              setCurPath('angular');
+              setCanRedirect(false);
+              setTimeout(() => {
+                setCanRedirect(true);
+              }, 1000);
+            } else {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }}
+          to='/angular'
+        >
+          Angular Compiler
+        </Link>
         {/* <div className='title-header'>{`${curPath==='react'?'React':'Vue'}在线编辑`}</div>
          */}
       </nav>
@@ -77,6 +97,14 @@ export default function RouteCmpt() {
           element={
             <Suspense fallback={<div>loading...</div>}>
               <VueEntry></VueEntry>
+            </Suspense>
+          }
+        ></Route>
+        <Route
+          path='/angular'
+          element={
+            <Suspense fallback={<div>loading...</div>}>
+              <AngularEntry></AngularEntry>
             </Suspense>
           }
         ></Route>

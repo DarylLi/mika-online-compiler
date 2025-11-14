@@ -1,13 +1,13 @@
 export const vueTemplates: any = [
-  {
-    filename: 'src',
-    value: '',
-    path: 'src',
-    kind: 'directory',
-    children: [
-      {
-        filename: 'App.vue',
-        value: `<script setup>
+	{
+		filename: 'src',
+		value: '',
+		path: 'src',
+		kind: 'directory',
+		children: [
+			{
+				filename: 'App.vue',
+				value: `<script setup>
 import { ref } from "vue";
 import ButtonCmpt from "./ButtonCmpt.vue";
 const count = ref(12);
@@ -117,21 +117,21 @@ h2{
 }
 </style>
 `,
-        path: 'src/App.vue',
-      },
-      {
-        filename: 'ButtonCmpt.vue',
-        value: `<template>
-  <el-button @click="count++">
+				path: 'src/App.vue'
+			},
+			{
+				filename: 'ButtonCmpt.vue',
+				value: `<template>
+  <button @click="count++">
     You you clicked :{{ count }} times! !
-  </el-button><p>Hello</p>
+  </button><p>Hello</p>
 </template>
 <script setup>
   import {ref} from 'vue';
   const count = ref(0);
 </script>`,
-        path: 'src/ButtonCmpt.vue',
-      },
-    ],
-  },
+				path: 'src/ButtonCmpt.vue'
+			}
+		]
+	}
 ];

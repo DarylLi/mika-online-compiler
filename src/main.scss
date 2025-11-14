@@ -122,8 +122,14 @@ body,
     &:nth-child(2) {
       left: 246px;
     }
+    &:nth-child(6){
+      left: 482px;
+    }
     text-decoration: none;
   }
+  span:nth-child(5){
+      left: 476px;
+    }
   a.active {
     color: #dff976;
     border: 0px solid #0b0e13;
@@ -133,7 +139,7 @@ body,
     position: absolute;
     top: 13px;
     left: 365px;
-    color: #dff976;
+    color: #fff;
   }
 }
 .title-header {
