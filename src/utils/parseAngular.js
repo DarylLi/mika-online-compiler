@@ -22,6 +22,7 @@ export const parseAngular = (fileEntry, storeObj, needRefresh) => {
 		'https://all.franxxdaryl.site/assets/compiler-lib/angular/angular-material.min.js'
 	];
 	let curFrame = document.createElement('iframe');
+	curFrame.setAttribute('id', 'angularLive');
 	curFrame.setAttribute('width', '100%');
 	curFrame.setAttribute('height', '100%');
 	curFrame.setAttribute('style', 'border:0px');
@@ -40,7 +41,7 @@ export const parseAngular = (fileEntry, storeObj, needRefresh) => {
    ${AppCmpt}
     <!-- 引入 AngularJS CDN -->
     ${scriptList.map((link) => `<script src="${link}"></script>`).join('')}
-    <script>${scriptRoot}${extraJs.map((content) => `${content}`).join('')}</script>
+    <script>window.console=window.parent.console;${scriptRoot}${extraJs.map((content) => `${content}`).join('')}</script>
 </body>
 </html>`
 	);

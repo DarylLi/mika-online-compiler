@@ -212,3 +212,22 @@ export const doDebounce = (fn, time) => {
 export default {
 	getCodeTransform
 };
+
+// log日志封装
+export const useConsole = (consoleList = [], store) => {
+	const MConsole = window.console.log;
+	// window.MLogList = [];
+
+	window.console.log = (...args) => {
+		let rslt = args.reduce((cum, cur) => {
+			if (typeof cur === 'function') {
+				return `${cum} ${cur()}`;
+			}
+			return `${cum} ${cur}`;
+		}, '');
+		MConsole.call(window, ...args);
+		// consoleList.push(rslt);
+		store && store.updateMsg(rslt);
+	};
+	// saveList && saveList(consoleList);
+};

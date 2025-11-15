@@ -189,7 +189,7 @@ h1{
   overflow: auto;
  }
  .ng-scope{
-  padding: 10px 0;
+  padding: 10px;
  }html{
   overflow: auto;
   background: #fff;

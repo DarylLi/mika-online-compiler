@@ -10,7 +10,7 @@ class EditorStore {
 	curType = 'rust-umi-generate';
 	curStatic = 'dist';
 	fileInfo = undefined;
-	code = ' ';
+	code = '';
 	path = '';
 	socket = null;
 	showView = false;
@@ -38,10 +38,15 @@ class EditorStore {
 		this.monacoModel = model;
 	}
 	clearLog() {
-		this.logMsg = [];
+		this.logMsg.splice(0, this.logMsg.length);
+		// this.logMsg = [];
+	}
+	setMsg(msgList) {
+		this.logMsg = msgList;
 	}
 	updateMsg(msg) {
-		this.logMsg = [...this.logMsg, msg];
+		let info = { msg, time: new Date().toTimeString().split(' ')[0] };
+		this.logMsg = [...this.logMsg, info];
 	}
 	initSocket(socket) {
 		this.socket = socket;
@@ -55,6 +60,8 @@ class EditorStore {
 	updateCode(code, path = '') {
 		this.code = code || ' ';
 		path && (this.path = path);
+		//编译前清log
+		this.clearLog();
 	}
 	replaceFileContent(code) {
 		replaceFileContent(this.currentFiles, this.fileInfo.path, code);

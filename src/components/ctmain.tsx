@@ -378,7 +378,6 @@ function MainEditor(props: any) {
 	};
 	return (
 		<div className="mika-mona-center-editor">
-			{ngLanguage}
 			{editStore.code && (
 				<MonacoEditor
 					height="calc(100vh - 66px)"

@@ -110,7 +110,7 @@ ${res.data}`;
 
 	return (
 		<div
-			className="mika-mona-right-view"
+			className={`mika-mona-right-view ${cpType === 'angular' ? 'angularFrame' : ''}`}
 			id="previewFrame"
 			ref={frameRef}
 		></div>
