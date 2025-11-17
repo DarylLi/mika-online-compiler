@@ -1,7 +1,8 @@
 import { observer } from 'mobx-react';
 import React, { PureComponent, createRef } from 'react';
 import { editStore } from '@store/index';
-import { useConsole } from '@utils/index';
+import { useConsole, getFileContent, getCodeTransform } from '@utils/index';
+import { showVuePreview } from '@utils/parseVue';
 import { Button, Modal } from 'antd';
 import { toJS } from 'mobx';
 
@@ -18,6 +19,26 @@ class EditLog extends PureComponent<any, any> {
 		this.setState({ showLog: !this.state.showLog });
 	};
 	openPreview = () => {
+		if (window.location.pathname === '/sfc') {
+			let currentFile = getFileContent(editStore.currentFiles, 'src/App.vue');
+			showVuePreview(
+				currentFile,
+				JSON.parse(JSON.stringify(editStore.currentFiles))
+			);
+			return;
+		} else if (
+			window.location.pathname === '/entry' ||
+			window.location.pathname === '/'
+		) {
+			let currentFile = getFileContent(editStore.currentFiles, 'src/app.jsx');
+			getCodeTransform(
+				currentFile,
+				JSON.parse(JSON.stringify(editStore.currentFiles)),
+				false,
+				true
+			);
+			return;
+		}
 		let shadowDomOrHTML =
 			(document as any).getElementById('angularLive')?.getAttribute('srcDoc') ||
 			(document as any)
@@ -49,7 +70,7 @@ class EditLog extends PureComponent<any, any> {
 				<Button onClick={this.switchLog}>
 					{showLog ? 'hide console' : 'show console'}
 				</Button>
-				<Button onClick={this.openPreview}>Open Preview</Button>
+				<Button onClick={this.openPreview}>open Preview</Button>
 				<Modal
 					title="compile Logs"
 					open={showLog}

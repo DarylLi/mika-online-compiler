@@ -33,7 +33,7 @@ export const parseAngular = (fileEntry, storeObj, needRefresh) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Angular</title>
+    <title>angular preview page</title>
     <link rel="stylesheet" href='https://all.franxxdaryl.site/assets/compiler-lib/angular/angular-material.min.css'>
     <style>${styleRoot}</style>
 </head>

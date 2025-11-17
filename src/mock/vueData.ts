@@ -46,7 +46,7 @@ const tableData = [
     />
   </div>
   <h3>ElementPlus components below:</h3>
-  <div style={{"padding":"10px"}}>
+  <div style="padding:10px">
     <el-button type='warning'>Waring!!!</el-button>
   </div>
   <div class="common-layout">

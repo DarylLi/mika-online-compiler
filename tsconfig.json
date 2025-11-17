@@ -32,6 +32,6 @@
     "**/*.js",
     "**/*.wasm",
     "public/wasmLib"
-  ],
+, ".prettierrc"  ],
   "exclude": ["./editorTarget/", "./public/"]
 }
