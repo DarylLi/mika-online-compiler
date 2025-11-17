@@ -134,7 +134,12 @@ registerPlugin('confound', confound);
 registerPlugin('transConfound', transConfound);
 registerPlugin('transFileConfound', transFileConfound);
 
-export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
+export const getCodeTransform = (
+	codeTxt,
+	checkedFiles,
+	rewrite = false,
+	runIframe
+) => {
 	const importCheckedCode = doCheckImport(codeTxt, 'index_', checkedFiles);
 	// transform-react-jsx已处理部分名称替换，单文件需独自处理
 	let values = Array.from(mapSolute.values());
@@ -161,13 +166,107 @@ export const getCodeTransform = (codeTxt, checkedFiles, rewrite = false) => {
 			presets: ['env'],
 			plugins: ['transConfound']
 		}).code;
-		rewrite
-			? eval(
-					`var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState, useEffect } = React;${afterCode};document.getElementById('previewFrame').shadowRoot.querySelector('body').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default))`
-				)
-			: eval(
-					`var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState, useEffect } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default));`
+		if (runIframe) {
+			let previewFrame = document.createElement('iframe');
+			setTimeout(() => {
+				previewFrame.setAttribute(
+					'srcDoc',
+					`<!DOCTYPE html>
+			<html lang="zh-CN">
+			<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>react preview page</title>
+				<style>
+				.box {
+					position: relative;
+					width: 300px;
+					height: 100px;
+					scale:.85;
+					/* background: #000; */
+					border: 6px solid #61dafb;
+					border-radius: 50%;
+					display: grid;
+					place-items: center;
+					animation: 3.5s rotate linear infinite;
+					left: calc(50% - 150px);
+					margin-top: 120px;
+					margin-bottom: 120px;
+					}
+					@keyframes rotate {
+					0% {
+						transform: rotate(0);
+					}
+					100% {
+						transform: rotate(360deg);
+					}
+					}
+					.box::after {
+					content: "";
+					position: absolute;
+					left: 0;
+					top: 0;
+					width: 100%;
+					height: 100%;
+					border: 6px solid #61dafb;
+					border-radius: 50%;
+					transform: rotate(60deg);
+					}
+
+					.box::before {
+					content: "";
+					position: absolute;
+					left: 0;
+					top: 0;
+					width: 100%;
+					height: 100%;
+					border: 6px solid #61dafb;
+					border-radius: 50%;
+					transform: rotate(120deg);
+					}
+
+					.inner-box {
+					width: 30px;
+					height: 30px;
+					background: #61dafb;
+					border-radius: 50%;
+					}
+					</style>
+				<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/antd@5.27.4/dist/reset.min.css' />
+				<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/antd@4.16.13/dist/antd.min.css' />
+				<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+				<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+				<script src="https://unpkg.com/antd@4.16.13/dist/antd.min.js"></script>
+			</head>
+			<body>
+				<div id="previewBlank"></div>
+			</body>
+				<script>
+				var exports={};
+				const {${Object.keys(antd).join(',')}} = antd;
+				 const { useRef, useState, useEffect } = React;
+				 ${afterCode};
+				 window._rootHandler = ReactDOM.createRoot(document.getElementById('previewBlank'));
+				 window._rootHandler.render(React.createElement(_default))
+				</script>`
 				);
+				let newWindow = window.open('', '_blank', 'width=600,height=800');
+				if (newWindow) {
+					newWindow.document.write(previewFrame.getAttribute('srcDoc'));
+					newWindow.document.close();
+					// 销毁iframe
+					previewFrame = undefined;
+				}
+			}, 100);
+		} else {
+			rewrite
+				? eval(
+						`var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState, useEffect } = React;${afterCode};document.getElementById('previewFrame').shadowRoot.querySelector('body').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default))`
+					)
+				: eval(
+						`var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState, useEffect } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default));`
+					);
+		}
 	} catch (error) {
 		console.log(error);
 	}

@@ -9,6 +9,13 @@ import { parseAngular } from '@utils/parseAngular';
 import { updateData } from '@utils/indexDb';
 import { toJS } from 'mobx';
 import { loadAngularConfig } from '../config/monacoConfig';
+import * as prettier from 'prettier/standalone';
+import * as parserBabel from 'prettier/plugins/babel';
+import * as parserHtml from 'prettier/plugins/html';
+import * as parserPostCSS from 'prettier/plugins/postcss';
+import * as prettierPluginEstree from 'prettier/plugins/estree';
+import { Button } from 'antd';
+
 function MainEditor(props: any) {
 	const { cpType = 'react' } = props;
 	// let cursocket: any = null;
@@ -28,10 +35,50 @@ function MainEditor(props: any) {
 		// loadAngularConfig(monaco);
 		editor.focus();
 	};
+	const doFormat = async () => {
+		const newValue = editStore.code;
+		let prettierVal: any = null;
+		try {
+			// if (cpType !== 'vue' && cpType !== 'react') return;
+			prettierVal = await prettier.format(newValue, {
+				parser:
+					cpType === 'vue'
+						? cpType
+						: cpType === 'react'
+							? 'babel'
+							: ngLanguage !== 'javascript'
+								? ngLanguage
+								: 'babel',
+				plugins: [
+					parserBabel,
+					prettierPluginEstree as any,
+					parserHtml,
+					parserPostCSS
+				],
+				tabWidth: 4,
+				useTabs: false,
+				semi: true,
+				singleQuote: true,
+				trailingComma: 'none',
+				bracketSpacing: true,
+				arrowParens: 'always'
+			});
+			editStore.updateCode(' ');
+			setTimeout(() => {
+				editStore.replaceFileContent(prettierVal);
+				editStore.updateCode(prettierVal);
+			}, 200);
+			// }
+		} catch (err) {
+			console.log(err);
+			return;
+		}
+	};
 	const onChange = async (newValue: any, e: any) => {
 		// editStore.currentFiles,
 		//   info?.node?.path,
 		//   info?.node?.value
+		// console.log(
 		editStore.replaceFileContent(newValue);
 		editStore.updateCode(newValue || ' ');
 		// 更新入口文件
@@ -49,8 +96,7 @@ function MainEditor(props: any) {
 			: cpType === 'vue'
 				? parseVue(
 						currentFile || '',
-						JSON.parse(JSON.stringify(editStore.currentFiles)),
-						true
+						JSON.parse(JSON.stringify(editStore.currentFiles))
 					)
 				: parseAngular(
 						currentFile || '',
@@ -378,6 +424,9 @@ function MainEditor(props: any) {
 	};
 	return (
 		<div className="mika-mona-center-editor">
+			<Button className="mika-mona-center-editor-format" onClick={doFormat}>
+				formatting codes
+			</Button>
 			{editStore.code && (
 				<MonacoEditor
 					height="calc(100vh - 66px)"
@@ -392,7 +441,7 @@ function MainEditor(props: any) {
 					value={editStore.code}
 					options={mdOption as any}
 					loading={<div className="monac-load">编辑器加载中..</div>}
-					onChange={doDebounce(onChange, 500)}
+					onChange={doDebounce(onChange, 1000)}
 					onMount={editorDidMount}
 				></MonacoEditor>
 			)}
