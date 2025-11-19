@@ -109,7 +109,7 @@ export const showVuePreview = (fileEntry, storeObj) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>vue preview page</title>
 	<link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
-	<script src="https://cdn.jsdelivr.net/npm/vue3-sfc-loader@0.9.5/dist/vue3-sfc-loader.js"></script>
+	<script src="https://all.franxxdaryl.site/assets/compiler-lib/vue3-sfc-loader.js"></script>
 	<script src="https://all.franxxdaryl.site/assets/compiler-lib/vue.runtime.global.js"></script>
 	<script src="//unpkg.com/element-plus"></script>
 </head>

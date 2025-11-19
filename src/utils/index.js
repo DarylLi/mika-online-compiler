@@ -232,11 +232,11 @@ export const getCodeTransform = (
 					border-radius: 50%;
 					}
 					</style>
-				<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/antd@5.27.4/dist/reset.min.css' />
-				<link rel="stylesheet" href='https://cdn.jsdelivr.net/npm/antd@4.16.13/dist/antd.min.css' />
-				<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-				<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-				<script src="https://unpkg.com/antd@4.16.13/dist/antd.min.js"></script>
+				<link rel="stylesheet" href='https://all.franxxdaryl.site/assets/compiler-lib/reset.min.css' />
+				<link rel="stylesheet" href='https://all.franxxdaryl.site/assets/compiler-lib/antd.min.css' />
+				<script src="https://all.franxxdaryl.site/assets/compiler-lib/react.development.js"></script>
+				<script src="https://all.franxxdaryl.site/assets/compiler-lib/react-dom.development.js"></script>
+				<script src="https://all.franxxdaryl.site/assets/compiler-lib/antd.min.js"></script>
 			</head>
 			<body>
 				<div id="previewBlank"></div>
