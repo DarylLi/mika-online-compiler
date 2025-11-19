@@ -40,7 +40,10 @@ class EditLog extends PureComponent<any, any> {
 			return;
 		}
 		let shadowDomOrHTML =
-			(document as any).getElementById('angularLive')?.getAttribute('srcDoc') ||
+			(
+				(document as any).getElementById('angularLive') ||
+				(document as any).getElementById('frameLive')
+			)?.getAttribute('srcDoc') ||
 			(document as any)
 				.getElementById('previewFrame')
 				.shadowRoot.querySelector('html');
@@ -70,7 +73,7 @@ class EditLog extends PureComponent<any, any> {
 				<Button onClick={this.switchLog}>
 					{showLog ? 'hide console' : 'show console'}
 				</Button>
-				<Button onClick={this.openPreview}>open Preview</Button>
+				<Button onClick={this.openPreview}>open preview</Button>
 				<Modal
 					title="compile Logs"
 					open={showLog}

@@ -17,7 +17,7 @@ function PageEntry() {
         let script = document.createElement('script');
         script.setAttribute(
           'src',
-          'https://cdn.jsdelivr.net/npm/vue3-sfc-loader@0.9.5/dist/vue3-sfc-loader.js'
+          'https://all.franxxdaryl.site/assets/compiler-lib/vue3-sfc-loader.js'
         );
         script.onload = () => {
           setSFCLoaded(true);
