@@ -7,7 +7,7 @@ import { editStore } from "@store/index";
 import { Spin } from 'antd';
 import './main.scss'
 
-function NgEntry() {
+function svEntry() {
     useEffect(()=>{
     },[])
   return (
@@ -23,4 +23,4 @@ function NgEntry() {
   );
 }
 
-export default observer(NgEntry);
+export default observer(svEntry);
