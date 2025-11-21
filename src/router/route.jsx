@@ -4,9 +4,10 @@ const PageEntry = React.lazy(() => import('../pageEntry'));
 const VueEntry = React.lazy(() => import('../vueEntry'));
 const AngularEntry = React.lazy(() => import('../ngEntry'));
 const SvelteEntry = React.lazy(() => import('../svelteEntry'));
+const EmberEntry = React.lazy(() => import('../emberEntry'));
+const KoEntry = React.lazy(() => import('../koEntry'));
 import TmpPopup from '../components/templatePop';
-const curRelativePath = window.location.href;
-const pathname = window.location.pathname;
+
 export default function RouteCmpt() {
   const [curPath, setCurPath] = useState('react');
   const [canRedirect, setCanRedirect] = useState(true);
@@ -31,7 +32,6 @@ export default function RouteCmpt() {
               e.stopPropagation();
             }
           }}
-          // to={`${pathname.endsWith('/') ? curRelativePath.replace(/\/$/, '') : curRelativePath}/entry`}
           to='/entry'
         >
           React Compiler
@@ -51,7 +51,6 @@ export default function RouteCmpt() {
               e.stopPropagation();
             }
           }}
-          // to={`${pathname.endsWith('/') ? curRelativePath.replace(/\/$/, '') : curRelativePath}/sfc`}
           to='/sfc'
         >
           Vue Compiler
@@ -94,8 +93,6 @@ export default function RouteCmpt() {
           Svelte 3 Compiler
         </Link>
         </div>
-        {/* <div className='title-header'>{`${curPath==='react'?'React':'Vue'}在线编辑`}</div>
-         */}
       </nav>
       {/* Routes */}
       <Routes>
@@ -136,6 +133,22 @@ export default function RouteCmpt() {
           element={
             <Suspense fallback={<div>loading...</div>}>
               <SvelteEntry></SvelteEntry>
+            </Suspense>
+          }
+        ></Route>
+        <Route
+          path='/ember'
+          element={
+            <Suspense fallback={<div>loading...</div>}>
+              <EmberEntry></EmberEntry>
+            </Suspense>
+          }
+        ></Route>
+        <Route
+          path='/ko'
+          element={
+            <Suspense fallback={<div>loading...</div>}>
+              <KoEntry></KoEntry>
             </Suspense>
           }
         ></Route>
