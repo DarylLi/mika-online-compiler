@@ -24,7 +24,7 @@ export const parseEmber = (fileEntry, storeObj, needRefresh) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>angular preview page</title>
+    <title>ember preview page</title>
     <style>${styleRoot}</style>
 </head>
 <body>

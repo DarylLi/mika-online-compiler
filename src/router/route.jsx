@@ -6,6 +6,9 @@ const AngularEntry = React.lazy(() => import('../ngEntry'));
 const SvelteEntry = React.lazy(() => import('../svelteEntry'));
 const EmberEntry = React.lazy(() => import('../emberEntry'));
 const KoEntry = React.lazy(() => import('../koEntry'));
+const LitEntry = React.lazy(() => import('../litEntry'));
+const SolidEntry = React.lazy(() => import('../solidEntry'));
+
 import TmpPopup from '../components/templatePop';
 
 export default function RouteCmpt() {
@@ -149,6 +152,22 @@ export default function RouteCmpt() {
           element={
             <Suspense fallback={<div>loading...</div>}>
               <KoEntry></KoEntry>
+            </Suspense>
+          }
+        ></Route>
+        <Route
+          path='/lit'
+          element={
+            <Suspense fallback={<div>loading...</div>}>
+              <LitEntry></LitEntry>
+            </Suspense>
+          }
+        ></Route>
+        <Route
+          path='/solid'
+          element={
+            <Suspense fallback={<div>loading...</div>}>
+              <SolidEntry></SolidEntry>
             </Suspense>
           }
         ></Route>

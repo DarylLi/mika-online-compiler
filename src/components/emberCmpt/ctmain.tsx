@@ -37,8 +37,8 @@ function MainEditor(props: any) {
 				ngLanguage === 'html'
 					? newValue
 							// 临时处理<script type="text/x-handlebars"> prettier不支持格式化问题
-							.split(/<script.*text\/x-handlebars.*>/)
-							.join('<slot type="replace">')
+							.split(/<script.*text\/x-handlebars[',"]/)
+							.join('<slot type="replace"')
 							.replace(/script>/g, 'slot>')
 					: newValue,
 				{
@@ -61,27 +61,18 @@ function MainEditor(props: any) {
 			);
 			editStore.updateCode(' ');
 			setTimeout(() => {
-				editStore.replaceFileContent(
+				let afterPrettier =
 					ngLanguage === 'html'
 						? // 临时处理<script type="text/x-handlebars"> prettier不支持格式化问题
 							prettierVal
 								.replace(
-									/<slot type="replace">/g,
-									`<script type='text/x-handlebars'>`
+									/<slot type="replace"/g,
+									`<script type='text/x-handlebars'`
 								)
 								.replace(/slot>/g, 'script>')
-						: prettierVal
-				);
-				editStore.updateCode(
-					ngLanguage === 'html'
-						? prettierVal
-								.replace(
-									/<slot type="replace">/g,
-									`<script type='text/x-handlebars'>`
-								)
-								.replace(/slot>/g, 'script>')
-						: prettierVal
-				);
+						: prettierVal;
+				editStore.replaceFileContent(afterPrettier);
+				editStore.updateCode(afterPrettier);
 			}, 200);
 			// }
 		} catch (err) {

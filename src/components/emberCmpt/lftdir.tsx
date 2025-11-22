@@ -260,10 +260,7 @@ function Directory(props: any) {
 				}, 500);
 			} catch (error) {
 				console.log(error);
-				// addData(curRequest.db, "mika-templates", info);
 			}
-
-			// updateData(curRequest.db, "mika-templates", info);
 		});
 	}, []);
 	return (
