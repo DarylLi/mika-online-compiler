@@ -28,7 +28,7 @@ export const parseSvelte = (fileEntry, storeObj, needRefresh) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>angular preview page</title>
+    <title>svelte preview page</title>
     <style>${styleRoot}</style>
 </head>
 <body>
@@ -45,6 +45,7 @@ export const parseSvelte = (fileEntry, storeObj, needRefresh) => {
     let reCompileDom = document.createElement('div');
     let scriptDom = document.createElement('script');
     let mainDome = document.createElement('div');
+    mainDome.setAttribute('class','svelte-root');
     mainDome.innerHTML=\`${htmlStr}\`;
     scriptDom.innerHTML=\`${scriptStr}\`;
     reCompileDom.appendChild(mainDome);

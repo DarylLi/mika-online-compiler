@@ -65,6 +65,9 @@ body {
     font-family: Roboto;
     overflow: hidden;
 }
+.svelte-root{
+  padding: 20px;
+}
 .bg {
     height: 100px;
     width: 100px;
