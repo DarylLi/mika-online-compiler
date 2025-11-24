@@ -8,14 +8,14 @@ import { parseVue } from '@utils/parseVue';
 import { parseAngular } from '@utils/parseAngular';
 import { updateData } from '@utils/indexDb';
 import { toJS } from 'mobx';
-import { loadAngularConfig } from '../config/monacoConfig';
 import * as prettier from 'prettier/standalone';
 import * as parserBabel from 'prettier/plugins/babel';
 import * as parserHtml from 'prettier/plugins/html';
 import * as parserPostCSS from 'prettier/plugins/postcss';
 import * as prettierPluginEstree from 'prettier/plugins/estree';
 import MonacoOptions from '@mock/monaco';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
+import { ToolOutlined } from '@ant-design/icons';
 
 function MainEditor(props: any) {
 	const { cpType = 'react' } = props;
@@ -124,9 +124,15 @@ function MainEditor(props: any) {
 	};
 	return (
 		<div className="mika-mona-center-editor">
-			<Button className="mika-mona-center-editor-format" onClick={doFormat}>
-				formatting codes
-			</Button>
+			<Tooltip placement="bottom" color="lime" title="formatting codes">
+				<Button
+					className="mika-mona-center-editor-format"
+					shape="circle"
+					icon={<ToolOutlined />}
+					size="small"
+					onClick={doFormat}
+				></Button>
+			</Tooltip>
 			{editStore.code && (
 				<MonacoEditor
 					height="calc(100vh - 66px)"

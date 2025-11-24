@@ -1,13 +1,13 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { Suspense, useEffect, useState } from 'react';
-const PageEntry = React.lazy(() => import('../pageEntry'));
-const VueEntry = React.lazy(() => import('../vueEntry'));
-const AngularEntry = React.lazy(() => import('../ngEntry'));
-const SvelteEntry = React.lazy(() => import('../svelteEntry'));
-const EmberEntry = React.lazy(() => import('../emberEntry'));
-const KoEntry = React.lazy(() => import('../koEntry'));
-const LitEntry = React.lazy(() => import('../litEntry'));
-const SolidEntry = React.lazy(() => import('../solidEntry'));
+const MainEntry = React.lazy(() => import('../entries/mainEntry'));
+const VueEntry = React.lazy(() => import('../entries/vueEntry'));
+const AngularEntry = React.lazy(() => import('../entries/ngEntry'));
+const SvelteEntry = React.lazy(() => import('../entries/svelteEntry'));
+const EmberEntry = React.lazy(() => import('../entries/emberEntry'));
+const KoEntry = React.lazy(() => import('../entries/koEntry'));
+const LitEntry = React.lazy(() => import('../entries/litEntry'));
+const SolidEntry = React.lazy(() => import('../entries/solidEntry'));
 
 import TmpPopup from '../components/templatePop';
 
@@ -103,7 +103,7 @@ export default function RouteCmpt() {
           path='*'
           element={
             <Suspense fallback={<div>loading...</div>}>
-              <PageEntry></PageEntry>
+              <MainEntry></MainEntry>
             </Suspense>
           }
         ></Route>
@@ -111,7 +111,7 @@ export default function RouteCmpt() {
           path='/entry'
           element={
             <Suspense fallback={<div>loading...</div>}>
-              <PageEntry></PageEntry>
+              <MainEntry></MainEntry>
             </Suspense>
           }
         ></Route>

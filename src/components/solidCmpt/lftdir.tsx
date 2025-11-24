@@ -205,7 +205,6 @@ function Directory(props: any) {
 				// solid page db init inject
 				solidTemplates
 		};
-		// 设定一个入口文件：app.jsx
 
 		setTimeout(async () => {
 			const curRequest = await initIndexDB(curData);

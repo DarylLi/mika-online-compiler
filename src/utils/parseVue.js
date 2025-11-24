@@ -1,6 +1,5 @@
 // import * as Vue from "vue";s
 import vueRouter from 'vue-router';
-import router from './vueRouter';
 
 // const vuetify = Vuetify.createVuetify({
 //   // ... your configuration

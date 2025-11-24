@@ -243,7 +243,6 @@ function Directory(props: any) {
 						? vueTemplates
 						: angularTemplates
 		};
-		// 设定一个入口文件：app.jsx
 
 		setTimeout(async () => {
 			const curRequest = await initIndexDB(curData);
