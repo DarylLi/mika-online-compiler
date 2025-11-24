@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Tree, message, Modal } from 'antd';
-import { templates } from '@mock/fileData';
-import { vueTemplates } from '@mock/vueData';
-import { angularTemplates } from '@mock/ngData';
 import { emberTemplates } from '@mock/emberData';
 import { editStore } from '@store/index';
 import { getCodeTransform, getFileContent } from '@utils/index';
-import { parseVue } from '@utils/parseVue';
 import { parseEmber } from '@utils/parseEmber';
 import {
 	FolderFilled,
@@ -209,7 +205,6 @@ function Directory(props: any) {
 				// ember page db init inject
 				emberTemplates
 		};
-		// 设定一个入口文件：app.jsx
 
 		setTimeout(async () => {
 			const curRequest = await initIndexDB(curData);

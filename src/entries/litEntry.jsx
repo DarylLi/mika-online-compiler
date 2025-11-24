@@ -5,7 +5,7 @@ import RightView from '@components/litCmpt/rtview'
 import { observer } from "mobx-react";
 import { editStore } from "@store/index";
 import { Spin } from 'antd';
-import './main.scss'
+import '../main.scss';
 
 function LitEntry() {
     useEffect(()=>{

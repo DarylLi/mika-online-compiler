@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react'
-import Directory from '@components/lftdir';
-import MainEditor from '@components/ctmain';
-import RightView from '@components/rtview'
+import Directory from '@components/mainCmpt/lftdir';
+import MainEditor from '@components/mainCmpt/ctmain';
+import RightView from '@components/mainCmpt/rtview'
 import { observer } from "mobx-react";
 import { editStore } from "@store/index";
 import { Spin } from 'antd';
-import './main.scss'
+import '../main.scss';
 
 function NgEntry() {
   const [sfcLoaded, setSFCLoaded] = useState(false);

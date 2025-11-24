@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react'
-import Directory from '@components/svelteCmpt/lftdir';
-import MainEditor from '@components/svelteCmpt/ctmain';
-import RightView from '@components/svelteCmpt/rtview'
+import Directory from '@components/koCmpt/lftdir';
+import MainEditor from '@components/koCmpt/ctmain';
+import RightView from '@components/koCmpt/rtview'
 import { observer } from "mobx-react";
 import { editStore } from "@store/index";
 import { Spin } from 'antd';
-import './main.scss'
+import '../main.scss';
 
-function svEntry() {
+function KoEntry() {
     useEffect(()=>{
     },[])
   return (
@@ -23,4 +23,4 @@ function svEntry() {
   );
 }
 
-export default observer(svEntry);
+export default observer(KoEntry);

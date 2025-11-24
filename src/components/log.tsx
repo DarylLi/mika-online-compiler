@@ -3,8 +3,9 @@ import React, { PureComponent, createRef } from 'react';
 import { editStore } from '@store/index';
 import { useConsole, getFileContent, getCodeTransform } from '@utils/index';
 import { showVuePreview } from '@utils/parseVue';
-import { Button, Modal } from 'antd';
+import { Button, Tooltip, Modal } from 'antd';
 import { toJS } from 'mobx';
+import { FileTextOutlined, PlayCircleOutlined } from '@ant-design/icons';
 
 @observer
 class EditLog extends PureComponent<any, any> {
@@ -54,6 +55,7 @@ class EditLog extends PureComponent<any, any> {
 		}
 	};
 	componentDidMount(): void {
+		console.log(editStore.SocketInstance);
 		useConsole(toJS(editStore.logMsg), editStore);
 		this.setState({ logPanelRef: createRef() }, () => {
 			editStore.setLogPanelRef(this.state.logPanelRef);
@@ -70,10 +72,27 @@ class EditLog extends PureComponent<any, any> {
 		};
 		return (
 			<span className="logControl">
-				<Button onClick={this.switchLog}>
-					{showLog ? 'hide console' : 'show console'}
-				</Button>
-				<Button onClick={this.openPreview}>open preview</Button>
+				{editStore.SocketInstance?.userInfo?.uuid}
+				<Tooltip
+					placement="bottom"
+					color="#e52a39"
+					title={showLog ? 'hide console' : 'show console'}
+				>
+					<Button
+						onClick={this.switchLog}
+						shape="circle"
+						icon={<FileTextOutlined />}
+						size="small"
+					></Button>
+				</Tooltip>
+				<Tooltip placement="bottom" color="#ff3e00" title="open preview">
+					<Button
+						onClick={this.openPreview}
+						shape="circle"
+						icon={<PlayCircleOutlined />}
+						size="small"
+					></Button>
+				</Tooltip>
 				<Modal
 					title="compile Logs"
 					open={showLog}

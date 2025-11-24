@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Tree, message, Modal } from 'antd';
-import { templates } from '@mock/fileData';
-import { vueTemplates } from '@mock/vueData';
-import { angularTemplates } from '@mock/ngData';
 import { svelteTemplates } from '@mock/svelteData';
 import { editStore } from '@store/index';
-import { getCodeTransform, getFileContent } from '@utils/index';
-import { parseVue } from '@utils/parseVue';
+import { getFileContent } from '@utils/index';
 import { parseSvelte } from '@utils/parseSvelte';
 import {
 	FolderFilled,
@@ -210,7 +206,6 @@ function Directory(props: any) {
 				// svelte page db init inject
 				svelteTemplates
 		};
-		// 设定一个入口文件：app.jsx
 
 		setTimeout(async () => {
 			const curRequest = await initIndexDB(curData);

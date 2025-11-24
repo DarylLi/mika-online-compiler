@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { replaceFileContent } from '@utils/index';
+import SocketInstance from '@api/index';
 
 class EditorStore {
 	// curTemplate = "createReactDemo";
@@ -17,12 +18,14 @@ class EditorStore {
 	showSpin = false;
 	logPanelRef = null;
 	monacoModel = null;
+	SocketInstance = SocketInstance;
 	logMsg = [];
 	viewSrc = `editorTarget/${this.curTemplate}/${this.curType}/${
 		this.curStatic || 'dist'
 	}/index.html`;
 
 	constructor() {
+		console.log(SocketInstance);
 		makeAutoObservable(this);
 	}
 	setCurrentIndexDBInstance(instance) {

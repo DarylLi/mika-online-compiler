@@ -46,9 +46,15 @@ body,
   }
   .mika-mona-center-editor-format{
     position: absolute;
-    z-index: 12;
-    top: 6px;
-    left: 530px;
+    z-index: 1200;
+    top: 10px;
+    right: 420px;
+    border-color: #d9d9d900!important;
+    background: #ffffff00!important;
+    color: #fff;
+    &:hover{
+      color: rgb(32, 216, 249)!important;
+    }
   }
   .mika-mona-right-view {
     width: 400px;
@@ -84,7 +90,7 @@ body,
     color: #fff;
   }
   .ant-tree-node-selected {
-    background-color: #dff976 !important;
+    background-color: #20d8f9 !important;
     color: #000;
   }
   .mika-mona-left-dir-title {
@@ -119,7 +125,7 @@ body,
     }
   }
   .ant-tree-node-content-wrapper:hover {
-    color: #dff976 !important;
+    color: #20d8f9 !important;
   }
 }
 .title-nav-header {
@@ -148,7 +154,7 @@ body,
       left: 476px;
     }
   a.active {
-    color: #dff976;
+    color: #20d8f9;
     border: 0px solid #0b0e13;
   }
   span {
@@ -160,14 +166,17 @@ body,
   }
 }
 .title-header {
-  font-size: 18px;
+  font-family: monospace;
+  height: 25px;
+  line-height: 28px;
+  font-size: 16px;
   text-align: left;
   color: #fff;
   background: transparent;
   font-weight: 600;
   border-bottom: 1px solid #dedede45;
   padding: 10px;
-  padding-left: 20px;
+  padding-left: 30px;
 }
 .mika-out-log-content {
   height: 400px;
@@ -183,13 +192,18 @@ body,
 .logControl{
   position: fixed;
   z-index: 124;
-  top: 6px;
+  top: 10px;
   right: 34px;
   button{
     margin: 0 10px;
     color: #fff;
-    background: linear-gradient(0deg, rgba(0, 172, 238, 1) 0%, rgba(2, 126, 251, 1) 100%);
+    background: transparent;
+    border-color: transparent;
     &:hover{
+      span{
+      color: #161c28;
+      }
+      border-color: #161c28!important;
       background-color: #fff;
     }
   }
@@ -207,68 +221,4 @@ body,
       padding-top: 15px;
     }
   }
-}
-.popupCtrl{
-  top: 8px;
-  left: 245px;
-  position: absolute;
-  z-index: 100;
-  background-color: #dff976 !important;
-  color: #000!important;
-  border-color: #fff0!important;
-}
-.popupPanel{
-  &.show{
-   opacity: 1; 
-   z-index: 1000;
-  }
-  opacity: 0;
-  transition: all .3s;
-  position: absolute;
-  z-index: -100;
-  width: 335px;
-  height: 230px;
-  background-color: rgb(0 0 0 / 63%);
-  border-radius: 20px;
-  left: 150px!important;
-  top: 40px!important;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding: 18px;
-  padding-right: 0px;
-  div{
-    min-width: 130px;
-    flex: 1;
-    height: 55px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    cursor: pointer;
-    &:hover{
-      background: #dedede45;
-      border-radius: 5px;
-    }
-  }
-}
-.popupCurShow{
-  position: absolute;
-  top: 8px;
-  left: 390px;
-  color: #ffff;
-  z-index: 12333;
-  font-size: 22px;
-  font-weight: bold;
-}
-.popIcon{
-  width: 40px;
-  height: 40px;
-  padding-right: 10px;
-  svg{
-    width: inherit;
-    height: inherit;
-  }
-  
 }

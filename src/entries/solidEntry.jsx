@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react'
-import Directory from '@components/koCmpt/lftdir';
-import MainEditor from '@components/koCmpt/ctmain';
-import RightView from '@components/koCmpt/rtview'
+import Directory from '@components/solidCmpt/lftdir';
+import MainEditor from '@components/solidCmpt/ctmain';
+import RightView from '@components/solidCmpt/rtview'
 import { observer } from "mobx-react";
 import { editStore } from "@store/index";
 import { Spin } from 'antd';
-import './main.scss'
+import '../main.scss';
 
-function KoEntry() {
+function SolidEntry() {
     useEffect(()=>{
     },[])
   return (
@@ -23,4 +23,4 @@ function KoEntry() {
   );
 }
 
-export default observer(KoEntry);
+export default observer(SolidEntry);

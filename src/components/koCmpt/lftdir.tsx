@@ -206,7 +206,6 @@ function Directory(props: any) {
 				// ko page db init inject
 				koTemplates
 		};
-		// 设定一个入口文件：app.jsx
 
 		setTimeout(async () => {
 			const curRequest = await initIndexDB(curData);
