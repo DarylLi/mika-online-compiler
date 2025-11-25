@@ -1,5 +1,8 @@
 export function initIndexDB(data) {
 	return new Promise((res, rej) => {
+		if (window._isAssistanceMode) {
+			data.storeName = 'mika-assistant-templates';
+		}
 		const request = (window.indexedDB || window.webkitIndexedDB).open(
 			data.storeName,
 			data.version
@@ -31,6 +34,10 @@ export function initIndexDB(data) {
 	});
 }
 export const addData = (db, storeName, obj) => {
+	if (window._isAssistanceMode) {
+		storeName = 'mika-assistant-templates';
+		obj.templates = window._assistanceTempate;
+	}
 	//readwrite 读写操作的权限
 	const request = db
 		.transaction(storeName, 'readwrite')
@@ -40,6 +47,8 @@ export const addData = (db, storeName, obj) => {
 		// console.log('写入成功', e.target.result);
 		//这里可以做一些操作，添加第一次之后数据还是相同的就要进行阻止或者清空，否则报错
 		//readyState为done是添加完毕
+		// 清理socket传输模版内容
+		window._assistanceTempate = null;
 	};
 	request.onerror = (e) => {
 		// console.log('写入失败：', e);
@@ -48,6 +57,10 @@ export const addData = (db, storeName, obj) => {
 };
 export const getData = (db, storeName, key) => {
 	return new Promise((res, rej) => {
+		if (window._isAssistanceMode) {
+			storeName = 'mika-assistant-templates';
+			res({ templates: window._assistanceTempate });
+		}
 		// transaction 第二个参数不写，默认是只读，key是当前属性的id值
 		const request = db.transaction([storeName]).objectStore(storeName).get(key);
 		request.onsuccess = (e) => {
@@ -64,6 +77,9 @@ export const getData = (db, storeName, key) => {
 
 export const getAllData = (db, storeName) => {
 	return new Promise((res, rej) => {
+		if (window._isAssistanceMode) {
+			storeName = 'mika-assistant-templates';
+		}
 		// transaction 第二个参数不写，默认是只读
 		const request = db.transaction(storeName).objectStore(storeName).getAll();
 		request.onsuccess = (e) => {
@@ -78,6 +94,9 @@ export const getAllData = (db, storeName) => {
 };
 // 通过索引name获取数据
 const getNameData = (db, storeName, name) => {
+	if (window._isAssistanceMode) {
+		storeName = 'mika-assistant-templates';
+	}
 	// transaction 第二个参数不写，默认是只读
 	const request = db
 		.transaction([storeName])
@@ -96,6 +115,9 @@ const getNameData = (db, storeName, name) => {
 // 更新某一条数据
 export const updateData = (db, storeName, data) => {
 	return new Promise((res, rej) => {
+		if (window._isAssistanceMode) {
+			storeName = 'mika-assistant-templates';
+		}
 		const request = db
 			.transaction([storeName], 'readwrite')
 			.objectStore(storeName)
@@ -114,6 +136,9 @@ export const updateData = (db, storeName, data) => {
 };
 // 删除某一条数据
 export const deleteData = (db, storeName, key) => {
+	if (window._isAssistanceMode) {
+		storeName = 'mika-assistant-templates';
+	}
 	const request = db
 		.transaction([storeName], 'readwrite')
 		.objectStore(storeName)
@@ -129,6 +154,9 @@ export const deleteData = (db, storeName, key) => {
 };
 // 使用指针遍历所有值使用id
 const fORData = (db, storeName) => {
+	if (window._isAssistanceMode) {
+		storeName = 'mika-assistant-templates';
+	}
 	const request = db
 		.transaction([storeName], 'readwrite')
 		.objectStore(storeName);
@@ -151,6 +179,9 @@ const fORData = (db, storeName) => {
 };
 // 使用指针遍历所有值，使用name索引
 const fORData1 = (db, storeName) => {
+	if (window._isAssistanceMode) {
+		storeName = 'mika-assistant-templates';
+	}
 	const objectStore = db.transaction([storeName]).objectStore(storeName);
 	var index = objectStore.index('indexName');
 	const range = IDBKeyRange.bound(1, 10); //遍历id从1到10的数据

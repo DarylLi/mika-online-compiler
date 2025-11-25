@@ -189,6 +189,9 @@ function Directory(props: any) {
 				: [...spendKeys, info?.node?.filename]
 		);
 		setSelectedKeys([info?.node?.path]);
+		// setTimeout(() => {
+		// 	setSelectedKeys(['src/index.css']);
+		// }, 2000);
 		setShowOP('');
 		setShowRenameKey('');
 	};

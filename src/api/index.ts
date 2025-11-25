@@ -3,12 +3,13 @@ type Socket = any;
 type UserInfo = any;
 type AssistanceRequests = any;
 type ContentChunks = any;
+const sockethost = '192.168.71.77';
 class SocketInstance {
 	socket: Socket = null;
 	userInfo: UserInfo = null;
 	assistanceRequests: AssistanceRequests = null;
 	contentChunks: ContentChunks = null;
-	constructor() {
+	constructor(handleMessage: any) {
 		if (this.socket && this.socket.readyState === WebSocket.OPEN) {
 			console.log('⚠️ 已经连接，无需重复连接');
 			return;
@@ -17,7 +18,7 @@ class SocketInstance {
 		// 将 http:// 替换为 ws://，https:// 替换为 wss://
 		const wsUrl =
 			(window.location.protocol === 'https:' ? 'wss://' : 'ws://') +
-			'localhost:3000';
+			`${sockethost}:3000`;
 		this.socket = new WebSocket(wsUrl);
 
 		this.socket.onopen = () => {
@@ -28,6 +29,7 @@ class SocketInstance {
 			try {
 				const message = JSON.parse(event.data);
 				this.handleMessage(message);
+				handleMessage(message);
 			} catch (error: unknown) {
 				console.log(`❌ 消息解析错误: ${error as any}`);
 			}
@@ -170,6 +172,38 @@ class SocketInstance {
 				console.log(`⚠️ 未知事件: ${event}`);
 		}
 	}
+	requestAssistance(templateId: string, templateContent: string) {
+		if (!this.userInfo) {
+			console.log('请先连接服务器');
+			return;
+		}
+		if (
+			this.sendWebSocketMessage('request-assistance', {
+				templateId,
+				templateContent
+			})
+		) {
+			console.log('📤 发送协助请求');
+		}
+	}
+	joinAssistance(requesterUuid: string) {
+		if (this.sendWebSocketMessage('join-assistance', { requesterUuid })) {
+			console.log(`📤 加入协助: ${requesterUuid}`);
+		}
+	}
+	sendWebSocketMessage(event: any, data: any) {
+		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+			alert('请先连接服务器');
+			return false;
+		}
+		try {
+			this.socket.send(JSON.stringify({ event, data }));
+			return true;
+		} catch (error) {
+			console.log(`❌ 发送消息失败: ${error.message}`);
+			return false;
+		}
+	}
 }
 export { SocketInstance };
-export default new SocketInstance();
+// export default new SocketInstance();

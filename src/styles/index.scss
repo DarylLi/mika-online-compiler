@@ -1,3 +1,55 @@
 body{
     background-color: #000;
 }
+.assistance-action-request{
+    position: fixed;
+    right: 340px;
+    top: 3px;
+    button{
+        color: #41b883!important;
+        background-color: #161c28!important;
+        span{
+            color: inherit!important;
+        }
+    }
+    
+}
+.assistance-action-list{
+    position: fixed;
+    right: 305px;
+    top: 3px;
+    button{
+        color: #ff3e00!important;
+        background-color: #161c28!important;
+        span{
+            color: inherit!important;
+        }
+    }
+    
+}
+.socket-loading{
+    position: fixed;
+    right: 200px;
+    width: 188px;
+    text-align: left;
+    z-index: 1222;
+    background: #131924;
+    top: 14px;
+    span{
+        color: #fff;
+    }
+}
+.assistance-info{
+    position: absolute;
+    width: 290px;
+    color: #fff;
+    font-size: 10px;
+    top: 0px;
+    right: 82px;
+    &-uid{
+        padding: 0 5px;
+        font-size: 10px;
+        font-weight: bold;
+        color: rgb(32, 216, 249);
+    }
+}

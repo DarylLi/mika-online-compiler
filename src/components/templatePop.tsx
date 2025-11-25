@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { renderButton } from '@utils/initButton';
+import { editStore } from '@store/index';
+import { socketStore } from '@store/socket';
+import RequestList from './socketCmpt/requestList';
 import '~@styles/popup';
 
 const Popup = () => {
@@ -14,6 +17,9 @@ const Popup = () => {
 	const [tmp, setTmp] = useState('React');
 	const navigate = useNavigate();
 	const directLink = (url: string, type: string) => {
+		(window as any)._isAssistanceMode = false;
+		(window as any)._assistanceTempate = undefined;
+		editStore.setType(type);
 		switchPop();
 		setTmp(type);
 		navigate(url);
@@ -23,6 +29,7 @@ const Popup = () => {
 	};
 	return (
 		<>
+			<RequestList showLog={socketStore.showList}></RequestList>
 			<div className="popupCtrl" onClick={switchPop}>
 				<svg
 					ref={popRef}
@@ -43,8 +50,8 @@ const Popup = () => {
 			<div className="popupCurShow">
 				<svg viewBox="0 0 600 300">
 					<symbol id="s-text">
-						<text text-anchor="left" x="0%" y="50%" dy=".35em">
-							{tmp}
+						<text textAnchor="start" x="0%" y="50%" dy=".35em">
+							{editStore.curType}
 						</text>
 					</symbol>
 					<use className="pop-text" xlinkHref="#s-text"></use>
