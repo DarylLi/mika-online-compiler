@@ -47,7 +47,7 @@ class SocketInstance {
 		};
 	}
 	updateAssistanceList() {
-		const listDiv = document.getElementById('assistanceList');
+		// const listDiv = document.getElementById('assistanceList');
 		if (this.assistanceRequests?.length === 0) {
 			// listDiv.innerHTML = '暂无协助请求';
 			console.log('无请求');
@@ -63,54 +63,6 @@ class SocketInstance {
 		//     `
 		// 	)
 		// 	.join('');
-	}
-	handleContentChunk(chunk: any) {
-		const key = `${chunk.fromUuid}_${chunk.templateId}`;
-
-		if (!this.contentChunks[key]) {
-			this.contentChunks[key] = [];
-		}
-
-		this.contentChunks[key][chunk.chunkIndex] = chunk.content;
-		console.log(`📦 接收内容分片 ${chunk.chunkIndex + 1}/${chunk.totalChunks}`);
-
-		// 检查是否所有分片都已接收
-		const receivedCount = this.contentChunks[key].filter(
-			(c: any) => c !== undefined
-		).length;
-		if (receivedCount === chunk.totalChunks) {
-			// 合并所有分片（按索引排序）
-			const sortedChunks = this.contentChunks[key]
-				.map((content: any, index: any) => ({ index, content }))
-				.filter((item: any) => item.content !== undefined)
-				.sort((a: any, b: any) => a.index - b.index);
-
-			const fullContent = sortedChunks
-				.map((item: any) => item.content)
-				.join('');
-
-			// 尝试解析为 JSON，如果是 JSON 则格式化显示
-			try {
-				const jsonContent = JSON.parse(fullContent);
-				// document.getElementById('editorContent').value = JSON.stringify(
-				// 	jsonContent,
-				// 	null,
-				// 	2
-				// );
-				console.log(
-					`✅ 内容接收完成（JSON 格式），共 ${chunk.totalChunks} 个分片`
-				);
-			} catch (err: unknown) {
-				// 不是 JSON，直接显示字符串
-				// document.getElementById('editorContent').value = fullContent;
-				console.log(
-					`✅ 内容接收完成，共 ${chunk.totalChunks} 个分片,${err as any}`
-				);
-			}
-
-			// 清理已处理的分片
-			delete this.contentChunks[key];
-		}
 	}
 	handleMessage(message: any) {
 		const { event, data } = message;
@@ -145,9 +97,9 @@ class SocketInstance {
 				console.log(`✅ 协助请求已发送`);
 				break;
 
-			case 'template-content-chunk':
-				this.handleContentChunk(data);
-				break;
+			// case 'template-content-chunk':
+			// 	this.handleContentChunk(data);
+			// 	break;
 
 			case 'message-received':
 				// const chatDiv = document.getElementById('chatMessages');
@@ -191,16 +143,53 @@ class SocketInstance {
 			console.log(`📤 加入协助: ${requesterUuid}`);
 		}
 	}
-	sendWebSocketMessage(event: any, data: any) {
+	switchContentFile(templateId: string, toUuid: string, switchFile: string) {
+		if (!this.userInfo) {
+			console.log('请先连接服务器');
+			return;
+		}
+		if (
+			this.sendWebSocketMessage('switch-content-file', {
+				switchFile,
+				toUuid,
+				templateId
+			})
+		) {
+			console.log('📤 切换当前文件');
+		}
+	}
+	endAssistance(requesterUuid: string) {
+		if (
+			this.sendWebSocketMessage('end-assistance', {
+				requesterUuid
+			})
+		) {
+			console.log('📤 结束协助');
+		}
+	}
+	sendContentMessage(
+		templateId: string,
+		path: string,
+		code: string,
+		toUuid: string
+	) {
+		this.sendWebSocketMessage('send-template-content', {
+			content: code || ' ',
+			path,
+			toUuid,
+			templateId
+		});
+	}
+	sendWebSocketMessage(event: string, data: any) {
 		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
-			alert('请先连接服务器');
+			console.error('请先连接服务器');
 			return false;
 		}
 		try {
 			this.socket.send(JSON.stringify({ event, data }));
 			return true;
 		} catch (error) {
-			console.log(`❌ 发送消息失败: ${error.message}`);
+			console.error(`❌ 发送消息失败: ${error.message}`);
 			return false;
 		}
 	}

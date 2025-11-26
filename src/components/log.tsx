@@ -11,7 +11,8 @@ import {
 	FileTextOutlined,
 	PlayCircleOutlined,
 	CommentOutlined,
-	ContainerOutlined
+	ContainerOutlined,
+	CloseOutlined
 } from '@ant-design/icons';
 import '~@styles/index';
 
@@ -35,7 +36,6 @@ class EditLog extends PureComponent<any, any> {
 	};
 	getAssistanceList = () => {
 		socketStore.getAssistanceList();
-		console.log(toJS(socketStore.assitanceList));
 		socketStore.switchList();
 	};
 	openPreview = () => {
@@ -73,6 +73,14 @@ class EditLog extends PureComponent<any, any> {
 			newWindow.document.close();
 		}
 	};
+	handleClose(): void {
+		socketStore.endAssistance();
+		let curUrl = window.location.href.split('/');
+		curUrl.splice(-1);
+		setTimeout(() => {
+			window.location.href = curUrl.join('/');
+		}, 1500);
+	}
 	componentDidMount(): void {
 		console.log(socketStore.SocketInstance);
 		useConsole(toJS(editStore.logMsg), editStore);
@@ -128,6 +136,19 @@ class EditLog extends PureComponent<any, any> {
 						You are helping ：
 						<span className="assistance-info-uid">
 							{socketStore?.assitantedId}
+						</span>
+						<span className="assistance-info-leave" onClick={this.handleClose}>
+							<Tooltip
+								placement="bottom"
+								color="#334fff"
+								title={'Close Assistance ~'}
+							>
+								<Button
+									shape="circle"
+									icon={<CloseOutlined />}
+									size="large"
+								></Button>
+							</Tooltip>
 						</span>
 					</span>
 				)}

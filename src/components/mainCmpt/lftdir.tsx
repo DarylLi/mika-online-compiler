@@ -4,6 +4,7 @@ import { templates } from '@mock/fileData';
 import { vueTemplates } from '@mock/vueData';
 import { angularTemplates } from '@mock/ngData';
 import { editStore } from '@store/index';
+import { socketStore } from '@store/socket';
 import { getCodeTransform, getFileContent } from '@utils/index';
 import { parseVue } from '@utils/parseVue';
 import { parseAngular } from '@utils/parseAngular';
@@ -326,6 +327,15 @@ function Directory(props: any) {
 			// updateData(curRequest.db, "mika-templates", info);
 		});
 	}, []);
+	useEffect(() => {
+		socketStore.switchFileNode.length > 0 &&
+			onSelect([], {
+				node: {
+					path: socketStore.switchFileNode[0],
+					filename: socketStore.switchFileNode[0]
+				}
+			});
+	}, [socketStore.switchFileNode]);
 	return (
 		<div className="mika-mona-left-dir">
 			{contextHolder}

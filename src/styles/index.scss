@@ -52,4 +52,18 @@ body{
         font-weight: bold;
         color: rgb(32, 216, 249);
     }
+    &-leave{
+        position: absolute;
+        font-size: 4px;
+        top: -8px;
+        right: 7px;
+        button{
+            background: #ffffff00!important;
+            color: #fff!important;
+            span{
+                color: #fff!important;
+            }
+        }
+    }
+    height: 28px;
 }

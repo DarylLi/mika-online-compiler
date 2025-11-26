@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input, Tree, message, Modal } from 'antd';
 import { emberTemplates } from '@mock/emberData';
 import { editStore } from '@store/index';
+import { socketStore } from '@store/socket';
 import { getCodeTransform, getFileContent } from '@utils/index';
 import { parseEmber } from '@utils/parseEmber';
 import {
@@ -258,6 +259,16 @@ function Directory(props: any) {
 			}
 		});
 	}, []);
+	useEffect(() => {
+		socketStore.switchFileNode.length > 0 &&
+			onSelect([], {
+				node: {
+					path: socketStore.switchFileNode[0],
+					filename: socketStore.switchFileNode[0]
+				}
+			});
+		// setSelectedKeys(socketStore.switchFileNode);
+	}, [socketStore.switchFileNode]);
 	return (
 		<div className="mika-mona-left-dir">
 			{contextHolder}

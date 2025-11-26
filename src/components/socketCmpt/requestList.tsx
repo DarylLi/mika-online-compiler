@@ -39,42 +39,46 @@ const requestList = (props: any) => {
 				<List
 					className="assistance-request-list"
 					itemLayout="horizontal"
-					dataSource={socketStore.assitanceList}
-					renderItem={(item, index) => (
-						<List.Item
-							actions={[
-								<a
-									key="list-assistance-edit"
-									onClick={(e) => {
-										joinAssistance(e, item);
-									}}
-								>
-									join
-								</a>
-							]}
-						>
-							<List.Item.Meta
-								avatar={
-									<Avatar
-										src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
-									/>
-								}
-								title={
-									<span>
-										User:{' '}
-										<span className="attention">{item.requesterUuid}</span>
-									</span>
-								}
-								description={
-									<>
-										please help me with the
-										<span className="attentionType"> {item.templateId} </span>
-										project
-									</>
-								}
-							/>
-						</List.Item>
-					)}
+					dataSource={socketStore.assitanceList.filter((e: any) => e.show)}
+					renderItem={(item, index) =>
+						item.show ? (
+							<List.Item
+								actions={[
+									<a
+										key="list-assistance-edit"
+										onClick={(e) => {
+											joinAssistance(e, item);
+										}}
+									>
+										join
+									</a>
+								]}
+							>
+								<List.Item.Meta
+									avatar={
+										<Avatar
+											src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${index}`}
+										/>
+									}
+									title={
+										<span>
+											User:{' '}
+											<span className="attention">{item.requesterUuid}</span>
+										</span>
+									}
+									description={
+										<>
+											please help me with the
+											<span className="attentionType"> {item.templateId} </span>
+											project
+										</>
+									}
+								/>
+							</List.Item>
+						) : (
+							<></>
+						)
+					}
 				/>
 			</Modal>
 		</>

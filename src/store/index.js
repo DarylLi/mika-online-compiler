@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx';
 import { replaceFileContent } from '@utils/index';
+import { socketStore } from './socket';
 // const temMap = new WeakMap();
 class EditorStore {
 	// curTemplate = "createReactDemo";
@@ -55,10 +56,22 @@ class EditorStore {
 	}
 	updateInfo(data) {
 		this.fileInfo = data;
+		socketStore.doSwitchFile({
+			templateId: this.curType,
+			path: data.path
+		});
 	}
 	updateCode(code, path = '') {
 		this.code = code || ' ';
-		path && (this.path = path);
+		if (path) {
+			this.path = path;
+		} else {
+			socketStore.doChangeContent({
+				templateId: this.curType,
+				path: this.path,
+				code
+			});
+		}
 		//编译前清log
 		this.clearLog();
 	}
