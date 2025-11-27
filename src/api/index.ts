@@ -143,6 +143,9 @@ class SocketInstance {
 			console.log(`📤 加入协助: ${requesterUuid}`);
 		}
 	}
+	stopRequest(requesterUuid) {
+		this.sendWebSocketMessage('stop-request', { requesterUuid });
+	}
 	switchContentFile(templateId: string, toUuid: string, switchFile: string) {
 		if (!this.userInfo) {
 			console.log('请先连接服务器');

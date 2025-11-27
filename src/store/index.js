@@ -75,6 +75,16 @@ class EditorStore {
 		//编译前清log
 		this.clearLog();
 	}
+	switchCode(code) {
+		this.code = code || ' ';
+		// socketStore.doChangeContent({
+		// 	templateId: this.curType,
+		// 	path: this.path,
+		// 	code
+		// });
+		//编译前清log
+		this.clearLog();
+	}
 	replaceFileContent(code) {
 		replaceFileContent(this.currentFiles, this.fileInfo.path, code);
 	}

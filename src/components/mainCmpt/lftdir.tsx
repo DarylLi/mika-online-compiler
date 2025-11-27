@@ -208,10 +208,18 @@ function Directory(props: any) {
 	};
 	const onSelect = (selectedKeys: any[], info: any) => {
 		info?.node?.kind !== 'directory' &&
-			editStore.updateCode(
-				getFileContent(editStore.currentFiles, info?.node?.path) || '',
-				cpType === 'angular' ? info?.node?.path : ''
-			);
+			// editStore.updateCode(
+			// 	getFileContent(editStore.currentFiles, info?.node?.path) || '',
+			// 	cpType === 'angular' ? info?.node?.path : ''
+			(cpType === 'angular'
+				? editStore.updateCode(
+						getFileContent(editStore.currentFiles, info?.node?.path) || '',
+						info?.node?.path
+					)
+				: editStore.switchCode(
+						getFileContent(editStore.currentFiles, info?.node?.path) || ''
+					));
+
 		info?.node?.kind !== 'directory' && editStore.updateInfo(info?.node || '');
 		// getDBSaved({});
 		setSpendKeys(

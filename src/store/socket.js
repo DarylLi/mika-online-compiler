@@ -82,6 +82,8 @@ class SocketStore {
 		message.event === 'assistance-ended' && this.handleAssistanceEnd();
 		// 协作者跑路
 		message.event === 'helper-leave' && (this.helperId = null);
+		// 协作发起者跑路
+		message.event === 'requester-leave' && this.endAssistance();
 	}
 	switchList() {
 		this.showList = !this.showList;
@@ -98,6 +100,11 @@ class SocketStore {
 	}
 	endAssistance() {
 		this.SocketInstance.endAssistance(this.assitantedId);
+		let curUrl = window.location.href.split('/');
+		curUrl.splice(-1);
+		setTimeout(() => {
+			window.location.href = curUrl.join('/');
+		}, 1500);
 	}
 	getAssistanceList() {
 		this.assitanceList = this.SocketInstance.assistanceRequests;
@@ -111,6 +118,10 @@ class SocketStore {
 		this.assitantedId = uuid;
 		this.joinAssitance = true;
 		this.SocketInstance.joinAssistance(uuid);
+	}
+	stopRequest(uuid) {
+		this.needAssitance = false;
+		this.SocketInstance.stopRequest(uuid);
 	}
 }
 

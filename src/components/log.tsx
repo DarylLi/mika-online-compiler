@@ -12,6 +12,7 @@ import {
 	PlayCircleOutlined,
 	CommentOutlined,
 	ContainerOutlined,
+	PoweroffOutlined,
 	CloseOutlined
 } from '@ant-design/icons';
 import '~@styles/index';
@@ -73,13 +74,13 @@ class EditLog extends PureComponent<any, any> {
 			newWindow.document.close();
 		}
 	};
+	// 停止协助
 	handleClose(): void {
 		socketStore.endAssistance();
-		let curUrl = window.location.href.split('/');
-		curUrl.splice(-1);
-		setTimeout(() => {
-			window.location.href = curUrl.join('/');
-		}, 1500);
+	}
+	//结束协助请求
+	handleStop(): void {
+		socketStore.stopRequest();
 	}
 	componentDidMount(): void {
 		console.log(socketStore.SocketInstance);
@@ -116,20 +117,39 @@ class EditLog extends PureComponent<any, any> {
 				{socketStore?.needAssitance &&
 					!socketStore.socketPending &&
 					(socketStore.helperId ? (
-						<span className="assistance-info">
-							<span className="assistance-info-uid">
-								{socketStore?.helperId}
+						<>
+							<div className="assistance-info-mask"></div>
+							<span className="assistance-info">
+								<span className="assistance-info-uid">
+									{socketStore?.helperId}
+								</span>
+								is helping you.
 							</span>
-							is helping you.
-						</span>
+						</>
 					) : (
-						<span className="assistance-info">
-							Your userId is ：
-							<span className="assistance-info-uid">
-								{socketStore?.SocketInstance?.userInfo?.uuid}
+						<>
+							<div className="assistance-info-mask">
+								<Tooltip
+									placement="bottom"
+									color="#863230"
+									title={'Cancel Request'}
+								>
+									<Button
+										shape="circle"
+										icon={<PoweroffOutlined />}
+										size="large"
+										onClick={this.handleStop}
+									></Button>
+								</Tooltip>
+							</div>
+							<span className="assistance-info">
+								Your userId is ：
+								<span className="assistance-info-uid">
+									{socketStore?.SocketInstance?.userInfo?.uuid}
+								</span>
+								，please wait for someone to assist you.
 							</span>
-							，please wait for someone to assist you.
-						</span>
+						</>
 					))}
 				{socketStore?.joinAssitance && !socketStore.socketPending && (
 					<span className="assistance-info">
@@ -140,7 +160,7 @@ class EditLog extends PureComponent<any, any> {
 						<span className="assistance-info-leave" onClick={this.handleClose}>
 							<Tooltip
 								placement="bottom"
-								color="#334fff"
+								color="#467abe"
 								title={'Close Assistance ~'}
 							>
 								<Button

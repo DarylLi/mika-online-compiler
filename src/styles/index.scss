@@ -65,5 +65,18 @@ body{
             }
         }
     }
+    &-mask{
+        position: fixed;
+        z-index: 12000;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        top: 0px;
+        button{
+            right: 100px;
+            position: absolute;
+            top: 2px;
+        }
+    }
     height: 28px;
 }
