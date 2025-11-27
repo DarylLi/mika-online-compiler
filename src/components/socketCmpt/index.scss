@@ -1,0 +1,23 @@
+span.attention{
+    color: rgb(32, 216, 249);
+}
+span.attentionType{
+    color: #ff3e00;
+}
+.AssistanceModal{
+    .ant-modal-content{
+        padding: 20px 14px;
+    }
+    .ant-list-items{
+        padding: 0 20px;
+    }
+    .ant-spin-container{
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    li{
+        a{
+            color: #41b883 !important;
+        }
+    }
+}

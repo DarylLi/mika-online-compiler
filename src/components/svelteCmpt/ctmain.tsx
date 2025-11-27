@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 // import MonacoEditor from "react-monaco-editor";
 import MonacoEditor from '@monaco-editor/react';
 import { editStore } from '@store/index';
+import { socketStore } from '@store/socket';
 import { observer } from 'mobx-react-lite';
 import { getCodeTransform, getFileContent, doDebounce } from '@utils/index';
 import { parseSvelte } from '@utils/parseSvelte';
@@ -90,9 +91,9 @@ function MainEditor(props: any) {
 			changedData
 		);
 	};
-	const options = {
-		selectOnLineNumbers: true
-	};
+	useEffect(() => {
+		socketStore.updatedCode && onChange(socketStore.updatedCode, null);
+	}, [socketStore.updatedCode]);
 	return (
 		<div className="mika-mona-center-editor">
 			<Tooltip placement="bottom" color="lime" title="formatting codes">

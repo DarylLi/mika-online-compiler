@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Input, Tree, message, Modal } from 'antd';
 import { svelteTemplates } from '@mock/svelteData';
 import { editStore } from '@store/index';
+import { socketStore } from '@store/socket';
 import { getFileContent } from '@utils/index';
 import { parseSvelte } from '@utils/parseSvelte';
 import {
@@ -262,6 +263,15 @@ function Directory(props: any) {
 			// updateData(curRequest.db, "mika-templates", info);
 		});
 	}, []);
+	useEffect(() => {
+		socketStore.switchFileNode.length > 0 &&
+			onSelect([], {
+				node: {
+					path: socketStore.switchFileNode[0],
+					filename: socketStore.switchFileNode[0]
+				}
+			});
+	}, [socketStore.switchFileNode]);
 	return (
 		<div className="mika-mona-left-dir">
 			{contextHolder}

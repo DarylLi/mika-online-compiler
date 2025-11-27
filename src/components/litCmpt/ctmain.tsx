@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import MonacoEditor from '@monaco-editor/react';
 import { editStore } from '@store/index';
+import { socketStore } from '@store/socket';
 import { observer } from 'mobx-react-lite';
 import { getFileContent, doDebounce } from '@utils/index';
 import { parseLit } from '@utils/parseLit';
@@ -88,6 +89,9 @@ function MainEditor(props: any) {
 			changedData
 		);
 	};
+	useEffect(() => {
+		socketStore.updatedCode && onChange(socketStore.updatedCode, null);
+	}, [socketStore.updatedCode]);
 	const options = {
 		selectOnLineNumbers: true
 	};
