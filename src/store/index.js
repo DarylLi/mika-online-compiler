@@ -16,6 +16,7 @@ class EditorStore {
 	socket = null;
 	showView = false;
 	showSpin = false;
+	showStorePop = false;
 	logPanelRef = null;
 	monacoModel = null;
 	assistanceTemplate = null;
@@ -53,6 +54,9 @@ class EditorStore {
 	}
 	updateSpin(show) {
 		this.showSpin = show;
+	}
+	updatePop(state) {
+		this.showStorePop = state;
 	}
 	updateInfo(data) {
 		this.fileInfo = data;

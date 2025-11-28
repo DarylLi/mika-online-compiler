@@ -21,13 +21,12 @@ $time-step: $time/$max;
     cursor: pointer;
   }
   text{
-    font-family: "Playfair Display", serif !important;
-    font-size: 18px;
+    font-family:'Space Grotesk' !important;
+    font-size: 22px;
     color: #fff;
     fill: #fff!important;
     transform: translateY(2px);
     font-weight: bold;
-    font-size: 20px;
   }
 }
 .popupPanel{

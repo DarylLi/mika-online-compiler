@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
-import { replaceFileContent } from '@utils/index';
 import { SocketInstance } from '@api/index';
+import { message } from 'antd';
 
 class SocketStore {
 	SocketInstance = new SocketInstance(this.handleMessage.bind(this));
@@ -15,6 +15,8 @@ class SocketStore {
 	assitanceList = [];
 	switchFileNode = [];
 	updatedCode = null;
+	messageApi = null;
+	contextHolder = (<></>);
 	constructor() {
 		makeAutoObservable(this);
 	}
@@ -24,6 +26,7 @@ class SocketStore {
 	 */
 	handleMatchAssitance({ helperUuid, templateId } = info) {
 		this.helperId = helperUuid;
+		message.info(`helper ${helperUuid} joined！！`);
 	}
 	/**
 	 * 被协作者接受文件切换
@@ -57,9 +60,17 @@ class SocketStore {
 			this.assitantedId
 		);
 	}
+	setMessageApi(messageApi) {
+		this.messageApi = messageApi;
+	}
+	setMessageContextHolder(contextHolder) {
+		this.contextHolder = contextHolder;
+	}
 	handleAssistanceEnd() {
 		this.needAssitance = false;
 		this.helperId = null;
+		// this.messageApi.info('Assistance End！！');
+		message.info('Assistance End！！');
 	}
 	/**
 	 * 接受消息
@@ -81,7 +92,7 @@ class SocketStore {
 		// 当前请求的协作结束
 		message.event === 'assistance-ended' && this.handleAssistanceEnd();
 		// 协作者跑路
-		message.event === 'helper-leave' && (this.helperId = null);
+		message.event === 'helper-leave' && this.handleHelperLeave();
 		// 协作发起者跑路
 		message.event === 'requester-leave' && this.endAssistance();
 	}
@@ -98,7 +109,12 @@ class SocketStore {
 		this.needAssitance = true;
 		this.SocketInstance.requestAssistance(templateType, templateData);
 	}
+	handleHelperLeave() {
+		this.helperId = null;
+		message.info('helper leave！！');
+	}
 	endAssistance() {
+		message.info('Assistance End！！');
 		this.SocketInstance.endAssistance(this.assitantedId);
 		let curUrl = window.location.href.split('/');
 		curUrl.splice(-1);

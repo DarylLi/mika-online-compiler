@@ -9,17 +9,23 @@ const KoEntry = React.lazy(() => import('../entries/koEntry'));
 const LitEntry = React.lazy(() => import('../entries/litEntry'));
 const SolidEntry = React.lazy(() => import('../entries/solidEntry'));
 const Assistance = React.lazy(() => import('../components/assistanceCmpt'));
-
+import { message } from 'antd';
+import { socketStore } from '@store/socket';
 import TmpPopup from '../components/templatePop';
+import { editStore } from '@store/index';
 
 export default function RouteCmpt() {
   const [curPath, setCurPath] = useState('react');
   const [canRedirect, setCanRedirect] = useState(true);
+  const [messageApi, contextHolder] = message.useMessage();
+  socketStore.setMessageApi(messageApi);
+  socketStore.setMessageContextHolder(contextHolder);
   return (
     <BrowserRouter>
       {/* Navigation */}
       <nav className='title-nav-header'>
-        <div className='title-header'>Mika Coding Online</div>
+        {editStore.contextHolder}
+        <div className='title-header'>Mika Online Editor</div>
         <TmpPopup />
         <div style={{"display":"none"}}>
         <Link

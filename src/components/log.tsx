@@ -30,12 +30,14 @@ class EditLog extends PureComponent<any, any> {
 		this.setState({ showLog: !this.state.showLog });
 	};
 	requestAssistance = () => {
+		editStore.updatePop(false);
 		socketStore.requestAssistance(
 			editStore.curType,
 			JSON.stringify(editStore.currentFiles)
 		);
 	};
 	getAssistanceList = () => {
+		editStore.updatePop(false);
 		socketStore.getAssistanceList();
 		socketStore.switchList();
 	};
@@ -119,7 +121,7 @@ class EditLog extends PureComponent<any, any> {
 					(socketStore.helperId ? (
 						<>
 							<div className="assistance-info-mask"></div>
-							<span className="assistance-info">
+							<span className="assistance-info success">
 								<span className="assistance-info-uid">
 									{socketStore?.helperId}
 								</span>
