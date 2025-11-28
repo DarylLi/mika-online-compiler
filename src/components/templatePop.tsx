@@ -8,12 +8,11 @@ import { socketStore } from '@store/socket';
 import RequestList from './socketCmpt/requestList';
 import '~@styles/popup';
 
-const Popup = () => {
+const Popup = (props) => {
 	useEffect(() => {
 		popRef.current && renderButton(popRef.current);
 	}, []);
 	const popRef = useRef(null);
-	const [showPop, setPop] = useState(false);
 	const [tmp, setTmp] = useState('React');
 	const navigate = useNavigate();
 	const directLink = (url: string, type: string) => {
@@ -24,8 +23,9 @@ const Popup = () => {
 		setTmp(type);
 		navigate(url);
 	};
+
 	const switchPop = () => {
-		setPop(!showPop);
+		editStore.updatePop(!editStore.showStorePop);
 	};
 	return (
 		<>
@@ -61,7 +61,7 @@ const Popup = () => {
 					<use className="pop-text" xlinkHref="#s-text"></use>
 				</svg>
 			</div>
-			<div className={`popupPanel ${showPop ? 'show' : ''}`}>
+			<div className={`popupPanel ${editStore.showStorePop ? 'show' : ''}`}>
 				<div onClick={() => directLink('entry', 'React')}>
 					<svg
 						className="popIcon"

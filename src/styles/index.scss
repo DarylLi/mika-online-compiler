@@ -80,3 +80,8 @@ body{
     }
     height: 28px;
 }
+.assistance-info{
+    &.success{
+        line-height: 24px;
+    }
+}
