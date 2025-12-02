@@ -274,7 +274,137 @@ export const getCodeTransform = (
 	replaceMaps = new Map();
 	mapSolute = new Map();
 };
+export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
+	const importCheckedCode = doCheckImport(codeTxt, 'index_', checkedFiles);
+	let values = Array.from(mapSolute.values());
+	let result = null;
+	try {
+		const duplicateList = values.filter(
+			(e) =>
+				e.targetKey &&
+				values.map((w) => w.targetKey).filter((inner) => inner === e.targetKey)
+					.length > 1
+		);
+		if (duplicateList.length > 1) {
+			let reCode = `let offList=[];let doDuplicateStr = importCheckedCode.replace(/${duplicateList[0].targetKey}.*()/g,(match,offset)=>{console.log('....',match,offset);match.includes('()')&&offList.push(match);console.log(offList.length);return 'D_'+offList.length+'_'+match});importCheckedCode=doDuplicateStr`;
+			eval(reCode);
+		}
+		const output = transform(importCheckedCode, {
+			presets: ['env'],
+			plugins: [['transform-react-jsx']]
+		}).code;
+		const afterCode = transform(output, {
+			presets: ['env'],
+			plugins: ['transConfound']
+		}).code;
+		let resultSource = `<!DOCTYPE html>
+			<html lang="zh-CN">
+			<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>react preview page</title>
+				<style>
+				.box {
+					position: relative;
+					width: 300px;
+					height: 100px;
+					scale:.85;
+					/* background: #000; */
+					border: 6px solid #61dafb;
+					border-radius: 50%;
+					display: grid;
+					place-items: center;
+					animation: 3.5s rotate linear infinite;
+					left: calc(50% - 150px);
+					margin-top: 120px;
+					margin-bottom: 120px;
+					}
+					@keyframes rotate {
+					0% {
+						transform: rotate(0);
+					}
+					100% {
+						transform: rotate(360deg);
+					}
+					}
+					.box::after {
+					content: "";
+					position: absolute;
+					left: 0;
+					top: 0;
+					width: 100%;
+					height: 100%;
+					border: 6px solid #61dafb;
+					border-radius: 50%;
+					transform: rotate(60deg);
+					}
 
+					.box::before {
+					content: "";
+					position: absolute;
+					left: 0;
+					top: 0;
+					width: 100%;
+					height: 100%;
+					border: 6px solid #61dafb;
+					border-radius: 50%;
+					transform: rotate(120deg);
+					}
+
+					.inner-box {
+					width: 30px;
+					height: 30px;
+					background: #61dafb;
+					border-radius: 50%;
+					}
+					</style>
+				<link rel="stylesheet" href='https://all.franxxdaryl.site/assets/compiler-lib/reset.min.css' />
+				<link rel="stylesheet" href='https://all.franxxdaryl.site/assets/compiler-lib/antd.min.css' />
+				<script src="https://all.franxxdaryl.site/assets/compiler-lib/react.development.js"></script>
+				<script src="https://all.franxxdaryl.site/assets/compiler-lib/react-dom.development.js"></script>
+				<script src="https://all.franxxdaryl.site/assets/compiler-lib/antd.min.js"></script>
+			</head>
+			<body>
+				<div id="previewBlank"></div>
+			</body>
+				<script>
+				var exports={};
+				const {${Object.keys(antd).join(',')}} = antd;
+				 const { useRef, useState, useEffect } = React;
+				 ${afterCode};
+				 window._rootHandler = ReactDOM.createRoot(document.getElementById('previewBlank'));
+				 window._rootHandler.render(React.createElement(_default))
+				</script>`;
+		let fileId = '';
+		await fetch(`http://${window._mainHost}:3000/api/files`, {
+			method: 'POST', // Method set to POST
+			headers: {
+				'Content-Type': 'application/json' // Inform the server the body is JSON
+			},
+			body: JSON.stringify({
+				content: resultSource,
+				type: 'html',
+				filename: `export_react_source`
+			})
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				fileId = data.fileId;
+			});
+		if (fileId) {
+			window.open(
+				`http://${window._mainHost}:3000/api/files/${fileId}/download`
+			);
+			result = 'success';
+		}
+	} catch (error) {
+		console.log(error);
+	}
+	transferMap = new Map();
+	replaceMaps = new Map();
+	mapSolute = new Map();
+	return resuult;
+};
 export const getFileContent = (files, path) => {
 	let result = files.find((e) => e.path === path);
 	if (result) return result.value;
@@ -308,8 +438,22 @@ export const doDebounce = (fn, time) => {
 		}, time);
 	};
 };
+export const doThrottle = (fn, time) => {
+	let timer = null;
+	return function (...args) {
+		if (timer) {
+			return;
+		} else {
+			fn.apply(this, args);
+			timer = setTimeout(() => {
+				timer = null;
+			}, time);
+		}
+	};
+};
 export default {
-	getCodeTransform
+	getCodeTransform,
+	getCodeTransformAndDL
 };
 
 // log日志封装

@@ -2,8 +2,13 @@ import { observer } from 'mobx-react';
 import React, { PureComponent, createRef } from 'react';
 import { editStore } from '@store/index';
 import { socketStore } from '@store/socket';
-import { useConsole, getFileContent, getCodeTransform } from '@utils/index';
-import { showVuePreview } from '@utils/parseVue';
+import {
+	useConsole,
+	getFileContent,
+	getCodeTransform,
+	getCodeTransformAndDL
+} from '@utils/index';
+import { showVuePreview, downloadVueSource } from '@utils/parseVue';
 import { Button, Tooltip, Popconfirm, Modal, Spin } from 'antd';
 import { toJS } from 'mobx';
 import {
@@ -13,7 +18,8 @@ import {
 	CommentOutlined,
 	ContainerOutlined,
 	PoweroffOutlined,
-	CloseOutlined
+	CloseOutlined,
+	DownloadOutlined
 } from '@ant-design/icons';
 import '~@styles/index';
 
@@ -74,6 +80,65 @@ class EditLog extends PureComponent<any, any> {
 		if (newWindow) {
 			newWindow.document.write(shadowDomOrHTML.innerHTML || shadowDomOrHTML);
 			newWindow.document.close();
+		}
+	};
+	// 下载资源
+	downloadSource = async () => {
+		if (window.location.pathname === '/sfc') {
+			let currentFile = getFileContent(editStore.currentFiles, 'src/App.vue');
+			return await downloadVueSource(
+				currentFile,
+				JSON.parse(JSON.stringify(editStore.currentFiles))
+			);
+		} else if (
+			window.location.pathname === '/entry' ||
+			window.location.pathname === '/'
+		) {
+			let currentFile = getFileContent(editStore.currentFiles, 'src/app.jsx');
+			return await getCodeTransformAndDL(
+				currentFile,
+				JSON.parse(JSON.stringify(editStore.currentFiles))
+			);
+		}
+		let shadowDomOrHTML =
+			(
+				(document as any).getElementById('angularLive') ||
+				(document as any).getElementById('frameLive')
+			)?.getAttribute('srcDoc') ||
+			(document as any)
+				.getElementById('previewFrame')
+				.shadowRoot.querySelector('html');
+		let resultSource = shadowDomOrHTML.innerHTML || shadowDomOrHTML;
+		try {
+			let fileId: string = '';
+			let result: any = null;
+			//@ts-ignore
+			await fetch(`http://${(window as any)._mainHost}:3000/api/files`, {
+				method: 'POST', // Method set to POST
+				headers: {
+					'Content-Type': 'application/json' // Inform the server the body is JSON
+				},
+				body: JSON.stringify({
+					content: resultSource,
+					type: 'html',
+					filename: `export_${editStore.curType}_source`
+				})
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					fileId = data.fileId;
+				});
+			if (fileId) {
+				window.open(
+					//@ts-ignore
+					`http://${(window as any)._mainHost}:3000/api/files/${fileId}/download`
+				);
+				result = 'success';
+			}
+			return result;
+		} catch (error) {
+			console.log(error);
+			return error;
 		}
 	};
 	// 停止协助
@@ -232,6 +297,14 @@ class EditLog extends PureComponent<any, any> {
 						onClick={this.openPreview}
 						shape="circle"
 						icon={<PlayCircleOutlined />}
+						size="small"
+					></Button>
+				</Tooltip>
+				<Tooltip placement="bottom" color="#6c2322" title={'download source'}>
+					<Button
+						onClick={this.downloadSource}
+						shape="circle"
+						icon={<DownloadOutlined />}
 						size="small"
 					></Button>
 				</Tooltip>

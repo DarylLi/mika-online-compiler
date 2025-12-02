@@ -18,6 +18,7 @@
     "html-webpack-plugin": "^5.6.0",
     "postcss-loader": "^7.3.4",
     "prettier": "^3.6.2",
+    "tsconfig-paths": "^4.2.0",
     "vue": "^3.5.22",
     "webpack": "^5.20.0",
     "webpack-dev-server": "^5.0.2"
