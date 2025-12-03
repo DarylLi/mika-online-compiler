@@ -387,7 +387,7 @@ function Directory(props: any) {
 								)}
 								{showOP === node.path &&
 									!(
-										/App.vue|app.jsx|index.html|index.js|index.css/.test(
+										/App.vue|app.jsx|index.html|index.js|(s?)css/.test(
 											showOP
 										) || showOP === 'src'
 									) && (

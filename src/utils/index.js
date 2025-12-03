@@ -1,12 +1,15 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { transform, registerPlugin } from '@babel/standalone';
 import { templates } from '@mock/fileData';
+import { getCssfromSass, getCssFromLess } from './parseStyles';
 
 window.useState = useState;
 window.useEffect = useEffect;
 var transferMap = new Map();
 let replaceMaps = new Map();
 let mapSolute = new Map();
+let cssResource = [];
+let cssValueMap = new WeakMap();
 
 const matchFileName = (fileTrees = [], name) => {
 	let result = null;
@@ -20,7 +23,7 @@ const matchFileName = (fileTrees = [], name) => {
 	return result;
 };
 // import内容替换
-const doCheckImport = (str, nameprefix, checkedFile = templates) => {
+const doCheckImport = async (str, nameprefix, checkedFile = templates) => {
 	let result = str;
 	transform(result, {
 		presets: ['env'],
@@ -28,9 +31,47 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
 	}).code;
 	// 文件import 检索
 	let resultArr = [...result.matchAll(/import.*from.*.;/g)];
+	let cssArr = [...result.matchAll(/import.*(.scss|.less|.css)("|')(;|\s)/g)];
+	// 替换import css内容为相应代码段
+	cssArr.length > 0 &&
+		(await (async () => {
+			// cssArr.forEach((css, index) => {
+			for (var index = 0; index < cssArr.length; index++) {
+				const css = cssArr[index];
+				let matchedName = matchFileName(checkedFile, css[0]);
+				let fileInfo = matchedName;
+				let parseCode = '';
+				// css文件名匹配后操作
+				if (fileInfo) {
+					// 引用代码文件输出内容名称混淆处理
+					let fileType = css[1].replace('.', '');
+					let cssFile = fileInfo.value.replace(/};/g, '}');
+					// less sass不同文件处理
+					const mapFile = {
+						scss: getCssfromSass,
+						less: getCssFromLess
+					};
+					if (mapFile[fileType]) {
+						cssFile = await mapFile[fileType](cssFile);
+					}
+					// getCssfromSass()
+					let curName = `__${fileInfo.filename}__`.replace(
+						'.',
+						`PName${new Date().getTime()}_`
+					);
+					cssResource.push(cssFile);
+					// parseCode = `let ${curName} = document.createElement("style");${curName}.innerText=\`${cssFile}\`;(document.getElementById("innerCssCode")||document.getElementById('previewFrame').shadowRoot.querySelector("#innerCssCode")).appendChild(${curName});`;
+					// parseCode = rustLib.getCompiledCssCode(curName, cssFile);
+				}
+				result = result.replace(css[0], `//${css[0]}`);
+			}
+		})());
 	// 替换import内容为相应代码段
-	resultArr.length > 0 &&
-		resultArr.forEach((mr, index) => {
+	// resultArr.length > 0 &&
+	// resultArr.forEach(
+	if (resultArr.length > 0)
+		for (var mr of resultArr) {
+			// async (mr, index) => {
 			let matchedName = matchFileName(checkedFile, mr[0]);
 			// 若引用文件存在则替换文件内容
 			if (matchedName) {
@@ -39,7 +80,7 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
 				let extraFile = fileInfo.value;
 
 				// 对代码段内容进行同等替换检索
-				let replaceCode = doCheckImport(
+				let replaceCode = await doCheckImport(
 					extraFile,
 					`${nameprefix}${fileInfo.filename.split('.')[0]}_`,
 					checkedFile
@@ -68,7 +109,9 @@ const doCheckImport = (str, nameprefix, checkedFile = templates) => {
 			else {
 				result = result.replace(mr[0], `//${mr[0]}`);
 			}
-		});
+			// }
+		}
+	// );
 	resultArr.forEach((mr) => {
 		const curKey = `${mr[0].replace('import', '').split('from')[0].trim()}`;
 		replaceMaps.set(curKey, `${nameprefix}${curKey}`);
@@ -134,13 +177,18 @@ registerPlugin('confound', confound);
 registerPlugin('transConfound', transConfound);
 registerPlugin('transFileConfound', transFileConfound);
 
-export const getCodeTransform = (
+export const getCodeTransform = async (
 	codeTxt,
 	checkedFiles,
 	rewrite = false,
 	runIframe
 ) => {
-	const importCheckedCode = doCheckImport(codeTxt, 'index_', checkedFiles);
+	cssResource = [];
+	const importCheckedCode = await doCheckImport(
+		codeTxt,
+		'index_',
+		checkedFiles
+	);
 	// transform-react-jsx已处理部分名称替换，单文件需独自处理
 	let values = Array.from(mapSolute.values());
 	try {
@@ -167,6 +215,8 @@ export const getCodeTransform = (
 			plugins: ['transConfound']
 		}).code;
 		if (runIframe) {
+			// console.log(cssResource);
+			let cssSource = cssResource.join('') || '';
 			let previewFrame = document.createElement('iframe');
 			setTimeout(() => {
 				previewFrame.setAttribute(
@@ -177,61 +227,6 @@ export const getCodeTransform = (
 				<meta charset="UTF-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>react preview page</title>
-				<style>
-				.box {
-					position: relative;
-					width: 300px;
-					height: 100px;
-					scale:.85;
-					/* background: #000; */
-					border: 6px solid #61dafb;
-					border-radius: 50%;
-					display: grid;
-					place-items: center;
-					animation: 3.5s rotate linear infinite;
-					left: calc(50% - 150px);
-					margin-top: 120px;
-					margin-bottom: 120px;
-					}
-					@keyframes rotate {
-					0% {
-						transform: rotate(0);
-					}
-					100% {
-						transform: rotate(360deg);
-					}
-					}
-					.box::after {
-					content: "";
-					position: absolute;
-					left: 0;
-					top: 0;
-					width: 100%;
-					height: 100%;
-					border: 6px solid #61dafb;
-					border-radius: 50%;
-					transform: rotate(60deg);
-					}
-
-					.box::before {
-					content: "";
-					position: absolute;
-					left: 0;
-					top: 0;
-					width: 100%;
-					height: 100%;
-					border: 6px solid #61dafb;
-					border-radius: 50%;
-					transform: rotate(120deg);
-					}
-
-					.inner-box {
-					width: 30px;
-					height: 30px;
-					background: #61dafb;
-					border-radius: 50%;
-					}
-					</style>
 				<link rel="stylesheet" href='https://all.franxxdaryl.site/assets/compiler-lib/reset.min.css' />
 				<link rel="stylesheet" href='https://all.franxxdaryl.site/assets/compiler-lib/antd.min.css' />
 				<script src="https://all.franxxdaryl.site/assets/compiler-lib/react.development.js"></script>
@@ -240,6 +235,7 @@ export const getCodeTransform = (
 			</head>
 			<body>
 				<div id="previewBlank"></div>
+				<div id="innerCssCode"><style>${cssSource}</style></div>
 			</body>
 				<script>
 				var exports={};
@@ -259,6 +255,12 @@ export const getCodeTransform = (
 				}
 			}, 100);
 		} else {
+			let cssSource = cssResource.join('') || '';
+			let cssRoot = document.createElement('div');
+			cssRoot.setAttribute('id', 'innerCssCode');
+			let styleDom = document.createElement('style');
+			styleDom.innerHTML = cssSource;
+			cssRoot.appendChild(styleDom);
 			rewrite
 				? eval(
 						`var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState, useEffect } = React;${afterCode};document.getElementById('previewFrame').shadowRoot.querySelector('body').innerHTML='';let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default))`
@@ -266,6 +268,10 @@ export const getCodeTransform = (
 				: eval(
 						`var exports={};const {${Object.keys(antd).join(',')}} = antd; const { useRef, useState, useEffect } = React;${afterCode};let targetRoot = document.createElement('div');targetRoot.setAttribute('id','previewContent');document.getElementById('previewFrame').shadowRoot.querySelector('body').appendChild(targetRoot);window._rootHandler = ReactDOM.createRoot(document.getElementById('previewFrame').shadowRoot.querySelector("#previewContent"));window._rootHandler.render(React.createElement(_default));`
 					);
+			document
+				.getElementById('previewFrame')
+				.shadowRoot.querySelector('body')
+				.appendChild(cssRoot);
 		}
 	} catch (error) {
 		console.log(error);
@@ -275,9 +281,14 @@ export const getCodeTransform = (
 	mapSolute = new Map();
 };
 export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
-	const importCheckedCode = doCheckImport(codeTxt, 'index_', checkedFiles);
+	const importCheckedCode = await doCheckImport(
+		codeTxt,
+		'index_',
+		checkedFiles
+	);
 	let values = Array.from(mapSolute.values());
 	let result = null;
+	let cssSource = cssResource.join('') || '';
 	try {
 		const duplicateList = values.filter(
 			(e) =>
@@ -303,61 +314,6 @@ export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
 				<meta charset="UTF-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 				<title>react preview page</title>
-				<style>
-				.box {
-					position: relative;
-					width: 300px;
-					height: 100px;
-					scale:.85;
-					/* background: #000; */
-					border: 6px solid #61dafb;
-					border-radius: 50%;
-					display: grid;
-					place-items: center;
-					animation: 3.5s rotate linear infinite;
-					left: calc(50% - 150px);
-					margin-top: 120px;
-					margin-bottom: 120px;
-					}
-					@keyframes rotate {
-					0% {
-						transform: rotate(0);
-					}
-					100% {
-						transform: rotate(360deg);
-					}
-					}
-					.box::after {
-					content: "";
-					position: absolute;
-					left: 0;
-					top: 0;
-					width: 100%;
-					height: 100%;
-					border: 6px solid #61dafb;
-					border-radius: 50%;
-					transform: rotate(60deg);
-					}
-
-					.box::before {
-					content: "";
-					position: absolute;
-					left: 0;
-					top: 0;
-					width: 100%;
-					height: 100%;
-					border: 6px solid #61dafb;
-					border-radius: 50%;
-					transform: rotate(120deg);
-					}
-
-					.inner-box {
-					width: 30px;
-					height: 30px;
-					background: #61dafb;
-					border-radius: 50%;
-					}
-					</style>
 				<link rel="stylesheet" href='https://all.franxxdaryl.site/assets/compiler-lib/reset.min.css' />
 				<link rel="stylesheet" href='https://all.franxxdaryl.site/assets/compiler-lib/antd.min.css' />
 				<script src="https://all.franxxdaryl.site/assets/compiler-lib/react.development.js"></script>
@@ -366,6 +322,7 @@ export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
 			</head>
 			<body>
 				<div id="previewBlank"></div>
+				<div id="innerCssCode"><style>${cssSource}</style></div>
 			</body>
 				<script>
 				var exports={};
@@ -403,7 +360,7 @@ export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
 	transferMap = new Map();
 	replaceMaps = new Map();
 	mapSolute = new Map();
-	return resuult;
+	return result;
 };
 export const getFileContent = (files, path) => {
 	let result = files.find((e) => e.path === path);

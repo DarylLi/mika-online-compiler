@@ -7,12 +7,6 @@ import { editStore } from '@store/index';
 function chatPanel(): any {
 	const [msgVal, setMsgVal] = useState('');
 	const curRef = useRef<any>(null);
-	const [chatList, setChatList] = useState<any>([
-		{ from: 'me', content: 'walala ni hao!', timestamp: '12:21' },
-		{ from: 'me', content: '????? ni hao!', timestamp: '12:23' },
-		{ from: 'me', content: 'hi hi hii!', timestamp: '12:33' },
-		{ from: 'remote', content: 'what ? ', timestamp: '12:35' }
-	]);
 
 	const RenderList = socketStore.chatMessages.map((e, index) =>
 		e.from === 'me' ? (

@@ -60,6 +60,7 @@ class EditorStore {
 	}
 	updateInfo(data) {
 		this.fileInfo = data;
+		console.log(this.fileInfo.path);
 		socketStore.doSwitchFile({
 			templateId: this.curType,
 			path: data.path
