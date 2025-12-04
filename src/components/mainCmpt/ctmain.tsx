@@ -42,19 +42,6 @@ function MainEditor(props: any) {
 		let prettierVal: any = null;
 		try {
 			// if (cpType !== 'vue' && cpType !== 'react') return;
-			console.log(
-				`wawawa:`,
-				(editStore as any)?.fileInfo?.path,
-				!((editStore as any)?.fileInfo?.path || '').includes('scss')
-					? cpType === 'vue'
-						? cpType
-						: cpType === 'react'
-							? 'babel'
-							: ngLanguage !== 'javascript'
-								? ngLanguage
-								: 'babel'
-					: 'scss'
-			);
 			prettierVal = await prettier.format(newValue, {
 				parser: !((editStore as any)?.fileInfo?.path || '').includes('scss')
 					? cpType === 'vue'

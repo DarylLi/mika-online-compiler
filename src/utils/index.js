@@ -431,3 +431,21 @@ export const useConsole = (consoleList = [], store) => {
 	};
 	// saveList && saveList(consoleList);
 };
+// loading typescript runtime compiler
+// window.ts could be used
+export const loadTsCompiler = async (cb) => {
+	return await new Promise((res, rej) => {
+		let script = document.createElement('script');
+		script.src =
+			'https://all.franxxdaryl.site/assets/compiler-lib/typescript-umd.js';
+		script.onload = () => {
+			let successMsg = 'success';
+			cb(successMsg);
+			res(successMsg);
+		};
+		script.onabort = () => {
+			rej('failed loaded');
+		};
+		document.body.appendChild(script);
+	});
+};
