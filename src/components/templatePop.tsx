@@ -6,6 +6,8 @@ import { renderButton } from '@utils/initButton';
 import { editStore } from '@store/index';
 import { socketStore } from '@store/socket';
 import RequestList from './socketCmpt/requestList';
+// @ts-ignore fixed in tsconfig by tsconfig-paths/register
+import MessagePanel from '@components/chatPanel/index';
 import '~@styles/popup';
 
 const Popup = (props) => {
@@ -30,7 +32,11 @@ const Popup = (props) => {
 	return (
 		<>
 			<RequestList showLog={socketStore.showList}></RequestList>
-			<div className="popupCtrl" onClick={switchPop}>
+			<MessagePanel />
+			<div
+				className="popupCtrl"
+				onClick={socketStore.joinAssitance ? () => {} : switchPop}
+			>
 				<svg
 					ref={popRef}
 					className="liquid-button"

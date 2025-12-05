@@ -5,7 +5,7 @@ import { vueTemplates } from '@mock/vueData';
 import { angularTemplates } from '@mock/ngData';
 import { editStore } from '@store/index';
 import { socketStore } from '@store/socket';
-import { getCodeTransform, getFileContent } from '@utils/index';
+import { getCodeTransform, getFileContent, loadTsCompiler } from '@utils/index';
 import { parseVue } from '@utils/parseVue';
 import { parseAngular } from '@utils/parseAngular';
 import {
@@ -334,6 +334,11 @@ function Directory(props: any) {
 
 			// updateData(curRequest.db, "mika-templates", info);
 		});
+		loadTsCompiler((rslt) => {
+			console.log(rslt, 'typescript loaded!');
+		}).then((res) => {
+			console.log(res, (window as any).ts);
+		});
 	}, []);
 	useEffect(() => {
 		socketStore.switchFileNode.length > 0 &&
@@ -387,7 +392,7 @@ function Directory(props: any) {
 								)}
 								{showOP === node.path &&
 									!(
-										/App.vue|app.jsx|index.html|index.js|index.css/.test(
+										/App.vue|app.jsx|index.html|index.js|(s?)css/.test(
 											showOP
 										) || showOP === 'src'
 									) && (

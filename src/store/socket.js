@@ -16,6 +16,9 @@ class SocketStore {
 	switchFileNode = [];
 	updatedCode = null;
 	messageApi = null;
+	showChatAlarm = false;
+	showChatPanel = false;
+	chatMessages = [];
 	contextHolder = (<></>);
 	constructor() {
 		makeAutoObservable(this);
@@ -66,11 +69,16 @@ class SocketStore {
 	setMessageContextHolder(contextHolder) {
 		this.contextHolder = contextHolder;
 	}
+	sendChatMessage(...args) {
+		this.SocketInstance.sendChatMessage(...args.slice(0, 3));
+		args[3] && this.chatMessages.push(args[3]);
+	}
 	handleAssistanceEnd() {
 		this.needAssitance = false;
 		this.helperId = null;
 		// this.messageApi.info('Assistance End！！');
 		message.info('Assistance End！！');
+		this.clearChatStat();
 	}
 	/**
 	 * 接受消息
@@ -95,6 +103,9 @@ class SocketStore {
 		message.event === 'helper-leave' && this.handleHelperLeave();
 		// 协作发起者跑路
 		message.event === 'requester-leave' && this.endAssistance();
+		// 接受对面聊天消息
+		message.event === 'message-received' &&
+			this.handleMessageReceive(message.data);
 	}
 	switchList() {
 		this.showList = !this.showList;
@@ -109,9 +120,31 @@ class SocketStore {
 		this.needAssitance = true;
 		this.SocketInstance.requestAssistance(templateType, templateData);
 	}
+	clearChatStat = () => {
+		this.chatMessages = [];
+		this.showChatAlarm = false;
+		this.showChatPanel = false;
+	};
+	handleReadChatMessage() {
+		this.showChatAlarm = false;
+	}
+	handleShowChatPanel(stat) {
+		this.showChatPanel = stat;
+		stat === true && (this.showChatAlarm = false);
+	}
+	handleMessageReceive(data) {
+		this.chatMessages.push({
+			from: 'remote',
+			content: data.content,
+			timestamp: data.timestamp
+		});
+		if (!this.showChatPanel) this.showChatAlarm = true;
+		// this.messageReceive = content
+	}
 	handleHelperLeave() {
 		this.helperId = null;
 		message.info('helper leave！！');
+		this.clearChatStat();
 	}
 	endAssistance() {
 		message.info('Assistance End！！');
@@ -121,6 +154,7 @@ class SocketStore {
 		setTimeout(() => {
 			window.location.href = curUrl.join('/');
 		}, 1500);
+		this.clearChatStat();
 	}
 	getAssistanceList() {
 		this.assitanceList = this.SocketInstance.assistanceRequests;

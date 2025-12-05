@@ -150,3 +150,83 @@ export const showVuePreview = (fileEntry, storeObj) => {
 		}
 	}, 100);
 };
+export const downloadVueSource = async (fileEntry, storeObj) => {
+	const AppCmpt = fileEntry;
+	const totalComponents = {
+		'App.vue': AppCmpt
+	};
+
+	(storeObj?.[0]?.children || []).forEach((file) => {
+		if (!/App.vue/.test(file.filename)) {
+			totalComponents[`${file.filename}`] = file.value;
+		}
+	});
+	let resultSource = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue preview page</title>
+	<link rel="stylesheet" href="https://unpkg.com/element-plus/dist/index.css" />
+	<script src="https://all.franxxdaryl.site/assets/compiler-lib/vue3-sfc-loader.js"></script>
+	<script src="https://all.franxxdaryl.site/assets/compiler-lib/vue.runtime.global.js"></script>
+	<script src="https://unpkg.com/element-plus"></script>
+</head>
+<body>
+	<div id="previewBlank"></div>
+</body>
+	<script>const totalComponents = ${JSON.stringify(totalComponents).replaceAll('/script>', '|script>')};
+	const options = {
+		// devMode: true,
+		moduleCache: { vue: Vue },
+		addStyle(styleStr) {
+			const style = document.createElement('style');
+			style.textContent = styleStr;
+			const ref =
+				document.getElementsByTagName('style')?.[0] || null;
+			document.getElementsByTagName('head')[0]
+				.insertBefore(style, ref);
+		},
+		getFile: (url) => {
+			return Promise.resolve({ getContentData: () => totalComponents[url].replaceAll('|script>', '/script>') });
+		}
+	};
+	const initRoot = document.getElementById('previewBlank');
+	rootApp = Vue.createApp(
+		Vue.defineAsyncComponent(() =>
+			window['vue3-sfc-loader'].loadModule('App.vue', options)
+		)
+	);
+	curVueApp = rootApp;
+	rootApp.use(ElementPlus).mount(initRoot);
+	</script>`;
+	try {
+		let fileId = '';
+		let result = null;
+		await fetch(`http://${window._mainHost}:3000/api/files`, {
+			method: 'POST', // Method set to POST
+			headers: {
+				'Content-Type': 'application/json' // Inform the server the body is JSON
+			},
+			body: JSON.stringify({
+				content: resultSource,
+				type: 'html',
+				filename: 'export_vue_source'
+			})
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				fileId = data.fileId;
+			});
+		if (fileId) {
+			window.open(
+				`http://${window._mainHost}:3000/api/files/${fileId}/download`
+			);
+			result = 'success';
+		}
+		return result;
+	} catch (error) {
+		console.log(error);
+		return error;
+	}
+};

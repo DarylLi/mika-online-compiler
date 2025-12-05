@@ -19,6 +19,7 @@ export const templates: any = [
 				filename: 'app.jsx',
 				value: `    import Cmpt1 from './component1.jsx';
     import Cmpt2 from './component2.jsx';
+    import './main.scss';
   
     function App() {
         const [txt,setTxt] = useState(0)
@@ -91,6 +92,68 @@ export const templates: any = [
       }
     export default ExtraB`,
 				path: 'component2.jsx'
+			},
+			{
+				filename: 'main.scss',
+				value: `.box {
+    position: relative;
+    width: 300px;
+    height: 100px;
+    scale: 0.85;
+    /* background: #000; */
+    border: 6px solid #61dafb;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    animation: 3.5s rotate linear infinite;
+    left: calc(50% - 150px);
+    margin-top: 120px;
+    margin-bottom: 120px;
+}
+@keyframes rotate {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.box::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: 6px solid #61dafb;
+    border-radius: 50%;
+    transform: rotate(60deg);
+}
+
+.box::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: 6px solid #61dafb;
+    border-radius: 50%;
+    transform: rotate(120deg);
+}
+
+.inner-box {
+    width: 30px;
+    height: 30px;
+    background: #61dafb;
+    border-radius: 50%;
+}
+#previewContent {
+    background: #fff;
+    font-size: (30px / 2);
+}
+`,
+				path: 'main.scss'
 			}
 		]
 	}

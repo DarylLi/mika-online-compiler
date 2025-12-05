@@ -4,6 +4,8 @@ type UserInfo = any;
 type AssistanceRequests = any;
 type ContentChunks = any;
 const sockethost = '192.168.71.77';
+//@ts-ignore
+(window as any)._mainHost = sockethost;
 class SocketInstance {
 	socket: Socket = null;
 	userInfo: UserInfo = null;
@@ -169,6 +171,19 @@ class SocketInstance {
 		) {
 			console.log('📤 结束协助');
 		}
+	}
+	// 发送聊天消息
+	/**
+	 *
+	 * @param templateId
+	 * @param toUuid
+	 */
+	sendChatMessage(toUuid: string, content: string, templateId: string) {
+		this.sendWebSocketMessage('send-message', {
+			toUuid,
+			content,
+			templateId
+		});
 	}
 	sendContentMessage(
 		templateId: string,

@@ -9,6 +9,16 @@
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
+  "browserslist": {
+    "production": [
+      "defaults and supports es6-module"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
     "@types/minimatch": "^6.0.0",
     "autoprefixer": "^10.4.16",
@@ -18,9 +28,15 @@
     "html-webpack-plugin": "^5.6.0",
     "postcss-loader": "^7.3.4",
     "prettier": "^3.6.2",
+    "tsconfig-paths": "^4.2.0",
     "vue": "^3.5.22",
     "webpack": "^5.20.0",
-    "webpack-dev-server": "^5.0.2"
+    "webpack-dev-server": "^5.0.2",
+    "less": "^4.2.0",
+    "postcss": "^8.4.47",
+    "postcss-discard-comments": "^7.0.3",
+    "postcss-discard-duplicates": "^7.0.1",
+    "postcss-discard-empty": "^7.0.0"
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",

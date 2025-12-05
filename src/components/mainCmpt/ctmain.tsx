@@ -43,14 +43,15 @@ function MainEditor(props: any) {
 		try {
 			// if (cpType !== 'vue' && cpType !== 'react') return;
 			prettierVal = await prettier.format(newValue, {
-				parser:
-					cpType === 'vue'
+				parser: !((editStore as any)?.fileInfo?.path || '').includes('scss')
+					? cpType === 'vue'
 						? cpType
 						: cpType === 'react'
 							? 'babel'
 							: ngLanguage !== 'javascript'
 								? ngLanguage
-								: 'babel',
+								: 'babel'
+					: 'scss',
 				plugins: [
 					parserBabel,
 					prettierPluginEstree as any,
@@ -141,11 +142,13 @@ function MainEditor(props: any) {
 				<MonacoEditor
 					height="calc(100vh - 66px)"
 					language={
-						cpType === 'react'
-							? 'javascript'
-							: cpType === 'vue'
-								? 'markdown'
-								: ngLanguage
+						!((editStore as any)?.fileInfo?.path || '').includes('scss')
+							? cpType === 'react'
+								? 'javascript'
+								: cpType === 'vue'
+									? 'markdown'
+									: ngLanguage
+							: 'css'
 					}
 					theme="vs-dark"
 					value={editStore.code}
