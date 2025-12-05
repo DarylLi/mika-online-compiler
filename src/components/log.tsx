@@ -21,6 +21,7 @@ import {
 	CloseOutlined,
 	DownloadOutlined
 } from '@ant-design/icons';
+import Terminate from './terminate';
 import '~@styles/index';
 
 @observer
@@ -163,7 +164,8 @@ class EditLog extends PureComponent<any, any> {
 		const { showLog, logPanelRef } = this.state;
 		const classNames = {
 			header: 'mika-log-header',
-			body: 'mika-log-body'
+			body: 'mika-log-body',
+			wrapper: 'mika-log-wrapper'
 		};
 		// const useStyle = createStyles(({ css }) => ({
 		// 	root: css`
@@ -314,16 +316,12 @@ class EditLog extends PureComponent<any, any> {
 					onOk={hideModal}
 					onCancel={hideModal}
 					classNames={classNames}
+					width={700}
 					footer={null}
 					cancelText="close"
 				>
 					<div className="mika-out-log-content" ref={this.state.logPanelRef}>
-						{editStore.logMsg.map((info, i) => (
-							<span className="info-item" key={i}>
-								<span>{info.msg}</span>
-								<span>{info.time}</span>
-							</span>
-						))}
+						<Terminate handleClose={hideModal} />
 					</div>
 				</Modal>
 			</span>
