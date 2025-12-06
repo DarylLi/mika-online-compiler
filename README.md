@@ -6,31 +6,31 @@ Mika Online Compiler 是一个基于前端渲染的在线代码编辑器，支�
 
 ## 核心特性
 
-### 🚀 多框架支持
+### 多框架支持
 
 - **React 支持**: 完整的 React 18 开发环境，支持 JSX 语法
 - **Vue 支持**: Vue 3 单文件组件 (SFC) 支持，包含 template、script、style 块
 
-### 🎨 UI 组件库集成
+### UI 组件库集成
 
 - **React**: 集成 Ant Design 组件库，提供丰富的 UI 组件
 - **Vue**: 集成 Element Plus 组件库，支持完整的组件生态
 
-### 💻 编辑器功能
+### 编辑器功能
 
 - **Monaco Editor**: 基于 VS Code 的编辑器内核，提供完整的代码编辑体验
 - **语法高亮**: 支持 JavaScript、TypeScript、Vue、JSX 等多种语法
 - **智能提示**: 代码自动补全和错误检测
 - **主题支持**: 内置暗色主题，提供舒适的编码环境
 
-### 🔧 编译与预览
+### 编译与预览
 
 - **实时编译**: 代码修改后自动编译，无需手动刷新
 - **热更新**: 支持组件热重载，提升开发效率
 - **沙箱预览**: 使用 Shadow DOM 隔离预览环境，确保代码安全
 - **模块解析**: 智能处理文件依赖关系，支持组件间引用
 
-### 📁 文件管理
+### 文件管理
 
 - **文件树**: 可视化的文件目录结构
 - **文件操作**: 创建、删除、重命名文件功能
@@ -103,10 +103,16 @@ yarn build
 ```
 
 ### 预览
+react project:
+<img width="3838" height="1902" alt="image" src="https://github.com/user-attachments/assets/79efbcd2-bc93-4ac0-81c2-8a94cf3be549" />
 
-<img width="2874" height="1364" alt="b9cee4f8182f707f01215b71837b9964" src="https://github.com/user-attachments/assets/053ce5c7-ce4c-4fc5-a4c5-db9602181318" />
+vue project:
+<img width="3838" height="1891" alt="image" src="https://github.com/user-attachments/assets/9b3e42f9-af04-4885-864c-c533d4dac263" />
 
-<img width="2876" height="1366" alt="6a44a0992ec58964c5b401bdf91b0a85" src="https://github.com/user-attachments/assets/33b07a3d-2349-4c9f-a1f0-668726410e1c" />
+you could choose other popular framework templates~
+<img width="3838" height="1899" alt="image" src="https://github.com/user-attachments/assets/e3e11e17-1bbd-42d0-affc-f0eb09c18266" />
+
+
 
 ## 使用说明
 
