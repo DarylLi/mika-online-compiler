@@ -1,9 +1,11 @@
+// @ts-nocheck
+
 //type整理：pending
 type Socket = any;
 type UserInfo = any;
 type AssistanceRequests = any;
 type ContentChunks = any;
-const sockethost = '192.168.71.77';
+const sockethost = '192.168.71.87';
 //@ts-ignore
 (window as any)._mainHost = sockethost;
 class SocketInstance {
@@ -126,19 +128,51 @@ class SocketInstance {
 				console.log(`⚠️ 未知事件: ${event}`);
 		}
 	}
-	requestAssistance(templateId: string, templateContent: string) {
+	async requestAssistance(
+		templateId: string,
+		templateContent: string
+	): Promise<boolean> {
 		if (!this.userInfo) {
 			console.log('请先连接服务器');
-			return;
+			return Promise.resolve(false);
 		}
-		if (
+		const chunkSize = 1024;
+		const totalChunks = Math.ceil((templateContent || ' ').length / chunkSize);
+		console.log(`模版大小：${totalChunks} kb`);
+		// this.sendWebSocketMessage('request-assistance', {
+		// 	templateId,
+		// 	templateContent
+		// });
+		for (var i = 0; i < totalChunks; i++) {
+			const chunk = templateContent.slice(
+				i * chunkSize,
+				i * chunkSize + chunkSize
+			);
+			await new Promise((res, rej) => {
+				this.sendWebSocketMessage('request-assistance', {
+					chunkFlag: 'sending',
+					currentChunk: i,
+					maxChunk: totalChunks,
+					templateId,
+					chunkContent: chunk
+				});
+				setTimeout(() => {
+					res(`chunk_${i}`);
+				});
+			});
+			// 让出主线程
+			(window as any).scheduler?.yield &&
+				(await (window as any).scheduler?.yield?.());
+		}
+		setTimeout(() => {
 			this.sendWebSocketMessage('request-assistance', {
+				chunkFlag: 'end',
 				templateId,
-				templateContent
-			})
-		) {
-			console.log('📤 发送协助请求');
-		}
+				maxChunk: totalChunks,
+				chunkContent: ''
+			});
+		});
+		return Promise.resolve(true);
 	}
 	joinAssistance(requesterUuid: string) {
 		if (this.sendWebSocketMessage('join-assistance', { requesterUuid })) {
@@ -185,19 +219,60 @@ class SocketInstance {
 			templateId
 		});
 	}
-	sendContentMessage(
+	async sendContentMessage(
 		templateId: string,
 		path: string,
 		code: string,
 		toUuid: string
-	) {
-		this.sendWebSocketMessage('send-template-content', {
-			content: code || ' ',
+	): Promise<boolean> {
+		const chunkSize = 1024;
+		const totalChunks = Math.ceil((code || ' ').length / chunkSize);
+		for (var i = 0; i < totalChunks; i++) {
+			const chunk = (code || ' ').slice(
+				i * chunkSize,
+				i * chunkSize + chunkSize
+			);
+			await new Promise((res, rej) => {
+				this.sendWebSocketMessage('send-split-content', {
+					chunkFlag: 'sending',
+					currentChunk: i,
+					maxChunk: totalChunks,
+					templateId,
+					chunkContent: chunk || ' ',
+					path,
+					toUuid
+				});
+				setTimeout(() => {
+					res(`chunk_${i}`);
+				});
+			});
+			// 让出主线程
+			(window as any).scheduler?.yield &&
+				(await (window as any).scheduler?.yield?.());
+		}
+		this.sendWebSocketMessage('send-split-content', {
+			chunkFlag: 'end',
+			maxChunk: totalChunks,
+			templateId,
+			chunkContent: ' ',
 			path,
-			toUuid,
-			templateId
+			toUuid
 		});
+		return Promise.resolve(true);
 	}
+	// sendContentMessage(
+	// 	templateId: string,
+	// 	path: string,
+	// 	code: string,
+	// 	toUuid: string
+	// ) {
+	// 	this.sendWebSocketMessage('send-template-content', {
+	// 		content: code || ' ',
+	// 		path,
+	// 		toUuid,
+	// 		templateId
+	// 	});
+	// }
 	sendWebSocketMessage(event: string, data: any) {
 		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
 			console.error('请先连接服务器');

@@ -8,6 +8,9 @@ const EmberEntry = React.lazy(() => import('../entries/emberEntry'));
 const KoEntry = React.lazy(() => import('../entries/koEntry'));
 const LitEntry = React.lazy(() => import('../entries/litEntry'));
 const SolidEntry = React.lazy(() => import('../entries/solidEntry'));
+const BackBoneEntry = React.lazy(() => import('../entries/backBoneEntry'));
+const PreactEntry = React.lazy(() => import('../entries/preactEntry'));
+// 统一协助模版入口
 const Assistance = React.lazy(() => import('../components/assistanceCmpt'));
 import { message } from 'antd';
 import { socketStore } from '@store/socket';
@@ -183,6 +186,22 @@ export default function RouteCmpt() {
           element={
             <Suspense fallback={<div>loading...</div>}>
               <Assistance></Assistance>
+            </Suspense>
+          }
+        ></Route>
+        <Route
+          path='/backbone'
+          element={
+            <Suspense fallback={<div>loading...</div>}>
+              <BackBoneEntry></BackBoneEntry>
+            </Suspense>
+          }
+        ></Route>
+        <Route
+          path='/preact'
+          element={
+            <Suspense fallback={<div>loading...</div>}>
+              <PreactEntry></PreactEntry>
             </Suspense>
           }
         ></Route>

@@ -181,13 +181,29 @@ const Popup = (props) => {
 					</svg>
 					EmberJS
 				</div>
-				<div onClick={() => directLink('ko', 'KnockOutJs')}>
+				<div onClick={() => directLink('ko', 'KnockOutJS')}>
 					<img
 						src="https://quintagroup.com/cms/js/js-image/knockout-js-logo.png/@@images/f4756dda-f9a9-4c04-9223-9f5724569747.png"
 						className="popIcon"
 						alt=""
 					/>
 					KnockOutJs
+				</div>
+				<div onClick={() => directLink('backbone', 'BackBoneJS')}>
+					<img
+						src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFk0lEQVR4AbWXA5jjbBDHc0mK4IxV0NvzLZN0z7a1rtb4bNu2jb20ac/2g8+2bdt+v8mb66Z36zx37/O0jec3M/+ZSYnWlZY/hJJUgxYKi4jDtJgqo9gb1O8kShNU27NSXn9a1hDt8/9Lydr1xNDctENlmKuI5rCR+Dq+aRdiAvrL9pk2AMq39FA/orPHAYj6OS1px8IZ2qnh3iseGMhFjCu5cPwPvm4L4ms3IjYUfaQTAPU72qch+AUAC4QUlecgNUt6aLsXEzSauEj8Y75+G4JfxIWiiK/ZgNjA6ke7A2B/hhZZH1Fb7xLyc7uyzAZj88DgE6bHXPVabBg+zgFsEEiLpP0J+riKyNAGtQl3sGUUHzEMvno9DrVt2DkA9jx1H29DWiif9gkp5jfj4tmFOMjzxZDnX7HX4ZhttHqd9QnqjgD+pSVloylMLEo5BUTIxTBuf+UTzOKL3+Sb98LDTa916xNJIDP3TEh/gwms3sdVrXEAYIpQVPwQbokSFd3az0dU5hjkzluC2JU3ILbiXhwlt1KK2JJbMYQVhcTvEJEriNCDHBPWj+TrtjoDoHzqfFtdrEqNnvUaM/9chD2q3YzY4ltwZKiMUfge7/TjEFf54HbmvK8zbVHqZwKUQwApb7Z5qn9poi/fsOMMpnbTl1hgZp4jazAAjoxUiD9masiMsS+RadkVrQDh2OnOAITc/4gh2bO56s0BMPahVc8JW2BV68Hb+0CUE7BxW6h+XDGkrDxCDBSKuMadx/ONO3sAIOUjOnM0cuUs+Jcpvv0jHkJtKtkupxjkeTMAJP5jy+69mRLyWjA0aKFN/8jK+ZfOXfo+W3YnLk24rzMAqT+VPvI714ipyDv3DOwtEB9Ux2aNm8bju5iK6PjkrZSsLCBl9SmrhfsPLFsxD+vEM/UoxIMjbM3GjiPgmdT0HRdoQZxZUmEjadguq4jxBheMlxHtL5KUtSOgUX2Cm5as2CBiAaLMqI6dj9wzTnms3bv7BvT+TPW671LCjSH42k2IDa/5lm/acyTRiFzdmUFk+vBzaLnwN0hBKgjWCinkPNExQCj6XVJoyQh455yG6BFTvyIHiNVEN9aAY97qwzftPZctvv03t1qKvU/VBSkp3QGIQZ7XIk9RCFFpw/FDsLIl7UVKLFzevunzSAA+CprQp3w9NJ7q9Th6nol1iMoaawOI6mPdBFiD3PnLTSW3nYyyusmVVVjQWuuB2EKYgE/z9VswuJVCHXdFZvapZv5tAFl5tJsAif9catkHuO/bym6dCVTG6L9co+Zcw1Tcu9qsc1wddsVg76E1/+OaVP8+BU70GAA3jdp1i6kh2StB2W9bA0kxvcHp8M4+Bfr/LcidswB5Z51sagaHHUSMPWerjIeZxt1+MmP08XC9MwAmkliGT2ZksOSQ7OMpIf9zz/gqxJbdhcuSLb0dlF0A0RgJJTYPMcuuRJD/F7m6beXJ54LhM5wDhPQVyfP80Y9NZgMPvgmhxfpoMwuE/WH2TdgGl2emAJzpGMATbJnhCT04nAsZ68391M6IAcrvglkw3p4FkrIfQv2dktXL4VWfoyX1KAcAZh+I/me+TDCB6E9t3nRA6XzDduQtvQNeWAvf7PDNSSx8HRrSPoiSAwCr9x84AcNxM8eICRtfwf4JBEK94FYO3hsuBoH+mvQ0dTImjTsBaDsBw4l/2YhxMxtsyWjzAJ9/FCVpBu0rajsZnQNYMxwLLxTfzoQf8BNdLErU5pnt1p6MjgB0U+k43ODxq3zIKO7pHxPapzSBED+2QLTuAujfgsCwYXMCspH4acT087yE05VZNJCSlStpSfsD68MCeKRDgGT5QRTu9JbHROIQLZdYkEOL6jpX9gQT4OUO/sHelcYFoxu9wZapxGFalOQvpkTlTnMzeex/WaHualmUBZEAAAAASUVORK5CYII="
+						className="popIcon"
+						alt=""
+					/>
+					BackBoneJs
+				</div>
+				<div onClick={() => directLink('preact', 'PreactJS')}>
+					<img
+						src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAYFBMVEVHcExmN7hdKbRnOrhnOrhnOblnOrhnOrhoOrhmObhnObhnObhmOrhnObhhMLb//v9bJbS3o93t6PZrPbvQxOiOcMqcgNHUyer18vrm3vN0Sb/b0e6CX8RRDLCwmtrDsePD+AhZAAAADXRSTlMAsvXwUDqUYAvRgiNvgESAmQAAAQRJREFUKJGNkumywiAMhQu2FawJO4WC+v5vKXXpol7m5ldmvjkHkpym2RZjzV/FWs7b35i1BMAA+YW7/gCPOvTdp+zEYSl+2olbjohvVlreLmgg1CnljSwcpfFKOUqGlwxQCa2FSM4Yl8TcK4Sn+AhGq0tRpGBtSMXhojTAcYHX4iinUYhxksX7uoFoowTMNioVbUaQ0eIKnfDSxeSkdCk66YVbIeAteD3mydopj9qHG662her5NSuEnV/W88z/gzXb6oeqo1SXUFnfY/EhlJ/Oiy/q0i+Lb1hP8/5kmfbrvTtCt8emZJ+U8zYm58+ADe8U8dPwHb9n/r6z9yrWcd5VMr9Hd72vHqqJdwPOAAAAAElFTkSuQmCC"
+						className="popIcon"
+						alt=""
+					/>
+					PreactJs
 				</div>
 			</div>
 		</>

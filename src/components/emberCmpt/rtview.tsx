@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 
 function RightView(props: any) {
 	const frameRef: any = useRef(null);
-	// useEffect(() => {}, [frameRef]);
 
 	return (
 		<div

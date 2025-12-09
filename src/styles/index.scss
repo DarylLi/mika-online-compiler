@@ -45,7 +45,7 @@ body{
     color: #fff;
     font-size: 10px;
     top: 0px;
-    right: 82px;
+    right: 110px;
     &-uid{
         padding: 0 5px;
         font-size: 10px;
@@ -72,16 +72,26 @@ body{
         height: 100%;
         left: 0px;
         top: 0px;
-        button{
-            right: 100px;
+        button.ant-btn{
+            span{
+                color: #fff!important;    
+            }
+            &:hover{
+                border:{
+                color:transparent!important;
+            }
+            }
+            background-color: transparent!important;
+            color: #fff!important;
+            right: 120px;
             position: absolute;
-            top: 2px;
+            top: -6px;
         }
     }
     height: 28px;
 }
 .assistance-info{
     &.success{
-        line-height: 24px;
+        line-height: 16px;
     }
 }
