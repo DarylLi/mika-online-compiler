@@ -1,9 +1,10 @@
 import { makeAutoObservable } from 'mobx';
 import { SocketInstance } from '@api/index';
-import { message } from 'antd';
+import { message as MessageObj } from 'antd';
 
 class SocketStore {
 	SocketInstance = new SocketInstance(this.handleMessage.bind(this));
+	uuid = false;
 	socketPending = false;
 	needAssitance = false;
 	joinAssitance = false;
@@ -29,7 +30,7 @@ class SocketStore {
 	 */
 	handleMatchAssitance({ helperUuid, templateId } = info) {
 		this.helperId = helperUuid;
-		message.info(`helper ${helperUuid} joined！！`);
+		MessageObj.info(`helper ${helperUuid} joined！！`);
 	}
 	/**
 	 * 被协作者接受文件切换
@@ -77,7 +78,7 @@ class SocketStore {
 		this.needAssitance = false;
 		this.helperId = null;
 		// this.messageApi.info('Assistance End！！');
-		message.info('Assistance End！！');
+		MessageObj.info('Assistance End！！');
 		this.clearChatStat();
 	}
 	/**
@@ -87,13 +88,15 @@ class SocketStore {
 	handleMessage(message) {
 		// setTimeout(() => {
 		this.socketPending = false;
+		message.event === 'user-connected' && (this.uuid = message.data.uuid);
 		// 协作者加入
 		message.event === 'helper-joined' &&
 			this.handleMatchAssitance(message.data);
 		// 协作者切换用户文件
 		message.event === 'get-switch-file' && this.handleSwitchFile(message.data);
 		// 协作者修改用户文件
-		message.event === 'template-content-chunk' &&
+		// message.event === 'template-content-chunk' &&
+		message.event === 'edited-content-update' &&
 			this.handleChangeFile(message.data);
 		// 更新协作列表
 		message.event === 'assistance-list-updated' && this.getAssistanceList();
@@ -106,6 +109,9 @@ class SocketStore {
 		// 接受对面聊天消息
 		message.event === 'message-received' &&
 			this.handleMessageReceive(message.data);
+		// 协作请求发送成功
+		message.event === 'assistance-requested' && (this.needAssitance = true);
+		message.event === 'error' && MessageObj.error(message.data.message);
 	}
 	switchList() {
 		this.showList = !this.showList;
@@ -117,7 +123,7 @@ class SocketStore {
 	 */
 	requestAssistance(templateType, templateData) {
 		this.socketPending = true;
-		this.needAssitance = true;
+		// this.needAssitance = true;
 		this.SocketInstance.requestAssistance(templateType, templateData);
 	}
 	clearChatStat = () => {
@@ -143,11 +149,11 @@ class SocketStore {
 	}
 	handleHelperLeave() {
 		this.helperId = null;
-		message.info('helper leave！！');
+		MessageObj.info('helper leave！！');
 		this.clearChatStat();
 	}
 	endAssistance() {
-		message.info('Assistance End！！');
+		MessageObj.info('Assistance End！！');
 		this.SocketInstance.endAssistance(this.assitantedId);
 		let curUrl = window.location.href.split('/');
 		curUrl.splice(-1);

@@ -151,7 +151,6 @@ class EditLog extends PureComponent<any, any> {
 		socketStore.stopRequest();
 	}
 	componentDidMount(): void {
-		console.log(socketStore.SocketInstance);
 		useConsole(toJS(editStore.logMsg), editStore);
 		this.setState({ logPanelRef: createRef() }, () => {
 			editStore.setLogPanelRef(this.state.logPanelRef);
@@ -213,9 +212,7 @@ class EditLog extends PureComponent<any, any> {
 							</div>
 							<span className="assistance-info">
 								Your userId is ：
-								<span className="assistance-info-uid">
-									{socketStore?.SocketInstance?.userInfo?.uuid}
-								</span>
+								<span className="assistance-info-uid">{socketStore.uuid}</span>
 								，please wait for someone to assist you.
 							</span>
 						</>
@@ -241,7 +238,7 @@ class EditLog extends PureComponent<any, any> {
 						</span>
 					</span>
 				)}
-				{socketStore?.SocketInstance?.userInfo?.uuid &&
+				{socketStore.uuid &&
 					!socketStore?.needAssitance &&
 					!socketStore?.joinAssitance && (
 						<span className="assistance-action-request">
@@ -264,7 +261,7 @@ class EditLog extends PureComponent<any, any> {
 							</Popconfirm>
 						</span>
 					)}
-				{socketStore.SocketInstance?.userInfo?.uuid &&
+				{socketStore.uuid &&
 					!socketStore?.needAssitance &&
 					!socketStore?.joinAssitance && (
 						<span className="assistance-action-list">
