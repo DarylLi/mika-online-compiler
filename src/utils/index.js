@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { transform, registerPlugin } from '@babel/standalone';
+import initSwc, { transformSync } from 'mika-swc-plugin';
 import { templates } from '@mock/fileData';
 import { getCssfromSass, getCssFromLess } from './parseStyles';
 
@@ -10,6 +11,37 @@ let replaceMaps = new Map();
 let mapSolute = new Map();
 let cssResource = [];
 let cssValueMap = new WeakMap();
+let swcLoaded = false;
+let swcConfig = {};
+async function importAndRunSwcOnMount() {
+	swcConfig = {
+		module: { type: 'es6' },
+		minify: false,
+		sourceMaps: false,
+		jsc: {
+			parser: {
+				syntax: 'ecmascript',
+				jsx: true,
+				minify: { compress: { unused: true } }
+			},
+			transform: {
+				react: {
+					runtime: 'classic',
+					pragma: 'React.createElement',
+					pragmaFrag: 'React.Fragment'
+				}
+			},
+			target: 'es2020'
+		},
+		module: {
+			type: 'commonjs'
+		}
+	};
+	await initSwc();
+}
+importAndRunSwcOnMount().then((res) => {
+	swcLoaded = true;
+});
 
 const matchFileName = (fileTrees = [], name) => {
 	let result = null;
@@ -25,10 +57,10 @@ const matchFileName = (fileTrees = [], name) => {
 // import内容替换
 const doCheckImport = async (str, nameprefix, checkedFile = templates) => {
 	let result = str;
-	transform(result, {
-		presets: ['env'],
-		plugins: [['transform-react-jsx'], ['confound', { prefix: nameprefix }]]
-	}).code;
+	// transform(result, {
+	// 	presets: ['env'],
+	// 	plugins: [['transform-react-jsx'], ['confound', { prefix: nameprefix }]]
+	// }).code;
 	// 文件import 检索
 	let resultArr = [...result.matchAll(/import.*from.*.;/g)];
 	let cssArr = [...result.matchAll(/import.*(.scss|.less|.css)("|')(;|\s)/g)];
@@ -118,16 +150,16 @@ const doCheckImport = async (str, nameprefix, checkedFile = templates) => {
 		mapSolute.set(`${nameprefix}${curKey}`, { init: false });
 		// return {[curKey]:`${nameprefix}${curKey}`}
 	});
+	if (!swcLoaded) await importAndRunSwcOnMount();
 	try {
-		const output = transform(result, {
-			presets: ['env'],
-			plugins: [['transform-react-jsx']]
-		}).code;
-
-		transform(output, {
-			presets: ['env'],
-			plugins: ['transFileConfound']
-		}).code;
+		// const output = transform(result, {
+		// 	presets: ['env'],
+		// 	plugins: [['transform-react-jsx']]
+		// }).code;
+		// transform(output, {
+		// 	presets: ['env'],
+		// 	plugins: ['transFileConfound']
+		// }).code;
 	} catch (error) {
 		console.log(`引入文件变量名重复`);
 	}
@@ -173,9 +205,9 @@ function transFileConfound() {
 		}
 	};
 }
-registerPlugin('confound', confound);
-registerPlugin('transConfound', transConfound);
-registerPlugin('transFileConfound', transFileConfound);
+// registerPlugin('confound', confound);
+// registerPlugin('transConfound', transConfound);
+// registerPlugin('transFileConfound', transFileConfound);
 
 export const getCodeTransform = async (
 	codeTxt,
@@ -206,14 +238,17 @@ export const getCodeTransform = async (
 			// let testCode = `let offList=[];let okStrArr = importCheckedCode.matchAll(/${duplicateList[0].targetKey}.*/g);console.log([...okStrArr])`;
 			// eval(testCode)
 		}
-		const output = transform(importCheckedCode, {
-			presets: ['env'],
-			plugins: [['transform-react-jsx']]
-		}).code;
-		const afterCode = transform(output, {
-			presets: ['env'],
-			plugins: ['transConfound']
-		}).code;
+		// 替换babel standalone
+		// const output = transform(importCheckedCode, {
+		// 	presets: ['env'],
+		// 	plugins: [['transform-react-jsx']]
+		// }).code;
+		// const afterCode = transform(output, {
+		// 	presets: ['env'],
+		// 	plugins: ['transConfound']
+		// }).code;
+		const output = transformSync(importCheckedCode, swcConfig).code;
+		const afterCode = transformSync(output, swcConfig).code;
 		if (runIframe) {
 			// console.log(cssResource);
 			let cssSource = cssResource.join('') || '';
@@ -300,14 +335,8 @@ export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
 			let reCode = `let offList=[];let doDuplicateStr = importCheckedCode.replace(/${duplicateList[0].targetKey}.*()/g,(match,offset)=>{console.log('....',match,offset);match.includes('()')&&offList.push(match);console.log(offList.length);return 'D_'+offList.length+'_'+match});importCheckedCode=doDuplicateStr`;
 			eval(reCode);
 		}
-		const output = transform(importCheckedCode, {
-			presets: ['env'],
-			plugins: [['transform-react-jsx']]
-		}).code;
-		const afterCode = transform(output, {
-			presets: ['env'],
-			plugins: ['transConfound']
-		}).code;
+		const output = transformSync(importCheckedCode, swcConfig).code;
+		const afterCode = transformSync(output, swcConfig).code;
 		let resultSource = `<!DOCTYPE html>
 			<html lang="zh-CN">
 			<head>
