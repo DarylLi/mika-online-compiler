@@ -207,6 +207,7 @@ function Directory(props: any) {
 		});
 	};
 	const onSelect = (selectedKeys: any[], info: any) => {
+		if (!(window as any)._canSelectTree) return;
 		info?.node?.kind !== 'directory' &&
 			// editStore.updateCode(
 			// 	getFileContent(editStore.currentFiles, info?.node?.path) || '',

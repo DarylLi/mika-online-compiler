@@ -417,10 +417,14 @@ export const replaceFileContent = (files, path, txt) => {
 
 export const doDebounce = (fn, time) => {
 	let timer = null;
+	window._canSelectTree = true;
 	return function (...args) {
+		// fix：修复在编译的同时切换path 造成上一个path的代码因debounce延迟而被加载的问题
+		window._canSelectTree = false;
 		clearTimeout(timer);
 		timer = setTimeout(() => {
 			fn.apply(this, args);
+			window._canSelectTree = true;
 		}, time);
 	};
 };
