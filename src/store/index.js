@@ -20,6 +20,7 @@ class EditorStore {
 	logPanelRef = null;
 	monacoModel = null;
 	assistanceTemplate = null;
+	disabledSelect = false;
 	logMsg = [];
 	constructor() {
 		makeAutoObservable(this);
@@ -37,6 +38,12 @@ class EditorStore {
 	}
 	setMonacoModel(model) {
 		this.monacoModel = model;
+	}
+	doDisableSelect() {
+		this.disabledSelect = true;
+	}
+	doEnableSelect() {
+		this.disabledSelect = false;
 	}
 	clearLog() {
 		this.logMsg.splice(0, this.logMsg.length);
