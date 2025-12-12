@@ -6,7 +6,7 @@ function WelcomePage() {
 	useEffect(()=>{
 		setTimeout(()=>{
 			setHide(true);
-		},6000)
+		},4000)
 	},[])
 	return (
 		<div className={`welcomeContainer ${hide?'hide':''}`}>
