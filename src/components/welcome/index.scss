@@ -23,8 +23,8 @@ h1 {
   -moz-transform: translate3d(0,0,0);
   transform: translate3d(0,0,0);
   opacity: 0;
-  -webkit-animation: anim 3.2s ease-out forwards 1s;
-  animation: anim 3.2s ease-out forwards 1s;
+  -webkit-animation: anim 2.2s ease-out forwards 1s;
+  animation: anim 2.2s ease-out forwards 1s;
 }
 strong {
   display: block;
@@ -60,7 +60,7 @@ strong {
 @keyframes anim {
   0% {
     text-shadow: 0 0 50px #fff;
-    letter-spacing: 80px;
+    letter-spacing: 40px;
     opacity: 0;
     -moz-transform: rotateY(-90deg);
   }
