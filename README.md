@@ -1,4 +1,4 @@
-<img width="2096" height="1168" alt="image" src="https://github.com/user-attachments/assets/89c27c9f-631c-43f6-9fd5-6851be1ce307" /># Mika Online Compiler
+# Mika Online Compiler
 
 ## 项目简介
 
