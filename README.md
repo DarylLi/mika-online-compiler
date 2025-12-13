@@ -1,3 +1,11 @@
+[![Vue](https://img.shields.io/badge/Vue-3.x-4FC08D?style=flat-square&logo=vue.js)](https://vuejs.org/)
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=flat-square&logo=react)](https://react.dev/)
+[![Angular](https://img.shields.io/badge/Angular-17.x-DD0031?style=flat-square&logo=angular)](https://angular.io/)
+[![SWC](https://img.shields.io/badge/SWC-1.x-FFA500?style=flat-square&logo=swc)](https://swc.rs/)
+[![Monaco](https://img.shields.io/badge/Monaco_Editor-0.x-2C2C32?style=flat-square&logo=visual-studio-code)](https://microsoft.github.io/monaco-editor/)
+[![Webpack](https://img.shields.io/badge/Webpack-5.x-8DD6F9?style=flat-square&logo=webpack)](https://webpack.js.org/)
+[![Babel](https://img.shields.io/badge/Babel-7.x-F9DC3E?style=flat-square&logo=babel)](https://babeljs.io/)
+
 # Mika Online Compiler
 
 ## 项目简介
