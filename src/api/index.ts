@@ -5,9 +5,9 @@ type Socket = any;
 type UserInfo = any;
 type AssistanceRequests = any;
 type ContentChunks = any;
-const sockethost = '192.168.71.87';
+const sockethost = 'franxxdaryl.site';
 //@ts-ignore
-(window as any)._mainHost = sockethost;
+(window as any)._mainHost = 'franxxdaryl.site';
 class SocketInstance {
 	socket: Socket = null;
 	userInfo: UserInfo = null;

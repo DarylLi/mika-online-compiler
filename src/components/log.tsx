@@ -114,7 +114,7 @@ class EditLog extends PureComponent<any, any> {
 			let fileId: string = '';
 			let result: any = null;
 			//@ts-ignore
-			await fetch(`http://${(window as any)._mainHost}:3000/api/files`, {
+			await fetch(`https://${(window as any)._mainHost}:3000/api/files`, {
 				method: 'POST', // Method set to POST
 				headers: {
 					'Content-Type': 'application/json' // Inform the server the body is JSON
@@ -132,7 +132,7 @@ class EditLog extends PureComponent<any, any> {
 			if (fileId) {
 				window.open(
 					//@ts-ignore
-					`http://${(window as any)._mainHost}:3000/api/files/${fileId}/download`
+					`https://${(window as any)._mainHost}:3000/api/files/${fileId}/download`
 				);
 				result = 'success';
 			}
