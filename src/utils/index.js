@@ -362,7 +362,7 @@ export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
 				 window._rootHandler.render(React.createElement(_default))
 				</script>`;
 		let fileId = '';
-		await fetch(`http://${window._mainHost}:3000/api/files`, {
+		await fetch(`https://${window._mainHost}:3000/api/files`, {
 			method: 'POST', // Method set to POST
 			headers: {
 				'Content-Type': 'application/json' // Inform the server the body is JSON
@@ -379,7 +379,7 @@ export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
 			});
 		if (fileId) {
 			window.open(
-				`http://${window._mainHost}:3000/api/files/${fileId}/download`
+				`https://${window._mainHost}:3000/api/files/${fileId}/download`
 			);
 			result = 'success';
 		}

@@ -203,7 +203,7 @@ export const downloadVueSource = async (fileEntry, storeObj) => {
 	try {
 		let fileId = '';
 		let result = null;
-		await fetch(`http://${window._mainHost}:3000/api/files`, {
+		await fetch(`https://${window._mainHost}:3000/api/files`, {
 			method: 'POST', // Method set to POST
 			headers: {
 				'Content-Type': 'application/json' // Inform the server the body is JSON
@@ -220,7 +220,7 @@ export const downloadVueSource = async (fileEntry, storeObj) => {
 			});
 		if (fileId) {
 			window.open(
-				`http://${window._mainHost}:3000/api/files/${fileId}/download`
+				`https://${window._mainHost}:3000/api/files/${fileId}/download`
 			);
 			result = 'success';
 		}
