@@ -158,7 +158,8 @@ class SocketStore {
 		let curUrl = window.location.href.split('/');
 		curUrl.splice(-1);
 		setTimeout(() => {
-			window.location.href = curUrl.join('/');
+			window.location.href = `https://franxxdaryl.site/dist/mika-editor/main`;
+			//`${curUrl.join('/')}/main`;
 		}, 1500);
 		this.clearChatStat();
 	}
