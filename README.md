@@ -1,3 +1,11 @@
+[![Vue](https://img.shields.io/badge/Vue-3.x-4FC08D?style=flat-square&logo=vue.js)](https://vuejs.org/)
+[![React](https://img.shields.io/badge/React-18.x-61DAFB?style=flat-square&logo=react)](https://react.dev/)
+[![Angular](https://img.shields.io/badge/Angular-17.x-DD0031?style=flat-square&logo=angular)](https://angular.io/)
+[![SWC](https://img.shields.io/badge/SWC-1.x-FFA500?style=flat-square&logo=swc)](https://swc.rs/)
+[![Monaco](https://img.shields.io/badge/Monaco_Editor-0.x-2C2C32?style=flat-square&logo=visual-studio-code)](https://microsoft.github.io/monaco-editor/)
+[![Webpack](https://img.shields.io/badge/Webpack-5.x-8DD6F9?style=flat-square&logo=webpack)](https://webpack.js.org/)
+[![Babel](https://img.shields.io/badge/Babel-7.x-F9DC3E?style=flat-square&logo=babel)](https://babeljs.io/)
+
 # Mika Online Compiler
 
 ## 项目简介
@@ -103,6 +111,19 @@ yarn build
 ```
 
 ### 预览
+react project:
+<img width="3838" height="1902" alt="image" src="https://github.com/user-attachments/assets/79efbcd2-bc93-4ac0-81c2-8a94cf3be549" />
+
+vue project:
+<img width="3838" height="1891" alt="image" src="https://github.com/user-attachments/assets/9b3e42f9-af04-4885-864c-c533d4dac263" />
+
+you could choose other popular framework templates~
+<img width="3838" height="1899" alt="image" src="https://github.com/user-attachments/assets/e3e11e17-1bbd-42d0-affc-f0eb09c18266" />
+
+### 支持同步协作服务
+<img width="2354" height="936" alt="image" src="https://github.com/user-attachments/assets/2f58c37d-a468-446b-94f0-f0f6db2bc732" />
+<img width="2512" height="994" alt="image" src="https://github.com/user-attachments/assets/9884e9c5-c2d1-4964-8f97-1dad5fb3e115" />
+<img width="2096" height="1168" alt="image" src="https://github.com/user-attachments/assets/6194c12a-f984-465e-a25a-60614f1e47bd" />
 
 react project:
 <img width="3838" height="1902" alt="image" src="https://github.com/user-attachments/assets/79efbcd2-bc93-4ac0-81c2-8a94cf3be549" />
@@ -118,6 +139,7 @@ you could choose other popular framework templates~
 <img width="2354" height="936" alt="image" src="https://github.com/user-attachments/assets/2f58c37d-a468-446b-94f0-f0f6db2bc732" />
 <img width="2512" height="994" alt="image" src="https://github.com/user-attachments/assets/9884e9c5-c2d1-4964-8f97-1dad5fb3e115" />
 <img width="2096" height="1168" alt="image" src="https://github.com/user-attachments/assets/6194c12a-f984-465e-a25a-60614f1e47bd" />
+
 
 ## 使用说明
 
