@@ -315,6 +315,7 @@ export const getCodeTransform = async (
 	replaceMaps = new Map();
 	mapSolute = new Map();
 };
+// react文件较大，先利用分片下载的方式下载
 export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
 	const importCheckedCode = await doCheckImport(
 		codeTxt,
@@ -362,24 +363,42 @@ export const getCodeTransformAndDL = async (codeTxt, checkedFiles) => {
 				 window._rootHandler.render(React.createElement(_default))
 				</script>`;
 		let fileId = '';
-		await fetch(`https://${window._mainHost}:3000/api/files`, {
-			method: 'POST', // Method set to POST
-			headers: {
-				'Content-Type': 'application/json' // Inform the server the body is JSON
-			},
-			body: JSON.stringify({
-				content: resultSource,
-				type: 'html',
-				filename: `export_react_source`
-			})
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				fileId = data.fileId;
-			});
+		let fileLength = 5 * 1024;
+		let number = 0;
+		let fileChunkId = `chunk_${new Date().getTime()}`;
+		let fileContent = '';
+		let totoalContent = '';
+		try {
+			for (var i = 0; i < Math.ceil(resultSource.length / fileLength); i++) {
+				fileContent = resultSource.slice(i * fileLength, (i + 1) * fileLength);
+				number++;
+				await fetch(`https://${window._mainHost}:3000/api/files/chunk`, {
+					method: 'POST', // Method set to POST
+					headers: {
+						'Content-Type': 'application/json' // Inform the server the body is JSON
+					},
+					body: JSON.stringify({
+						content: fileContent,
+						type: 'html',
+						fileChunkId,
+						order: number,
+						filename: `export_react_source`
+					})
+				});
+			}
+			await fetch(
+				`https://${window._mainHost}:3000/api/files/${fileChunkId}/merge`
+			)
+				.then((res) => res.json())
+				.then((data) => {
+					fileId = data.fileId;
+				});
+		} catch (error) {
+			console.log(error);
+		}
 		if (fileId) {
 			window.open(
-				`https://${window._mainHost}:3000/api/files/${fileId}/download`
+				`https://${window._mainHost}:3000/api/files/${fileId}/downloadmerge`
 			);
 			result = 'success';
 		}
