@@ -8,7 +8,7 @@ function RightView(props: any) {
 
 	return (
 		<div
-			className="mika-mona-right-view simpleFrame"
+			className="mika-mona-right-view simpleFrame svelte-frame"
 			id="previewFrame"
 			ref={frameRef}
 		></div>

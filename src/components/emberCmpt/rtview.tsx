@@ -6,7 +6,7 @@ function RightView(props: any) {
 
 	return (
 		<div
-			className="mika-mona-right-view simpleFrame"
+			className="mika-mona-right-view simpleFrame ember-frame"
 			id="previewFrame"
 			ref={frameRef}
 		></div>

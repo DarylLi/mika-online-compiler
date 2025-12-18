@@ -10,19 +10,42 @@ const LitEntry = React.lazy(() => import('../entries/litEntry'));
 const SolidEntry = React.lazy(() => import('../entries/solidEntry'));
 const BackBoneEntry = React.lazy(() => import('../entries/backBoneEntry'));
 const PreactEntry = React.lazy(() => import('../entries/preactEntry'));
+const ArtTmpEntry = React.lazy(() => import('../entries/artTemplateEntry'));
+const PugEntry = React.lazy(() => import('../entries/pugEntry'));
 // 统一协助模版入口
 const Assistance = React.lazy(() => import('../components/assistanceCmpt'));
 import { message } from 'antd';
 import { socketStore } from '@store/socket';
 import TmpPopup from '../components/templatePop';
 import { editStore } from '@store/index';
-
 export default function RouteCmpt() {
   const [curPath, setCurPath] = useState('react');
   const [canRedirect, setCanRedirect] = useState(true);
   const [messageApi, contextHolder] = message.useMessage();
+  // const compilePugTemplate = (str = '', locals = {})=>{
+  //   try {
+  //     let funcStr = generateCode(parse(lex(str)), {
+  //       compileDebug: false,
+  //       pretty: true,
+  //       inlineRuntimeFunctions: false,
+  //       templateName: '_parse'
+  //     });
+  //     let func = wrap(funcStr, '_parse');
+  //     return func(locals);
+  //   } catch (e) {
+  //     return `Compile Error: ${e.message}`;
+  //   }
+  // }
+//   useEffect(()=>{
+//     let str = compilePugTemplate(`div.main
+//  - for(var i=0; i<data.length; i++)
+//    div.child
+//     | #{data[i]}
+// div.another #{greet('shidhin')}`)
+//   },[])
   socketStore.setMessageApi(messageApi);
   socketStore.setMessageContextHolder(contextHolder);
+  const loadingCmpt = <>loading...</>
   return (
     <BrowserRouter>
       {/* Navigation */}
@@ -105,6 +128,42 @@ export default function RouteCmpt() {
         >
           Svelte 3 Compiler
         </Link>
+        <Link
+          className={`${curPath === 'arttemplate' ? 'active' : ''}`}
+          onClick={e => {
+            if (canRedirect) {
+              setCurPath('arttemplate');
+              setCanRedirect(false);
+              setTimeout(() => {
+                setCanRedirect(true);
+              }, 1000);
+            } else {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }}
+          to='/arttemplate'
+        >
+          ArtTemplate Compiler
+        </Link>
+        <Link
+          className={`${curPath === 'pug' ? 'active' : ''}`}
+          onClick={e => {
+            if (canRedirect) {
+              setCurPath('pug');
+              setCanRedirect(false);
+              setTimeout(() => {
+                setCanRedirect(true);
+              }, 1000);
+            } else {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }}
+          to='/pug'
+        >
+          Pug Compiler
+        </Link>
         </div>
       </nav>
       {/* Routes */}
@@ -112,7 +171,7 @@ export default function RouteCmpt() {
         <Route
           path='*'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <MainEntry></MainEntry>
             </Suspense>
           }
@@ -120,7 +179,7 @@ export default function RouteCmpt() {
         <Route
           path='/entry'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <MainEntry></MainEntry>
             </Suspense>
           }
@@ -128,7 +187,7 @@ export default function RouteCmpt() {
         <Route
           path='/sfc'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <VueEntry></VueEntry>
             </Suspense>
           }
@@ -136,7 +195,7 @@ export default function RouteCmpt() {
         <Route
           path='/angular'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <AngularEntry></AngularEntry>
             </Suspense>
           }
@@ -144,7 +203,7 @@ export default function RouteCmpt() {
         <Route
           path='/svelte'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <SvelteEntry></SvelteEntry>
             </Suspense>
           }
@@ -152,7 +211,7 @@ export default function RouteCmpt() {
         <Route
           path='/ember'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <EmberEntry></EmberEntry>
             </Suspense>
           }
@@ -160,7 +219,7 @@ export default function RouteCmpt() {
         <Route
           path='/ko'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <KoEntry></KoEntry>
             </Suspense>
           }
@@ -168,7 +227,7 @@ export default function RouteCmpt() {
         <Route
           path='/lit'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <LitEntry></LitEntry>
             </Suspense>
           }
@@ -176,7 +235,7 @@ export default function RouteCmpt() {
         <Route
           path='/solid'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <SolidEntry></SolidEntry>
             </Suspense>
           }
@@ -184,7 +243,7 @@ export default function RouteCmpt() {
         <Route
           path='/assitant'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <Assistance></Assistance>
             </Suspense>
           }
@@ -192,7 +251,7 @@ export default function RouteCmpt() {
         <Route
           path='/backbone'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <BackBoneEntry></BackBoneEntry>
             </Suspense>
           }
@@ -200,8 +259,24 @@ export default function RouteCmpt() {
         <Route
           path='/preact'
           element={
-            <Suspense fallback={<div>loading...</div>}>
+            <Suspense fallback={loadingCmpt}>
               <PreactEntry></PreactEntry>
+            </Suspense>
+          }
+        ></Route>
+        <Route
+          path='/arttemplate'
+          element={
+            <Suspense fallback={loadingCmpt}>
+              <ArtTmpEntry></ArtTmpEntry>
+            </Suspense>
+          }
+        ></Route>
+        <Route
+          path='/pug'
+          element={
+            <Suspense fallback={loadingCmpt}>
+              <PugEntry></PugEntry>
             </Suspense>
           }
         ></Route>

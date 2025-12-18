@@ -12,6 +12,10 @@ const LitEntry = React.lazy(() => import('../entries/litEntry'));
 const SolidEntry = React.lazy(() => import('../entries/solidEntry'));
 const BackBoneEntry = React.lazy(() => import('../entries/backBoneEntry'));
 const PreactJsEntry = React.lazy(() => import('../entries/preactEntry'));
+const ArtTemplateEntry = React.lazy(
+	() => import('../entries/artTemplateEntry')
+);
+const PugEntry = React.lazy(() => import('../entries/pugEntry'));
 
 function assistanceCmpt() {
 	const entryMap = {
@@ -24,7 +28,9 @@ function assistanceCmpt() {
 		EmberJS: <EmberEntry />,
 		KnockOutJS: <KoEntry />,
 		BackBoneJS: <BackBoneEntry />,
-		PreactJS: <PreactJsEntry />
+		PreactJS: <PreactJsEntry />,
+		ArtTemplate: <ArtTemplateEntry />,
+		Pug: <PugEntry />
 	};
 	return (
 		<>

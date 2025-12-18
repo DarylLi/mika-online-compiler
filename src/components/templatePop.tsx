@@ -205,6 +205,38 @@ const Popup = (props) => {
 					/>
 					PreactJs
 				</div>
+				<div onClick={() => directLink('arttemplate', 'ArtTemplate')}>
+					<svg
+						width="1em"
+						height="1em"
+						className="popIcon"
+						viewBox="0 0 200 200"
+						xmlns="www.w3.org"
+					>
+						<rect width="200" height="200" fill="#fff" rx="20" ry="20" />
+						<text
+							x="50%"
+							y="55%"
+							font-family="Arial, sans-serif"
+							font-size="120"
+							font-weight="bold"
+							fill="#333"
+							text-anchor="middle"
+							dominant-baseline="middle"
+						>
+							A
+						</text>
+					</svg>
+					ArtTemplate
+				</div>
+				<div onClick={() => directLink('pug', 'Pug')}>
+					<img
+						className="popIcon"
+						src="https://pugjs.org/images/favicon.ico"
+						alt=""
+					/>
+					Pug
+				</div>
 			</div>
 		</>
 	);
