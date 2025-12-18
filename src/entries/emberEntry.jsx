@@ -17,7 +17,7 @@ function ebEntry() {
         <MainEditor></MainEditor>
         <RightView></RightView>
     </div>
-    <Spin spinning={editStore.showSpin} percent={'auto'} fullscreen >code服务运行中。。。</Spin>
+    <Spin spinning={editStore.showSpin} percent={'auto'} fullscreen >ember切换中...</Spin>
     </>
     
   );

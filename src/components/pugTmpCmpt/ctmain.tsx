@@ -1,0 +1,134 @@
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+// import MonacoEditor from "react-monaco-editor";
+import MonacoEditor from '@monaco-editor/react';
+import { editStore } from '@store/index';
+import { socketStore } from '@store/socket';
+import { observer } from 'mobx-react-lite';
+import { getCodeTransform, getFileContent, doDebounce } from '@utils/index';
+import { parsePugtemplate } from '@utils/parsePug';
+import { updateData } from '@utils/indexDb';
+import { toJS } from 'mobx';
+import * as prettier from 'prettier/standalone';
+import * as parserBabel from 'prettier/plugins/babel';
+import * as parserHtml from 'prettier/plugins/html';
+import * as parserPostCSS from 'prettier/plugins/postcss';
+import * as prettierPluginEstree from 'prettier/plugins/estree';
+import MonacoOptions from '@mock/monaco';
+import { Button, Tooltip } from 'antd';
+import { ToolOutlined } from '@ant-design/icons';
+
+function MainEditor(props: any) {
+	const ngLanguage = useMemo(
+		() =>
+			/.*\.pug$/.test(editStore.path)
+				? 'pug'
+				: /.*\.js$/.test(editStore.path)
+					? 'javascript'
+					: 'css',
+		[editStore.path]
+	);
+	const editorDidMount = (editor: any, monaco: any) => {
+		// loadAngularConfig(monaco);
+		editor.focus();
+	};
+	const doFormat = async () => {
+		const newValue = editStore.code;
+		let prettierVal: any = null;
+		try {
+			prettierVal =
+				ngLanguage === 'pug'
+					? newValue
+					: await prettier.format(newValue, {
+							// pug page language inject
+							parser: ngLanguage !== 'javascript' ? ngLanguage : 'babel',
+							plugins: [
+								parserBabel,
+								prettierPluginEstree as any,
+								parserHtml,
+								parserPostCSS
+							],
+							tabWidth: 4,
+							useTabs: false,
+							semi: true,
+							singleQuote: true,
+							trailingComma: 'none',
+							bracketSpacing: true,
+							arrowParens: 'always'
+						});
+			editStore.updateCode(' ');
+			setTimeout(() => {
+				let afterPrettier = prettierVal;
+				editStore.replaceFileContent(afterPrettier);
+				editStore.updateCode(afterPrettier);
+			}, 200);
+			// }
+		} catch (err) {
+			console.log(err);
+			return;
+		}
+	};
+	const onChange = async (newValue: any, e: any) => {
+		editStore.replaceFileContent(newValue);
+		editStore.updateCode(newValue || ' ');
+		// 更新入口文件
+		let currentFile = getFileContent(
+			editStore.currentFiles,
+			// pug page entry inject
+			'src/index.pug'
+		);
+		// 重新编译入口文件
+		// pug parse entry inject
+		parsePugtemplate(
+			currentFile || '',
+			JSON.parse(JSON.stringify(editStore.currentFiles)),
+			true
+		);
+		const changedData = {
+			id: 'daryl',
+			name: 'daryl',
+			templates: toJS(editStore.currentFiles)
+		};
+		updateData(
+			(editStore as any).currentIndexDBInstance.db,
+			// pug db template inject
+			'mika-pug-templates',
+			changedData
+		);
+	};
+	useEffect(() => {
+		socketStore.updatedCode && onChange(socketStore.updatedCode, null);
+	}, [socketStore.updatedCode]);
+	const options = {
+		selectOnLineNumbers: true
+	};
+	return (
+		<div className="mika-mona-center-editor">
+			<Tooltip placement="bottom" color="lime" title="formatting codes">
+				<Button
+					className="mika-mona-center-editor-format"
+					shape="circle"
+					icon={<ToolOutlined />}
+					size="small"
+					onClick={doFormat}
+				></Button>
+			</Tooltip>
+			{editStore.code && (
+				<MonacoEditor
+					height="calc(100vh - 66px)"
+					language={
+						// pug language inject
+						ngLanguage === 'pug' ? 'pug' : ngLanguage
+					}
+					theme="vs-dark"
+					value={editStore.code}
+					options={MonacoOptions as any}
+					loading={<div className="monac-load">编辑器加载中..</div>}
+					onChange={doDebounce(onChange, 1000)}
+					onMount={editorDidMount}
+				></MonacoEditor>
+			)}
+		</div>
+	);
+}
+
+export default observer(MainEditor);

@@ -93,7 +93,8 @@ class EditLog extends PureComponent<any, any> {
 			);
 		} else if (
 			window.location.pathname === '/entry' ||
-			window.location.pathname === '/'
+			window.location.pathname === '/' ||
+			/mika-editor\/main/.test(window.location.pathname)
 		) {
 			let currentFile = getFileContent(editStore.currentFiles, 'src/app.jsx');
 			return await getCodeTransformAndDL(

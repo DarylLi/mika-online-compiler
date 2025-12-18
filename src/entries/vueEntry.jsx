@@ -46,7 +46,7 @@ function PageEntry() {
         <RightView cpType='vue'></RightView>
       </div>
       <Spin spinning={editStore.showSpin} percent={'auto'} fullscreen>
-        code服务运行中。。。
+        vue切换中...
       </Spin>
     </>
   );

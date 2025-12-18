@@ -5,7 +5,7 @@ function RightView(props: any) {
 	const frameRef: any = useRef(null);
 	return (
 		<div
-			className="mika-mona-right-view simpleFrame"
+			className="mika-mona-right-view simpleFrame solid-frame"
 			id="previewFrame"
 			ref={frameRef}
 		></div>
