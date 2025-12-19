@@ -29,7 +29,7 @@ export const parsePugtemplate = async (fileEntry, storeObj, needRefresh) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pug preview page</title>
-    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css'></link>
+    <link rel='stylesheet' href='https://all.franxxdaryl.site/assets/compiler-lib/bootstrap.min.css'></link>
     <style>${cssFile}</style>
 </head>
 <body>

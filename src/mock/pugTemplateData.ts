@@ -24,7 +24,7 @@ export const pugTemplateTemplates: any = [
       .bottom-mouth
       .nose
     h2
-      | pug is wathing u ~
+      | pug is watching u ~
     .modal-dialog
         .modal-content
           // Modal Header
@@ -85,15 +85,12 @@ export const pugTemplateTemplates: any = [
         position: absolute;
         content: '';
     }
-    left: 0;
-    bottom: 0;
-    right: 0;
     scale: 0.5;
     display: flex;
     align-items: center;
     left: 70px;
     transform: translate(-50%, 0px);
-    top: -400px;
+    top: -100px;
 }
 .head {
     width: 330px;
