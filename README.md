@@ -18,7 +18,8 @@ Mika Online Compiler 是一个基于前端渲染的在线代码编辑器，支�
 
 - **React 支持**: 完整的 React 18 开发环境，支持 JSX 语法
 - **Vue 支持**: Vue 3 单文件组件 (SFC) 支持，包含 template、script、style 块
-
+- **AngularJs 支持**:AngularJS语法支持，支持完整MVVM模型逻辑。
+- 支持其他如pug，svelte，preact，arttemplate前端框架及模板引擎
 ### UI 组件库集成
 
 - **React**: 集成 Ant Design 组件库，提供丰富的 UI 组件
