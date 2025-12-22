@@ -66,7 +66,9 @@ export const pugTemplateTemplates: any = [
         position: absolute;
         width: 100%;
         text-align: center;
+        color: #fff;
     }
+    background:#a86454;
 }
 .modal-dialog {
     margin-top: 280px;
