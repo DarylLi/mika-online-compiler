@@ -218,7 +218,8 @@ h1{
   font-size: 14px;
   background-color: #fff;
   border-radius: 10px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
  }
  .ng-scope{
   padding: 10px;
@@ -235,13 +236,6 @@ a{
 h1{
   text-align: center;
 }
- body{
-  height: 100%;
-  font-size: 14px;
-  background-color: #fff;
-  border-radius: 10px;
-  overflow: auto;
- }
  .ng-scope{
   padding: 10px 0;
  }`,

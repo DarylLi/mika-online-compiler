@@ -497,3 +497,13 @@ body,
     height: 100%;
 }
 .ant-message{z-index: 10000000;}
+.ember-frame{
+  iframe{
+    padding: 10px;
+    box-sizing: border-box;  
+  }
+}
+#angularLive{
+  padding: 10px;
+  box-sizing: border-box;
+}

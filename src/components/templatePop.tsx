@@ -18,8 +18,8 @@ const Popup = (props) => {
 	const [tmp, setTmp] = useState('React');
 	const navigate = useNavigate();
 	const directLink = (url: string, type: string) => {
-		(window as any)._isAssistanceMode = false;
-		(window as any)._assistanceTempate = undefined;
+		window._isAssistanceMode = false;
+		window._assistanceTempate = undefined;
 		editStore.setType(type);
 		switchPop();
 		setTmp(type);
