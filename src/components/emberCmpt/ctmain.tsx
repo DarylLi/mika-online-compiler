@@ -132,7 +132,7 @@ function MainEditor(props: any) {
 					height="calc(100vh - 66px)"
 					language={
 						// ember language inject
-						ngLanguage === 'html' ? 'markdown' : ngLanguage
+						ngLanguage === 'html' ? 'handlebars' : ngLanguage
 					}
 					theme="vs-dark"
 					value={editStore.code}
