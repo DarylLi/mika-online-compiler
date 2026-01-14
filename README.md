@@ -112,31 +112,16 @@ yarn build
 ```
 
 ### 预览
-react project:
+#### react project:
 <img width="3838" height="1902" alt="image" src="https://github.com/user-attachments/assets/79efbcd2-bc93-4ac0-81c2-8a94cf3be549" />
 
-vue project:
+#### vue project:
 <img width="3838" height="1891" alt="image" src="https://github.com/user-attachments/assets/9b3e42f9-af04-4885-864c-c533d4dac263" />
 
-you could choose other popular framework templates~
+#### you could choose other popular framework templates~
 <img width="3838" height="1899" alt="image" src="https://github.com/user-attachments/assets/e3e11e17-1bbd-42d0-affc-f0eb09c18266" />
 
 ### 支持同步协作服务
-<img width="2354" height="936" alt="image" src="https://github.com/user-attachments/assets/2f58c37d-a468-446b-94f0-f0f6db2bc732" />
-<img width="2512" height="994" alt="image" src="https://github.com/user-attachments/assets/9884e9c5-c2d1-4964-8f97-1dad5fb3e115" />
-<img width="2096" height="1168" alt="image" src="https://github.com/user-attachments/assets/6194c12a-f984-465e-a25a-60614f1e47bd" />
-
-react project:
-<img width="3838" height="1902" alt="image" src="https://github.com/user-attachments/assets/79efbcd2-bc93-4ac0-81c2-8a94cf3be549" />
-
-vue project:
-<img width="3838" height="1891" alt="image" src="https://github.com/user-attachments/assets/9b3e42f9-af04-4885-864c-c533d4dac263" />
-
-you could choose other popular framework templates~
-<img width="3838" height="1899" alt="image" src="https://github.com/user-attachments/assets/e3e11e17-1bbd-42d0-affc-f0eb09c18266" />
-
-### 支持同步协作服务
-
 <img width="2354" height="936" alt="image" src="https://github.com/user-attachments/assets/2f58c37d-a468-446b-94f0-f0f6db2bc732" />
 <img width="2512" height="994" alt="image" src="https://github.com/user-attachments/assets/9884e9c5-c2d1-4964-8f97-1dad5fb3e115" />
 <img width="2096" height="1168" alt="image" src="https://github.com/user-attachments/assets/6194c12a-f984-465e-a25a-60614f1e47bd" />
